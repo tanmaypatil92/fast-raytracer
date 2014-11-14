@@ -21,6 +21,81 @@
 #include <iostream>
 #include <string>
 
+
+#define MAX_LIGHTS 10
+#define MAX_SPHERES 10
+#define MAX_PLANES 1
+#define MAX_OBJ_TO_RENDER 5
+
+typedef struct
+{
+
+  int dispWidth;
+  int dispHeight;
+  
+  float defaultCamFOV;
+  
+  Vector camPosition;
+  Vector camLook;
+  //Camera defCam;
+  
+  /* The actual number of lights to initialize*/
+  int numLights;
+  Color defLightColors[MAX_LIGHTS];
+  
+  
+  int numSpheres;
+  Sphere spheres[MAX_SPHERES];
+  
+  int numPlanes;
+  Plane planes[MAX_PLANES];
+  
+} infinity_bsp_s;
+
+/* Stores all the elemental structures needed for initializing the app data */
+infinity_bsp_s infinity_bsp =
+{
+  .dispWidth = XRES,
+  .dispHeight = YRES,
+  
+  .defaultCamFOV = 45,
+  
+  .camPosition = Vector(0,-2.5,-10),
+  .camLook      = Vector(0,0,3.0),
+  
+  .numLights = 1,
+  .defLightColors = {Color(1.0,1.0,1.0), Color(1.0,1.0,1.0),Color(1.0,1.0,1.0),Color(1.0,1.0,1.0),Color(1.0,1.0,1.0),Color(1.0,1.0,1.0),Color(1.0,1.0,1.0),Color(1.0,1.0,1.0),Color(1.0,1.0,1.0),Color(1.0,1.0,1.0)},
+  
+  
+  .numSpheres = 2,
+  .spheres = {Sphere(Vector(0.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0))), Sphere(Vector(3.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)))},
+
+  .numPlanes = 1,
+  .planes = {}
+  
+};
+
+typedef struct
+{
+
+  Camera appCamera;
+  
+  GeomObj* objectsToRender[MAX_OBJ_TO_RENDER];
+
+}infinity_tracer_app_data_s;
+
+infinity_tracer_app_data_s tracer_app = {
+
+  .appCamera = Camera(infinity_bsp.camPosition,infinity_bsp.camLook),
+  
+  .objectsToRender = {NULL},
+  
+  
+};
+//Next step is checkerboard...
+// create 10^-6 check for intersection value greater than 0.000001
+// for reflection check on : http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-1-writing-a-simple-raytracer/
+
 #include "math.h"
 
 int main(int argc,char **argv)
@@ -57,17 +132,6 @@ int main(int argc,char **argv)
 	Vector sphereCenter2 = Vector(3.0,1.2,0.0); // World space coordinates
 	Sphere sphere02 = Sphere(sphereCenter2,sphereRadius2,sphereMat2);
   
-  
-  #if 0
-	//Plane not needed for now. refer to tutorial.
-	Material planeMat    = Material(Color(0.5,0.0,0.2));
-	Vector planeNormal   = (Vector(0.0,1.0,0.0)); /* */
-	double planeDistance = -1.0;
-  Plane plane01 = Plane(planeNormal,planeDistance,planeMat);
-
-	double normalizedX,normalizedY;
-	double xoffset,yoffset;
-	#endif
   
   double intersectionValue,intersectionValue2;
 	Vector tempdirection;
