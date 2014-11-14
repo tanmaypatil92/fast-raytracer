@@ -25,59 +25,88 @@
 
 int main(int argc,char **argv)
 {
+  GeomObj * thisObj1 = NULL;
+  GeomObj * thisObj2 = NULL;
+  
 	int width  = XRES;
 	int height = YRES;
-	double ARatio = (double)width/(double)height;
+	//double ARatio = (double)width/(double)height;
 	int result = 0;
 	float FOV = 45;
 	float PI = 3.14159265;
 	//Camera information
-	Vector camPosition = Vector(0,1.8,10);
-	Vector camLook     = Vector(0,3.0,0);
-	Camera cam01       = Camera(camPosition);
+	Vector camPosition = Vector(0,-2.5,10);
+	Vector camLook     = Vector(0,0.0,3.0);
+	Camera cam01       = Camera(camPosition,camLook);
 
 	//Light Information
 	Color  lightColor     = Color(1.0,1.0,1.0);
 	//Vector lightDirection = Vector(-30,-10,20);
-	Vector lightDirection = Vector(7,10,-10);
+	Vector lightDirection = Vector(0,0.0,-10.0);
 	Light  light01        = Light(lightDirection,lightColor);
 
 	//Sphere
 	Material sphereMat  = Material(Color(0.4,0.1,0.0,1.0));
 	double sphereRadius = 1.0;
-	Vector sphereCenter = Vector(0.0,1.2,0.0);
+	Vector sphereCenter = Vector(0.0,1.2,0.0); // World space coordinates
 	Sphere sphere01 = Sphere(sphereCenter,sphereRadius,sphereMat);
-
-	//Plane
+	
+  	//Sphere
+	Material sphereMat2  = Material(Color(0.4,0.1,0.0,1.0));
+	double sphereRadius2 = 1.0;
+	Vector sphereCenter2 = Vector(3.0,1.2,0.0); // World space coordinates
+	Sphere sphere02 = Sphere(sphereCenter2,sphereRadius2,sphereMat2);
+  
+  
+  #if 0
+	//Plane not needed for now. refer to tutorial.
 	Material planeMat    = Material(Color(0.5,0.0,0.2));
-	Vector planeNormal   = (Vector(0.0,1.0,0.0));
+	Vector planeNormal   = (Vector(0.0,1.0,0.0)); /* */
 	double planeDistance = -1.0;
-	Plane plane01 = Plane(planeNormal,planeDistance,planeMat);
+  Plane plane01 = Plane(planeNormal,planeDistance,planeMat);
+
+	double normalizedX,normalizedY;
+	double xoffset,yoffset;
+	#endif
+  
+  double intersectionValue,intersectionValue2;
+	Vector tempdirection;
+
 
 	Pixel *pixels = (Pixel*)malloc(sizeof(Pixel)*width*height);
 	
-	double normalizedX,normalizedY;
-	double xoffset,yoffset;
-	double intersectionValue;
-	Vector tempdirection;
-
   std::cout<<"Begin rendering ..."<<std::endl;
 
+  float theta = tanf((PI*(FOV/2.0))/180);
+  float ratio = (float)height/(float)width;
+  float halfheight = theta*ratio;
+  float cameraWidth = theta*2.0;
+  float cameraHeight = halfheight*2.0;
+  float pixelWidth = cameraWidth/(width-1);
+  float pixelHeight = cameraHeight/(height-1);
+  
 	for(int x = 0; x < width; x++)
 	{
 		for(int y = 0; y < height; y++)
 		{
 			// transforming x and y for ray calculation from screen to camera space
-			float theta = tan((PI*(FOV/2))/180);
-			float ratio = (float)height/(float)width;
-			float halfheight = theta*ratio;
-			float cameraWidth = theta*2.0;
-			float cameraHeight = halfheight*2.0;
-			float pixelWidth = cameraWidth/(width-1);
-			float pixelHeight = cameraHeight/(height-1);
 
-			Vector xoffset = cam01.camY.scalarMult((x*pixelWidth)-theta);
-			Vector yoffset = cam01.camX.scalarMult((y*pixelHeight)-halfheight);
+
+      float xScaleCoeff = (x*pixelWidth)-theta ;
+      float yScaleCoeff = (y*pixelHeight)-halfheight;
+    
+
+      if( (xScaleCoeff < -1.0) || (xScaleCoeff > 1.0))
+      {
+        std::cout<<"xoffset not normalized "<<xScaleCoeff<<std::endl;
+      }
+      if( (yScaleCoeff < -1.0) || (yScaleCoeff > 1.0))
+      {
+        std::cout<<"yoffset not normalized "<<yScaleCoeff<<std::endl;
+      }
+    
+      Vector xoffset = cam01.camX.scalarMult(xScaleCoeff);
+			Vector yoffset = cam01.camY.scalarMult(yScaleCoeff);
 			
 			// Calculating camera ray using the new x and y offsets
 			Ray cameraRay;
@@ -90,6 +119,10 @@ int main(int argc,char **argv)
 			Vector normalValue = sphere01.sphereNormal;
 			Vector interValue  = sphere01.sphereInter;
 
+			intersectionValue2  = sphere02.sphereIntersection(cameraRay);
+			Vector normalValue2 = sphere02.sphereNormal;
+			Vector interValue2  = sphere02.sphereInter;
+    
 			//Vector lightOffset = light01.direction.subVector(interValue);
 			//double lightDistance = lightOffset.lengthVector();
 			//Vector lightDirection = lightOffset.normalize();
@@ -99,9 +132,27 @@ int main(int argc,char **argv)
 			//Vector L = (light01.direction).subVector(interValue);
 			//double DOT = N.dotProduct(L);
 
-			if(intersectionValue > 1)
+			if(intersectionValue > 1 || intersectionValue2 > 1)
 			{
-
+        double intersectionVal = intersectionValue2;
+        Vector normalVector = normalValue2;
+        Vector interVector = interValue2;
+      
+        if(intersectionValue > 1 && intersectionValue2 >1 )
+        {
+          intersectionVal = intersectionValue < intersectionValue2 ? 1 : 2;
+          if(intersectionVal < 2)
+          {
+             normalVector = normalValue;
+             interVector = interValue;
+          }
+        }
+        else if (intersectionValue > 1){
+          intersectionVal = intersectionValue;
+           normalVector = normalValue;
+           interVector = interValue;
+        }
+      
 				// computer color at each vertex
 				//Vector N = normalValue;
 				//Vector L = (light01.direction).subVector(interValue);
@@ -115,8 +166,8 @@ int main(int argc,char **argv)
 					//else
 					//{
 					
-					Vector N = normalValue;
-					Vector L = (light01.direction).subVector(interValue);
+					Vector N = normalVector;
+					Vector L = (light01.direction).subVector(interVector);
 					Vector R;
 					Vector E = Vector(0,0,-1);
 					Color Ka = Color(0.1,0.1,0.1);

@@ -12,10 +12,13 @@ class Plane : public GeomObj
 	double distance;
 	Vector normal;
 	Material mat;
+  Vector intersection;
 	Plane();
 	Plane(Vector,double);
 	Plane(Vector,double,Material);
   double findIntersection(Ray r);
+  double planeIntersection(Ray r);
+
 };
 
 #endif

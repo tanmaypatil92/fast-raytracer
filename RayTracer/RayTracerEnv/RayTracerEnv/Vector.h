@@ -16,5 +16,6 @@ class Vector{
 	Vector scalarMult(double);
 	double lengthVector();
 	Vector negate();
+  bool checkRange(float down, float up);
 };
 #endif

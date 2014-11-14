@@ -51,6 +51,7 @@ Vector Vector::addVector(Vector v)
 	add.z = z + v.z;
 	return add;
 }
+
 Vector Vector::scalarMult(double val)
 {
 	Vector mult;
@@ -66,4 +67,10 @@ double Vector::lengthVector()
 Vector Vector::negate()
 {
 	return  Vector(x*-1,y*-1,z*-1);
+}
+bool Vector::checkRange(float down, float up)
+{
+  bool ret_value = true;
+  return ret_value;
+  
 }
