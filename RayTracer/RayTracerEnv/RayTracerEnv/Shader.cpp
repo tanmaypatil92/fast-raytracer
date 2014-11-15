@@ -82,9 +82,10 @@ void getColor
       localNormal = *N;
       flag        = 0;
     }
-    else if (NdotL > 0 && NdotE > 0)
+    else if (NdotL < 0 && NdotE < 0)
     {
       localNormal = N->negate();
+      NdotL       = -1.0 * NdotL;
       flag        = 0;
     }
     // R = 2(N.L)N-L
@@ -105,11 +106,6 @@ void getColor
       specColor.red   += lights[l].lightColor.red   * pow(RdotE,SPECULAR_COEFF);
       specColor.green += lights[l].lightColor.green * pow(RdotE,SPECULAR_COEFF);
       specColor.blue  += lights[l].lightColor.blue  * pow(RdotE,SPECULAR_COEFF);
-    }
-    else
-    {
-      diffColor.red += 0;diffColor.green +=0;diffColor.blue += 0;
-      specColor.red += 0;specColor.green += 0;specColor.blue += 0;
     }
   }
   diffColor.red   = shader_data.Kd.red   * diffColor.red ;

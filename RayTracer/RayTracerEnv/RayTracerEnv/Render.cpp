@@ -131,17 +131,17 @@ void renderObjects
 
   /* Main processing */
   /* Render line by line, for all lines */
-  for(int j =0; j < thisObj->height; j++)
+  for(int i =0; i < thisObj->width; i++)
   {
-    vertScaleCoeff  = (j*thisObj->pixelHeight) - (camera->height/2.0);
-    vertOffset = camera->camY.scalarMult(vertScaleCoeff);
-    /*  Now render this line  */
-    for(int i = 0; i < thisObj->width;i++)
-    {
-      objRend         = NULL;
       horizScaleCeoff = (i*thisObj->pixelWidth) - (camera->width/2.0);
       horizOffset     = camera->camX.scalarMult(horizScaleCeoff);
+    /*  Now render this line  */
+    for(int j = 0; j < thisObj->height;j++)
+    {
+      objRend         = NULL;
 
+      vertScaleCoeff  = (j*thisObj->pixelHeight) - (camera->height/2.0);
+      vertOffset = camera->camY.scalarMult(vertScaleCoeff);
       primaryRay.direction = (camera->camZ.addVector(horizOffset)).addVector(vertOffset);
       primaryRay.direction = primaryRay.direction.normalize();
 
@@ -155,6 +155,7 @@ void renderObjects
            objsToRender[obj]->intersectionValue > TRACER_THRESH )
         {
           objRend = objsToRender[obj];
+          intersectValue = objRend->intersectionValue;
         }
       } /* End of obj loop */
 

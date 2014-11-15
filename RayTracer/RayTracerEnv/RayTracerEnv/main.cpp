@@ -26,14 +26,14 @@ infinity_bsp_s infinity_bsp =
   
   .defaultCamFOV = 45,
   
-  .camPosition = Vector(0,-2.5,-10),
+  .camPosition = Vector(0,1.8,10),
   .camLook      = Vector(0,0,3.0),
 
   
-  .numSpheres = 2,
+  .numSpheres = 1,
   .spheres = {Sphere(Vector(0.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0))), Sphere(Vector(3.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)))},
 
-  .numPlanes = 1,
+  .numPlanes = 0,
   .planes = {Plane(Vector(0.0,1.0,0.0),-1.0,Material(Color(0.5,0.0,0.2)))}
   
 };
@@ -62,7 +62,7 @@ infinity_tracer_app_data_s tracer_app = {
   .numLights = 1,
   .defLights =
     {
-      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0)),
+      Light( Vector(4,-10.0,3.0),Color(1.0,1.0,1.0)),
       Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0)),
       Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0)),
       Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0)),

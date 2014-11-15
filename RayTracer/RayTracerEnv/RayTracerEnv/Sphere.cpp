@@ -64,9 +64,16 @@ double Sphere::sphereIntersection(Ray r)
 	//sphereInter  = (R0.addVector(Rd.scalarMult(intersectionVal))).normalize();
 	//sphereNormal = ((sphereInter.subVector(center)).normalize()).scalarMult(1/radius);
 	Vector temp = Vector((R0.x - center.x),(R0.y - center.y),(R0.z - center.z));
+  /* @todo - deprecated, use the superclass properties instead */
 	sphereNormal   = (temp.addVector(Rd.scalarMult(intersectionVal))).normalize();
 	sphereInter    = R0.addVector(Rd.scalarMult(intersectionVal)).normalize();
+ 
+  /* Now set the superclass properties.*/
   intersectionValue = intersectionVal;
+  objNormal          = sphereNormal;
+  objIntersection    = sphereInter;
+  
+
 	return intersectionVal;
 }
 
