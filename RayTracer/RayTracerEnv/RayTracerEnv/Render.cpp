@@ -122,8 +122,9 @@ void renderObjects
   Vector vertOffset      = {0,0,0};
   Ray    primaryRay      = {};
   Ray    secondaryRay    = {};
-  const GeomObj* objRend = NULL;
+  GeomObj* objRend = NULL;
   double   intersectValue = INFINITY;
+  Color  thisColor;
 
   /* Initializations */
   primaryRay.origin = camera->position;
@@ -160,7 +161,8 @@ void renderObjects
       /* now that we have the object to render, find the color for this pixel */
       if(objRend !=NULL)
       {
-      
+        getColor(lights,numLights,objRend,&thisColor);
+        thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisColor);
       }
       else{
         //Set the default color to something?

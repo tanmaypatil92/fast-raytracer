@@ -10,8 +10,15 @@
 #define __RayTracerEnv__Shader__
 
 #include <stdio.h>
+#include "Light.h"
+#include "GeometricObject.h"
 
+void getColor
+(
+  Light   * lights,
+  int       numLights,
+  GeomObj * objToRender,
+  Color   * returnColor
+);
 
-
-void obtainColor();
 #endif /* defined(__RayTracerEnv__Shader__) */
