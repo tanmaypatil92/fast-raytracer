@@ -14,6 +14,7 @@ Sphere::Sphere(Vector c,double r)
 	center = c;
 	radius = r;
 	mat.matColor = Color(0.5,0.5,0.5);
+  material.matColor = mat.matColor;
 }
 
 Sphere::Sphere(Vector c,double r,Material m)
@@ -21,6 +22,7 @@ Sphere::Sphere(Vector c,double r,Material m)
 	center = c;
 	radius = r;
 	mat    = m;
+  material = m;
 }
 
 double Sphere::findIntersection(Ray ray)
@@ -64,6 +66,7 @@ double Sphere::sphereIntersection(Ray r)
 	Vector temp = Vector((R0.x - center.x),(R0.y - center.y),(R0.z - center.z));
 	sphereNormal   = (temp.addVector(Rd.scalarMult(intersectionVal))).normalize();
 	sphereInter    = R0.addVector(Rd.scalarMult(intersectionVal)).normalize();
+  intersectionValue = intersectionVal;
 	return intersectionVal;
 }
 

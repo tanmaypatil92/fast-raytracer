@@ -50,5 +50,6 @@ double Plane::planeIntersection(Ray r)
 			intersection = R0.addVector(Rd.scalarMult(t));
 		}
 	}
+  intersectionValue = t;
 	return t;
 }

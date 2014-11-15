@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8118DF851A16B45C00C406D7 /* Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8118DF831A16B45C00C406D7 /* Render.cpp */; };
+		8118DF881A17052800C406D7 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8118DF861A17052800C406D7 /* Shader.cpp */; };
 		81590D241A12BFD60090ABAF /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81590D231A12BFD60090ABAF /* main.cpp */; };
 		81590D411A12C0260090ABAF /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81590D2A1A12C0260090ABAF /* Camera.cpp */; };
 		81590D421A12C0260090ABAF /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81590D2C1A12C0260090ABAF /* Color.cpp */; };
@@ -33,6 +35,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8118DF831A16B45C00C406D7 /* Render.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Render.cpp; sourceTree = "<group>"; };
+		8118DF841A16B45C00C406D7 /* Render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Render.h; sourceTree = "<group>"; };
+		8118DF861A17052800C406D7 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
+		8118DF871A17052800C406D7 /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
+		8118DF891A1746E600C406D7 /* TracerAppBSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TracerAppBSP.h; sourceTree = "<group>"; };
 		81590D201A12BFD60090ABAF /* RayTracerEnv */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RayTracerEnv; sourceTree = BUILT_PRODUCTS_DIR; };
 		81590D231A12BFD60090ABAF /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		81590D2A1A12C0260090ABAF /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
@@ -111,6 +118,11 @@
 				81590D3D1A12C0260090ABAF /* Sphere.h */,
 				81590D3F1A12C0260090ABAF /* Vector.cpp */,
 				81590D401A12C0260090ABAF /* Vector.h */,
+				8118DF831A16B45C00C406D7 /* Render.cpp */,
+				8118DF841A16B45C00C406D7 /* Render.h */,
+				8118DF861A17052800C406D7 /* Shader.cpp */,
+				8118DF871A17052800C406D7 /* Shader.h */,
+				8118DF891A1746E600C406D7 /* TracerAppBSP.h */,
 				81590D231A12BFD60090ABAF /* main.cpp */,
 			);
 			path = RayTracerEnv;
@@ -172,6 +184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8118DF881A17052800C406D7 /* Shader.cpp in Sources */,
 				81590D481A12C0260090ABAF /* Ray.cpp in Sources */,
 				81590D441A12C0260090ABAF /* Light.cpp in Sources */,
 				81590D461A12C0260090ABAF /* Pixel.cpp in Sources */,
@@ -179,6 +192,7 @@
 				81590D411A12C0260090ABAF /* Camera.cpp in Sources */,
 				81590D4A1A12C0260090ABAF /* Vector.cpp in Sources */,
 				81590D451A12C0260090ABAF /* Material.cpp in Sources */,
+				8118DF851A16B45C00C406D7 /* Render.cpp in Sources */,
 				81590D431A12C0260090ABAF /* Disp.cpp in Sources */,
 				81590D421A12C0260090ABAF /* Color.cpp in Sources */,
 				81590D491A12C0260090ABAF /* Sphere.cpp in Sources */,

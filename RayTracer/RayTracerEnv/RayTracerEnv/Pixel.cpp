@@ -10,3 +10,8 @@ Pixel::Pixel(Color c)
 	pixelColor = c;
 	pixelColor.colorCheck();
 }
+
+void Pixel::setColor(Color newColor)
+{
+  this->pixelColor = newColor;
+}

@@ -9,6 +9,7 @@ class Pixel {
 	double    alpha;
 	Pixel();
 	Pixel(Color);
+  void setColor(Color newColor);
 };
 
 #endif
