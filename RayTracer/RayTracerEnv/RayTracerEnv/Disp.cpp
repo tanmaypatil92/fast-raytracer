@@ -28,15 +28,6 @@ int saveImage(Pixel *pixels)
    putc((height & 0xff00) >> 8,fptr);
    putc(24,fptr);                        /* 24 bit bitmap */
    putc(0,fptr);
-   /* 
-   for(int x = 0; x < width*height; x++) // not sure why it has to be widthXheight but iterating through
-   {                                     // width and height seperately does not work!! 
-
-			putc(pixels[x].pixelColor.blue  * 255, fptr);
-			putc(pixels[x].pixelColor.green * 255, fptr);
-			putc(pixels[x].pixelColor.red   * 255, fptr);
-
-   } */
 
    for (int j = 0; j < height; j++)
    {

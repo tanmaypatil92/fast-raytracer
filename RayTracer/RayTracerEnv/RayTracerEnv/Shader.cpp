@@ -117,9 +117,9 @@ void getColor
   specColor.blue  = shader_data.Ks.blue  * specColor.blue;
 
   Color color01 = Color(objToRender->material.matColor);
-  color01.red   = color01.red    *( diffColor.red   + specColor.red);// R
-  color01.green = color01.green  *( diffColor.green + specColor.green);// G
-  color01.blue  = color01.blue   *( diffColor.blue  + specColor.blue);// B
+  color01.red   = diffColor.red   + specColor.red;   //color01.red    *( diffColor.red   + specColor.red);// R
+  color01.green = diffColor.green + specColor.green; //color01.green  *( diffColor.green + specColor.green);// G
+  color01.blue  = diffColor.blue  + specColor.blue ; // color01.blue   *( diffColor.blue  + specColor.blue);// B
 
   (*returnColor) = color01; 
   return ; 
