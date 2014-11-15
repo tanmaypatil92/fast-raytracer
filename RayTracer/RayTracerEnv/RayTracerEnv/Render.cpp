@@ -118,10 +118,10 @@ void renderObjects
   /* Local variables */
   double horizScaleCeoff = 0.0;
   double vertScaleCoeff  = 0.0;
-  Vector horizOffset     = {0,0,0};
-  Vector vertOffset      = {0,0,0};
-  Ray    primaryRay      = {};
-  Ray    secondaryRay    = {};
+  Vector horizOffset;//     = {0,0,0};
+  Vector vertOffset;//      = {0,0,0};
+  Ray    primaryRay;//      = {};
+  Ray    secondaryRay;//    = {};
   GeomObj* objRend = NULL;
   double   intersectValue = INFINITY;
   Color  thisColor;

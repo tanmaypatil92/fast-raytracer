@@ -18,8 +18,12 @@
 #include "TracerAppBSP.h"
 
 
+static infinity_bsp_s infinity_bsp;
+static infinity_tracer_app_data_s tracer_app;
+
+#if 0
 /* Stores all the elemental structures needed for initializing the app data */
-infinity_bsp_s infinity_bsp =
+static infinity_bsp_s infinity_bsp =
 {
   .dispWidth = XRES,
   .dispHeight = YRES,
@@ -38,7 +42,7 @@ infinity_bsp_s infinity_bsp =
   
 };
 
-infinity_tracer_app_data_s tracer_app = {
+static infinity_tracer_app_data_s tracer_app = {
 
   .appCamera = Camera(infinity_bsp.camPosition,infinity_bsp.camLook),
   
@@ -74,6 +78,74 @@ infinity_tracer_app_data_s tracer_app = {
       Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0))
     },
 };
+
+#endif
+
+//#if 0
+void pre_initialize_everything()
+{
+
+  infinity_bsp.dispWidth = XRES;
+  infinity_bsp.dispHeight = YRES;
+  
+  infinity_bsp.defaultCamFOV = 45;
+  
+  infinity_bsp.camPosition = Vector(0,1.8,10);
+  infinity_bsp.camLook      = Vector(0,0,3.0);
+  
+  infinity_bsp.numSpheres = 1;
+  infinity_bsp.spheres[0] =Sphere(Vector(0.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
+  infinity_bsp.spheres[1] =Sphere(Vector(3.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
+
+
+  infinity_bsp.numPlanes = 0;
+  infinity_bsp.planes[0] = Plane(Vector(0.0,1.0,0.0),-1.0,Material(Color(0.5,0.0,0.2)));
+  
+  tracer_app.appCamera = Camera(infinity_bsp.camPosition,infinity_bsp.camLook);
+  
+  tracer_app.numObjsToRender = 0;
+  //tracer_app.objectsToRender[0] = {};
+
+  //.infinityRender =
+  
+  tracer_app.infinityRender.height = infinity_bsp.dispHeight;
+   tracer_app.infinityRender.width  = infinity_bsp.dispWidth;
+   tracer_app.infinityRender.aspectRatio = 1.0 * (double)infinity_bsp.dispHeight/ (double)infinity_bsp.dispWidth;
+   tracer_app.infinityRender.pixelWidth = 0.0;
+   tracer_app.infinityRender.pixelHeight = 0.0;
+   tracer_app.infinityRender.cameraWidth = 0.0;
+   tracer_app.infinityRender.cameraHeight = 0.0;
+   tracer_app.infinityRender.pixels = NULL;
+   tracer_app.infinityRender.defaultColor = Color(0.4,0.2,0.3,1.0);
+    
+  tracer_app.numLights = 1;
+  
+  tracer_app.defLights[0] =
+      Light(Vector(4,-10.0,3.0),Color(1.0,1.0,1.0));
+  
+  tracer_app.defLights[1] =
+      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
+  tracer_app.defLights[2] =
+      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
+  tracer_app.defLights[3] =
+      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
+  tracer_app.defLights[4] =
+      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
+  tracer_app.defLights[5] =
+      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
+  tracer_app.defLights[6] =
+      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
+  tracer_app.defLights[7] =
+      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
+  tracer_app.defLights[8] =
+      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
+  tracer_app.defLights[9] =
+      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
+
+  
+  return;
+}
+//#endif
 //Next step is checkerboard...
 // create 10^-6 check for intersection value greater than 0.000001
 // for reflection check on : http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-1-writing-a-simple-raytracer/
@@ -84,7 +156,8 @@ bool initialize_tracer_app()
 {
   bool ret_val = true;
 
-  /* do any initializations the loader cannot do */
+  /* do any initializations the VC++ loader cannot do */
+  pre_initialize_everything();
   
   tracer_app.appCamera.setFOV(infinity_bsp.defaultCamFOV,((double)infinity_bsp.dispHeight/(double)infinity_bsp.dispWidth));
   
