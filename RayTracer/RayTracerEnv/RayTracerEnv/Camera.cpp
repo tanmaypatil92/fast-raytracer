@@ -2,7 +2,11 @@
 #include "Vector.h"
 #include "Camera.h"
 #include "math.h"
+#include <cmath>
 
+#include <cstdlib>
+
+#define M_PI 3.1427
 #define RAD_CONV_CONST (M_PI/180.0)
 
 
@@ -56,6 +60,7 @@ int Camera::cameraXYZ( Vector pos, Vector up, Vector look)
 	this->camY = camX.crossProduct(camZ); //Because Z and Y are normalized this should be normalized??
   return SUCCESS;
 }
+
 
 /*  @todo, hack again, how should the aspect ratio be sent by the application? */
 void Camera::setFOV(double newFOV, double aspectRatio)

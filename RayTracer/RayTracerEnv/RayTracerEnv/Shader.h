@@ -21,4 +21,5 @@ void getColor
   Color   * returnColor
 );
 
+void init_shader();
 #endif /* defined(__RayTracerEnv__Shader__) */

@@ -10,8 +10,14 @@
 #include "math.h"
 #include "stdlib.h"
 #include "Shader.h"
+#include <cstdlib>
+#include <climits>
+
+#define INFINITY std::numeric_limits<double>::max()
+#define M_PI 3.1427
 
 /*  MACROS */
+#define _USE_MATH_DEFINES
 #define RAD_CONV_CONST (M_PI/180.0)
 #define TRACER_THRESH   1.0
 
@@ -31,11 +37,12 @@ typedef struct{
 
 }render_debug_s;
 
+#if 0
 /* LOCAL OBJECTS, to be referenced only in this file */
 render_debug_s debug_mode = {
   .debug_mode = 0x0
 };
-
+#endif
 double getAspectRatio(infinity_render_s* thisObj)
 {
   return thisObj->aspectRatio;
@@ -123,7 +130,7 @@ void renderObjects
   Ray    primaryRay;//      = {};
   Ray    secondaryRay;//    = {};
   GeomObj* objRend = NULL;
-  double   intersectValue = INFINITY;
+  double   intersectValue = std::numeric_limits<double>::max();
   Color  thisColor;
 
   /* Initializations */

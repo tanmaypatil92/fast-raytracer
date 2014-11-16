@@ -15,6 +15,7 @@
 #define MAX_PLANES 1
 #define MAX_OBJ_TO_RENDER 5
 
+#include "Shader.h"
 #include "TracerAppBSP.h"
 
 
@@ -84,6 +85,8 @@ static infinity_tracer_app_data_s tracer_app = {
 //#if 0
 void pre_initialize_everything()
 {
+
+  init_shader();
 
   infinity_bsp.dispWidth = XRES;
   infinity_bsp.dispHeight = YRES;

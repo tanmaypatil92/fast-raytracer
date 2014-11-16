@@ -37,6 +37,9 @@ typedef struct{
   Color Ks;
 }shader_data_s;
 
+static shader_data_s shader_data;
+
+#if 0
 shader_data_s shader_data =
 {
   .E  = Vector(0,0,-1),
@@ -45,8 +48,15 @@ shader_data_s shader_data =
   .Ks = Color(0.3,0.3,0.3),
 };
 /*  forward declarations */
-
-
+#endif
+void init_shader()
+{
+	//shader_data
+  shader_data.E  = Vector(0,0,-1);
+  shader_data.Ka = Color(0.1,0.1,0.1);
+  shader_data.Kd = Color(0.7,0.7,0.7);
+  shader_data.Ks = Color(0.3,0.3,0.3);
+}
 /*  functions */
 void getColor
 (
