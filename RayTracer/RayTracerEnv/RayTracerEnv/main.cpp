@@ -6,7 +6,8 @@
 //  Copyright (c) 2014 hima. All rights reserved.
 //  @original code from uthara (thelagar@usc.edu)
 
-/* Raytracer Framework for CS580 Project*/
+/* Raytracer Framework for CS580 Project
+*/
 
 
 
@@ -19,10 +20,10 @@
 #include "TracerAppBSP.h"
 
 
-static infinity_bsp_s infinity_bsp;
-static infinity_tracer_app_data_s tracer_app;
+//static infinity_bsp_s infinity_bsp;
+//static infinity_tracer_app_data_s tracer_app;
 
-#if 0
+//#if 0
 /* Stores all the elemental structures needed for initializing the app data */
 static infinity_bsp_s infinity_bsp =
 {
@@ -36,7 +37,10 @@ static infinity_bsp_s infinity_bsp =
 
   
   .numSpheres = 1,
-  .spheres = {Sphere(Vector(0.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0))), Sphere(Vector(3.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)))},
+  .spheres = {
+    Sphere(Vector(0.0,-2.4,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0))),
+    //Sphere(Vector(0.0,-1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)))
+    },
 
   .numPlanes = 0,
   .planes = {Plane(Vector(0.0,1.0,0.0),-1.0,Material(Color(0.5,0.0,0.2)))}
@@ -80,9 +84,9 @@ static infinity_tracer_app_data_s tracer_app = {
     },
 };
 
-#endif
+//#endif
 
-//#if 0
+#if 0
 void pre_initialize_everything()
 {
 
@@ -93,12 +97,12 @@ void pre_initialize_everything()
   
   infinity_bsp.defaultCamFOV = 45;
   
-  infinity_bsp.camPosition = Vector(0,1.8,10);
+  infinity_bsp.camPosition = Vector(0,-2.5,10);
   infinity_bsp.camLook      = Vector(0,0,3.0);
   
   infinity_bsp.numSpheres = 1;
-  infinity_bsp.spheres[0] =Sphere(Vector(0.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
-  infinity_bsp.spheres[1] =Sphere(Vector(3.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
+  //infinity_bsp.spheres[0] =Sphere(Vector(0.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
+  infinity_bsp.spheres[0] =Sphere(Vector(0.0,0.0,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
 
 
   infinity_bsp.numPlanes = 0;
@@ -148,10 +152,11 @@ void pre_initialize_everything()
   
   return;
 }
-//#endif
+#endif
 //Next step is checkerboard...
 // create 10^-6 check for intersection value greater than 0.000001
-// for reflection check on : http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-1-writing-a-simple-raytracer/
+// for reflection check on:
+// http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-1-writing-a-simple-raytracer/
 
 #include "math.h"
 
@@ -160,7 +165,7 @@ bool initialize_tracer_app()
   bool ret_val = true;
 
   /* do any initializations the VC++ loader cannot do */
-  pre_initialize_everything();
+  //pre_initialize_everything();
   
   tracer_app.appCamera.setFOV(infinity_bsp.defaultCamFOV,((double)infinity_bsp.dispHeight/(double)infinity_bsp.dispWidth));
   
@@ -187,7 +192,11 @@ bool initialize_tracer_app()
 } /* initialize_tracer_app */
 
 
-int main(int argc,char **argv)
+int main
+(
+  int     argc,
+  char ** argv
+)
 {
   //GeomObj * objsToRender = NULL;
   
@@ -197,8 +206,14 @@ int main(int argc,char **argv)
 
   //Parser would read obj here
   //objsToRender = getParserObjs();
-  renderObjects(&tracer_app.infinityRender,tracer_app.objectsToRender,&tracer_app.appCamera,
-    tracer_app.numObjsToRender,tracer_app.defLights,tracer_app.numLights);
+  
+  renderObjects(
+    &tracer_app.infinityRender,
+     tracer_app.objectsToRender,
+    &tracer_app.appCamera,
+     tracer_app.numObjsToRender,
+     tracer_app.defLights,
+     tracer_app.numLights);
 
   
   saveImage(tracer_app.infinityRender.pixels);

@@ -6,7 +6,8 @@
 
 #include <cstdlib>
 
-#define M_PI 3.1427
+//@todo - VC++ folks please un-comment this out.
+//#define M_PI 3.1427
 #define RAD_CONV_CONST (M_PI/180.0)
 
 
@@ -56,8 +57,8 @@ int Camera::cameraXYZ( Vector pos, Vector up, Vector look)
 {
 	this->camZ = lookAt.subVector(pos);
 	this->camZ = camZ.normalize(); // Reversed and negative Z, if lookat subrated from pos ??
-	this->camX = (camZ.crossProduct(up)).normalize(); //@todo : it is actually this->camX
-	this->camY = camX.crossProduct(camZ); //Because Z and Y are normalized this should be normalized??
+	this->camX = (up.crossProduct(camZ)).normalize(); //@todo : it is actually this->camX
+	this->camY = camZ.crossProduct(camX); //Because Z and Y are normalized this should be normalized??
   return SUCCESS;
 }
 

@@ -106,6 +106,7 @@
 				81590D311A12C0260090ABAF /* Gz.h */,
 				81590D321A12C0260090ABAF /* Light.cpp */,
 				81590D331A12C0260090ABAF /* Light.h */,
+				81590D231A12BFD60090ABAF /* main.cpp */,
 				81590D341A12C0260090ABAF /* Material.cpp */,
 				81590D351A12C0260090ABAF /* Material.h */,
 				81590D361A12C0260090ABAF /* Pixel.cpp */,
@@ -123,7 +124,6 @@
 				8118DF861A17052800C406D7 /* Shader.cpp */,
 				8118DF871A17052800C406D7 /* Shader.h */,
 				8118DF891A1746E600C406D7 /* TracerAppBSP.h */,
-				81590D231A12BFD60090ABAF /* main.cpp */,
 			);
 			path = RayTracerEnv;
 			sourceTree = "<group>";

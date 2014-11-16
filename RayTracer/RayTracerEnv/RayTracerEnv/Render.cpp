@@ -13,8 +13,9 @@
 #include <cstdlib>
 #include <climits>
 
-#define INFINITY std::numeric_limits<double>::max()
-#define M_PI 3.1427
+//@todo : VC++ people, uncomment this for unblocking you.
+//#define INFINITY std::numeric_limits<double>::max()
+//#define M_PI 3.1427
 
 /*  MACROS */
 #define _USE_MATH_DEFINES

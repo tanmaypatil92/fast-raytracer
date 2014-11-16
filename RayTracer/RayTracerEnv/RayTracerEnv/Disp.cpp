@@ -3,6 +3,10 @@
 #include <iostream>
 #include <stdio.h>
 
+#define DEBUG_J 367
+#define DEBUG_I 244
+
+#define DEBUG_THIS 0
 int saveImage(Pixel *pixels)
 {
 	int width  = XRES;
@@ -28,14 +32,21 @@ int saveImage(Pixel *pixels)
    putc((height & 0xff00) >> 8,fptr);
    putc(24,fptr);                        /* 24 bit bitmap */
    putc(0,fptr);
-
+    char r, g, b;
    for (int j = 0; j < height; j++)
    {
 	   for (int i = 0; i < width; i++)
 	   {
-		   putc(pixels[i + j*width].pixelColor.blue * 255, fptr);
-		   putc(pixels[i + j*width].pixelColor.green * 255, fptr);
-		   putc(pixels[i + j*width].pixelColor.red * 255, fptr);
+       if(j == DEBUG_J && i == DEBUG_I &&  DEBUG_THIS)
+       {
+        std::cout<<"Found it"<<std::endl;
+       }
+       r = pixels[i + j*width].pixelColor.blue * 255;
+       g = pixels[i + j*width].pixelColor.green * 255;
+       b = pixels[i + j*width].pixelColor.red * 255;
+		   putc(r, fptr);
+		   putc(g, fptr);
+		   putc(b, fptr);
 	   }
    }
    fclose(fptr);

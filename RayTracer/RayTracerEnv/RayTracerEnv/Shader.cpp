@@ -37,9 +37,9 @@ typedef struct{
   Color Ks;
 }shader_data_s;
 
-static shader_data_s shader_data;
+//static shader_data_s shader_data;
 
-#if 0
+
 shader_data_s shader_data =
 {
   .E  = Vector(0,0,-1),
@@ -47,8 +47,9 @@ shader_data_s shader_data =
   .Kd = Color(0.7,0.7,0.7),
   .Ks = Color(0.3,0.3,0.3),
 };
-/*  forward declarations */
-#endif
+
+
+/*  forward declarations
 void init_shader()
 {
 	//shader_data
@@ -57,6 +58,7 @@ void init_shader()
   shader_data.Kd = Color(0.7,0.7,0.7);
   shader_data.Ks = Color(0.3,0.3,0.3);
 }
+*/
 /*  functions */
 void getColor
 (
@@ -83,8 +85,12 @@ void getColor
 
   for(int l=0; l <numLights; l++)
   {
-    flag = 1;
+    L          = lights[l].direction.subVector(objToRender->objIntersection);
+    L = L.normalize();
     NdotL = N->dotProduct(L);
+
+    flag = 1;
+    //NdotL = N->dotProduct(L);
     NdotE = N->dotProduct(shader_data.E);
 
     if(NdotL > 0 && NdotE > 0)
@@ -99,9 +105,9 @@ void getColor
       flag        = 0;
     }
     // R = 2(N.L)N-L
-    R.x = (2*NdotL*localNormal.x) - lights[l].direction.x; 
-    R.y = (2*NdotL*localNormal.y) - lights[l].direction.y; 
-    R.z = (2*NdotL*localNormal.z) - lights[l].direction.z; 
+    R.x = (2*NdotL*localNormal.x) - L.x;
+    R.y = (2*NdotL*localNormal.y) - L.y;
+    R.z = (2*NdotL*localNormal.z) - L.z;
     R = R.normalize();
     RdotE = R.dotProduct(shader_data.E); 
     if(RdotE < 0) RdotE = 0;
