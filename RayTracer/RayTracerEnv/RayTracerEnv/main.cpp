@@ -20,10 +20,10 @@
 #include "TracerAppBSP.h"
 
 
-//static infinity_bsp_s infinity_bsp;
-//static infinity_tracer_app_data_s tracer_app;
+static infinity_bsp_s infinity_bsp;
+static infinity_tracer_app_data_s tracer_app;
 
-//#if 0
+#if 0
 /* Stores all the elemental structures needed for initializing the app data */
 static infinity_bsp_s infinity_bsp =
 {
@@ -87,9 +87,9 @@ static infinity_tracer_app_data_s tracer_app = {
     },
 };
 
-//#endif
+#endif
 
-#if 0
+
 void pre_initialize_everything()
 {
 
@@ -103,9 +103,14 @@ void pre_initialize_everything()
   infinity_bsp.camPosition = Vector(0,-2.5,10);
   infinity_bsp.camLook      = Vector(0,0,3.0);
   
-  infinity_bsp.numSpheres = 1;
+  infinity_bsp.numSpheres = 5;
   //infinity_bsp.spheres[0] =Sphere(Vector(0.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
-  infinity_bsp.spheres[0] =Sphere(Vector(0.0,0.0,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
+  //infinity_bsp.spheres[0] =Sphere(Vector(0.0,0.0,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
+  infinity_bsp.spheres[0] = Sphere(Vector(0.0,1.2,0.0),0.5,Material(Color(0.2,0.00,0.0,1.0)));
+  infinity_bsp.spheres[1] = Sphere(Vector(3.0,1.2,0.0),0.5,Material(Color(0.0,0.2,0.0,1.0)));
+  infinity_bsp.spheres[2] = Sphere(Vector(-3.0,1.2,0.0),0.5,Material(Color(0.0,0.0,0.25,1.0)));
+  infinity_bsp.spheres[3] = Sphere(Vector(-1.5,2.4,0.0),0.5,Material(Color(0.3,0.0,0.25,1.0)));
+  infinity_bsp.spheres[4] = Sphere(Vector(1.5,0.0,0.0),1.0,Material(Color(0.35,0.03,0.1,1.0)));
 
 
   infinity_bsp.numPlanes = 0;
@@ -118,7 +123,7 @@ void pre_initialize_everything()
 
   //.infinityRender =
   
-  tracer_app.infinityRender.height = infinity_bsp.dispHeight;
+   tracer_app.infinityRender.height = infinity_bsp.dispHeight;
    tracer_app.infinityRender.width  = infinity_bsp.dispWidth;
    tracer_app.infinityRender.aspectRatio = 1.0 * (double)infinity_bsp.dispHeight/ (double)infinity_bsp.dispWidth;
    tracer_app.infinityRender.pixelWidth = 0.0;
@@ -126,12 +131,13 @@ void pre_initialize_everything()
    tracer_app.infinityRender.cameraWidth = 0.0;
    tracer_app.infinityRender.cameraHeight = 0.0;
    tracer_app.infinityRender.pixels = NULL;
-   tracer_app.infinityRender.defaultColor = Color(0.4,0.2,0.3,1.0);
+   tracer_app.infinityRender.defaultColor = Color(1.0,1.0,1.0,1.0);
     
   tracer_app.numLights = 1;
   
   tracer_app.defLights[0] =
-      Light(Vector(4,-10.0,3.0),Color(1.0,1.0,1.0));
+	 Light( Vector(3.0,7.0,-10.0),Color(1.0,1.0,1.0));
+     // Light(Vector(4,-10.0,3.0),Color(1.0,1.0,1.0));
   
   tracer_app.defLights[1] =
       Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
@@ -155,7 +161,7 @@ void pre_initialize_everything()
   
   return;
 }
-#endif
+
 //Next step is checkerboard...
 // create 10^-6 check for intersection value greater than 0.000001
 // for reflection check on:
@@ -168,7 +174,7 @@ bool initialize_tracer_app()
   bool ret_val = true;
 
   /* do any initializations the VC++ loader cannot do */
-  //pre_initialize_everything();
+  pre_initialize_everything();
   
   tracer_app.appCamera.setFOV(infinity_bsp.defaultCamFOV,((double)infinity_bsp.dispHeight/(double)infinity_bsp.dispWidth));
   

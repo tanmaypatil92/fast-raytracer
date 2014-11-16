@@ -7,6 +7,8 @@
 #define DEBUG_I 244
 
 #define DEBUG_THIS 0
+
+#if 0
 int saveImage(Pixel *pixels)
 {
 	int width  = XRES;
@@ -61,4 +63,31 @@ int saveImage(Pixel *pixels)
    fclose(fptr);
    return SUCCESS;
 }
-
+#endif
+int saveImage(Pixel *pixels)
+{
+	int width  = XRES;
+	int height = YRES;
+	// Writing to tga file, borrowed from PaulBrooke's website //
+  
+	FILE *fptr = fopen(outfile, "wb");
+	if (fptr == NULL) {
+      fprintf(stderr,"Failed to open outputfile\n");
+      return FAILURE;
+   }
+   fprintf(fptr,"P3\n%d %d\n%d\n",width,height,255);
+   for (int j = 0; j < height; j++)
+   {
+	   for (int i = 0; i < width; i++)
+	   {
+			pixels[i + j*width].pixelColor.colorCheck();
+			int r = pixels[i + j*width].pixelColor.red * 255;
+			int g = pixels[i + j*width].pixelColor.green * 255;
+			int b = pixels[i + j*width].pixelColor.blue * 255;
+			fprintf(fptr,"%d %d %d ",r,g,b);
+	   }
+	   fprintf(fptr,"\n");
+   }
+   fclose(fptr);
+   return SUCCESS;
+}

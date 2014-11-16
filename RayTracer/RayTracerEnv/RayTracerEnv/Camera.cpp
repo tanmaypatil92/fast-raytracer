@@ -7,7 +7,7 @@
 #include <cstdlib>
 
 //@todo - VC++ folks please un-comment this out.
-//#define M_PI 3.1427
+#define M_PI 3.1427
 #define RAD_CONV_CONST (M_PI/180.0)
 
 

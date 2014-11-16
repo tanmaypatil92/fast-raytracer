@@ -14,8 +14,8 @@
 #include <climits>
 
 //@todo : VC++ people, uncomment this for unblocking you.
-//#define INFINITY std::numeric_limits<double>::max()
-//#define M_PI 3.1427
+#define INFINITY std::numeric_limits<double>::max()
+#define M_PI 3.1427
 
 /*  MACROS */
 #define _USE_MATH_DEFINES
@@ -131,7 +131,7 @@ void renderObjects
   Ray    primaryRay;//      = {};
   Ray    secondaryRay;//    = {};
   GeomObj* objRend = NULL;
-  double   intersectValue = std::numeric_limits<double>::max();
+  double   intersectValue = INFINITY;
   Color  thisColor;
 
   /* Initializations */
