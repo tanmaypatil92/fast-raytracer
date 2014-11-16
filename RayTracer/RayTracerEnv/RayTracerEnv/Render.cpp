@@ -170,6 +170,13 @@ void renderObjects
       /* now that we have the object to render, find the color for this pixel */
       if(objRend !=NULL)
       {
+      
+        //std::cout<<i<<","<<j<<" ";
+        if(i == 90 && j == 260)
+        {
+          std::cout<<"BP"<<std::endl;
+        }
+      
         getColor(lights,numLights,objRend,&thisColor);
         thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisColor);
       }

@@ -32,14 +32,17 @@ static infinity_bsp_s infinity_bsp =
   
   .defaultCamFOV = 45,
   
-  .camPosition = Vector(0,1.8,10),
+  .camPosition = Vector(0,-2.5,10),
   .camLook      = Vector(0,0,3.0),
 
   
-  .numSpheres = 1,
+  .numSpheres = 5,
   .spheres = {
-    Sphere(Vector(0.0,-2.4,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0))),
-    //Sphere(Vector(0.0,-1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)))
+    Sphere(Vector(0.0,1.2,0.0),0.5,Material(Color(0.2,0.00,0.0,1.0))),
+    Sphere(Vector(3.0,1.2,0.0),0.5,Material(Color(0.0,0.2,0.0,1.0))),
+    Sphere(Vector(-3.0,1.2,0.0),0.5,Material(Color(0.0,0.0,0.25,1.0))),
+    Sphere(Vector(-1.5,2.4,0.0),0.5,Material(Color(0.3,0.0,0.25,1.0))),
+    Sphere(Vector(1.5,0.0,0.0),1.0,Material(Color(0.35,0.03,0.1,1.0)))
     },
 
   .numPlanes = 0,
@@ -64,14 +67,14 @@ static infinity_tracer_app_data_s tracer_app = {
       .cameraWidth = 0.0,
       .cameraHeight = 0.0,
       .pixels = NULL,
-      .defaultColor = Color(0.4,0.2,0.3,1.0),
+      .defaultColor = Color(1.0,1.0,1.0,1.0),
     },
   
     
   .numLights = 1,
   .defLights =
     {
-      Light( Vector(4,-10.0,3.0),Color(1.0,1.0,1.0)),
+      Light( Vector(0.0,0.0,-10.0),Color(1.0,1.0,1.0)),
       Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0)),
       Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0)),
       Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0)),

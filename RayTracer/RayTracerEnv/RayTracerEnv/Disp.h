@@ -3,7 +3,7 @@
 
 #include "Pixel.h"
 //#define baseName    "/Users/enticer/developer/CS580/RayTracer/RayTracerEnv/RayTracerEnv/"
-#define outfile "render.tga"
+#define outfile "./render.tga"
 
 int saveImage(Pixel *pixels);
 

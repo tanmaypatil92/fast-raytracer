@@ -14,4 +14,5 @@ Pixel::Pixel(Color c)
 void Pixel::setColor(Color newColor)
 {
   this->pixelColor = newColor;
+  pixelColor.colorCheck();
 }

@@ -50,6 +50,16 @@ double Plane::planeIntersection(Ray r)
 			intersection = R0.addVector(Rd.scalarMult(t));
 		}
 	}
+  
+    /* @todo - deprecated, use the superclass properties instead */
+  
+	this->normal   = Pn.normalize(); //@todo : Uthara, please confirm this.
+	this->intersection    = R0.addVector(Rd.scalarMult(intersectionValue)).normalize();
+ 
+  /* Now set the superclass properties.*/
   intersectionValue = t;
+  objNormal          = this->normal;
+  objIntersection    = intersection;
+  
 	return t;
 }

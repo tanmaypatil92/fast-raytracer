@@ -82,7 +82,13 @@ void getColor
   L = L.normalize();
   NdotL = N->dotProduct(L);
 
-
+  memset(&specColor, 0x0, sizeof(specColor));
+  memset(&diffColor, 0x0, sizeof(diffColor));
+  memset(&ambColor, 0x0, sizeof(ambColor));
+  ambColor.red = 0.3;
+  ambColor.green = 0.3;
+  ambColor.blue = 0.3;
+  
   for(int l=0; l <numLights; l++)
   {
     L          = lights[l].direction.subVector(objToRender->objIntersection);
@@ -131,11 +137,23 @@ void getColor
   specColor.red   = shader_data.Ks.red   * specColor.red ;
   specColor.green = shader_data.Ks.green * specColor.green;
   specColor.blue  = shader_data.Ks.blue  * specColor.blue;
+  
+  ambColor.red = shader_data.Ka.red * ambColor.red;
+  ambColor.green = shader_data.Ka.green * ambColor.green;
+  ambColor.blue = shader_data.Ka.blue * ambColor.blue;
 
   Color color01 = Color(objToRender->material.matColor);
-  color01.red   = diffColor.red   + specColor.red;   //color01.red    *( diffColor.red   + specColor.red);// R
-  color01.green = diffColor.green + specColor.green; //color01.green  *( diffColor.green + specColor.green);// G
-  color01.blue  = diffColor.blue  + specColor.blue ; // color01.blue   *( diffColor.blue  + specColor.blue);// B
+  color01.red   += diffColor.red   + specColor.red   + ambColor.red;// R
+  color01.green += diffColor.green + specColor.green + ambColor.green;// G
+  color01.blue  += diffColor.blue  + specColor.blue  + ambColor.blue;// B
+#if 0
+
+  color01.red   += diffColor.red   + specColor.red   + ambColor.red;// R
+  color01.green += diffColor.green + specColor.green + ambColor.green;// G
+  color01.blue  += diffColor.blue  + specColor.blue  + ambColor.blue;// B
+#endif
+
+  //std::cout<<specColor.red<<","<<specColor.green<<","<<specColor.blue<<std::endl;
 
   (*returnColor) = color01; 
   return ; 
