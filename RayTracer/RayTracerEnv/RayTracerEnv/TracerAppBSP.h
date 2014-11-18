@@ -14,6 +14,8 @@
 #include "Material.h"
 #include "Sphere.h"
 #include "Plane.h"
+#include "Triangle.h"
+#include "ComplexObject.h"
 #include "Vector.h"
 #include "Camera.h"
 #include "Ray.h"
@@ -58,7 +60,13 @@ typedef struct
   
   int numPlanes;
   Plane planes[MAX_PLANES];
+
+  int numTriangles;
+  Triangle triangles[MAX_TRIANGLES];
   
+  int numComplexObjects;
+  ComplexObject complex_objects[MAX_COMPLEX_OBJECTS];
+
 } infinity_bsp_s;
 
 #endif

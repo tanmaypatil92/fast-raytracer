@@ -14,6 +14,8 @@
 #define MAX_LIGHTS 10
 #define MAX_SPHERES 10
 #define MAX_PLANES 1
+#define MAX_TRIANGLES 5
+#define MAX_COMPLEX_OBJECTS 5
 #define MAX_OBJ_TO_RENDER 5
 
 #include "Shader.h"
@@ -100,10 +102,13 @@ void pre_initialize_everything()
   
   infinity_bsp.defaultCamFOV = 45;
   
-  infinity_bsp.camPosition = Vector(0,-2.5,10);
-  infinity_bsp.camLook      = Vector(0,0,3.0);
+  //infinity_bsp.camPosition = Vector(0,-2.5,10);
+  //infinity_bsp.camLook      = Vector(0,0,3.0);
+
+  infinity_bsp.camPosition = Vector(5,5,5);
+  infinity_bsp.camLook      = Vector(1.0,1.0,1.0);
   
-  infinity_bsp.numSpheres = 5;
+  infinity_bsp.numSpheres = 0;
   //infinity_bsp.spheres[0] =Sphere(Vector(0.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
   //infinity_bsp.spheres[0] =Sphere(Vector(0.0,0.0,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
   infinity_bsp.spheres[0] = Sphere(Vector(0.0,1.2,0.0),0.5,Material(Color(0.2,0.00,0.0,1.0)));
@@ -116,6 +121,14 @@ void pre_initialize_everything()
   infinity_bsp.numPlanes = 0;
   infinity_bsp.planes[0] = Plane(Vector(0.0,1.0,0.0),-1.0,Material(Color(0.5,0.0,0.2)));
   
+  infinity_bsp.numTriangles = 0;
+  infinity_bsp.triangles[0] = Triangle(Vector(0.0,0.0,0.0),Vector(0.0,1.0,0.0),Vector(1.0,0.0,0.0));
+
+  infinity_bsp.numComplexObjects = 1;
+  infinity_bsp.complex_objects[0] = ComplexObject("cube.obj" , Material(Color(0.9,0.9,0.9)) );
+  //infinity_bsp.complex_objects[0] = ComplexObject("sphere_triangulated.obj" , Material(Color(0.9,0.9,0.9)) );// OBJ PARSER DOES NOT WORK
+  //infinity_bsp.complex_objects[0] = ComplexObject("teapot.obj", Material(Color(0.9,0.9,0.9)) );
+
   tracer_app.appCamera = Camera(infinity_bsp.camPosition,infinity_bsp.camLook);
   
   tracer_app.numObjsToRender = 0;
@@ -133,18 +146,18 @@ void pre_initialize_everything()
    tracer_app.infinityRender.pixels = NULL;
    tracer_app.infinityRender.defaultColor = Color(1.0,1.0,1.0,1.0);
     
-  tracer_app.numLights = 1;
+  tracer_app.numLights = 4;
   
   tracer_app.defLights[0] =
-	 Light( Vector(3.0,7.0,-10.0),Color(1.0,1.0,1.0));
+	 Light( Vector(2.0,2.0,2.0),Color(1.0,0.4,0.4));
      // Light(Vector(4,-10.0,3.0),Color(1.0,1.0,1.0));
   
   tracer_app.defLights[1] =
-      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
+      Light( Vector(-2.0,-2.0,-2.0),Color(0.4,0.4,1.0));
   tracer_app.defLights[2] =
-      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
+      Light( Vector(0.0 , 0.0, 2.0),Color(1.0,1.0,1.0));
   tracer_app.defLights[3] =
-      Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
+      Light( Vector(0.0 , 0.0,-2.0),Color(1.0,1.0,1.0));
   tracer_app.defLights[4] =
       Light( Vector(0,0.0,-10.0),Color(1.0,1.0,1.0));
   tracer_app.defLights[5] =
@@ -191,6 +204,18 @@ bool initialize_tracer_app()
     tracer_app.objectsToRender[o] = (GeomObj*)&infinity_bsp.planes[p];
   }
   
+  /* Now add all the triangles */
+  for(int t= 0; (t< infinity_bsp.numTriangles) && (o < MAX_OBJ_TO_RENDER); t++, o++)
+  {
+    tracer_app.objectsToRender[o] = (GeomObj*)&infinity_bsp.triangles[t];
+  }
+
+  /* Now add all the complex objects */
+  for(int c= 0; (c< infinity_bsp.numComplexObjects) && (o < MAX_OBJ_TO_RENDER); c++, o++)
+  {
+	tracer_app.objectsToRender[o] = (GeomObj*)&infinity_bsp.complex_objects[c];
+  }
+
   tracer_app.numObjsToRender = o;
   /*  Now initialize the renderer to use the camera's FOV */
   tracer_app.infinityRender.pixels = NULL;

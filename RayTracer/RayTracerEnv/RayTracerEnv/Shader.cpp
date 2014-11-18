@@ -55,7 +55,7 @@ void init_shader()
 {
 	//shader_data
   shader_data.E  = Vector(0,0,-1);
-  shader_data.Ka = Color(0.1,0.1,0.1);
+  shader_data.Ka = Color(0.5,0.5,0.5);
   shader_data.Kd = Color(0.7,0.7,0.7);
   shader_data.Ks = Color(0.3,0.3,0.3);
 }
@@ -86,13 +86,13 @@ void getColor
   memset(&specColor, 0x0, sizeof(specColor));
   memset(&diffColor, 0x0, sizeof(diffColor));
   memset(&ambColor, 0x0, sizeof(ambColor));
-  ambColor.red = 0.3;
-  ambColor.green = 0.3;
-  ambColor.blue = 0.3;
+  ambColor.red = 0.5;
+  ambColor.green = 0.5;
+  ambColor.blue = 0.5;
   
   for(int l=0; l <numLights; l++)
   {
-    L          = lights[l].direction.subVector(objToRender->objIntersection);
+    L = lights[l].direction.subVector(objToRender->objIntersection);
     L = L.normalize();
     NdotL = N->dotProduct(L);
 
@@ -131,6 +131,14 @@ void getColor
       specColor.blue  += lights[l].lightColor.blue  * pow(RdotE,SPECULAR_COEFF);
     }
   }
+
+  //SET TO 1 IF IT EXCEEDS 1
+  diffColor.colorCheck();
+  specColor.colorCheck();
+
+  // KD AND KS SHOULD COME FROM MATRIAL OF OBJECT - using only kd for now
+  shader_data.Kd = objToRender->material.matColor;
+
   diffColor.red   = shader_data.Kd.red   * diffColor.red ;
   diffColor.green = shader_data.Kd.green * diffColor.green;
   diffColor.blue  = shader_data.Kd.blue  * diffColor.blue;
@@ -143,12 +151,15 @@ void getColor
   ambColor.green = shader_data.Ka.green * ambColor.green;
   ambColor.blue = shader_data.Ka.blue * ambColor.blue;
 
-  Color color01 = Color(objToRender->material.matColor);
-  color01.red   += diffColor.red   + specColor.red   + ambColor.red;// R
-  color01.green += diffColor.green + specColor.green + ambColor.green;// G
-  color01.blue  += diffColor.blue  + specColor.blue  + ambColor.blue;// B
-#if 0
+  Color color01;
+  color01.red   = diffColor.red   + specColor.red   + ambColor.red;// R
+  color01.green = diffColor.green + specColor.green + ambColor.green;// G
+  color01.blue  = diffColor.blue  + specColor.blue  + ambColor.blue;// B
 
+  color01.colorCheck();
+
+#if 0
+  Color color01 = Color(objToRender->material.matColor);
   color01.red   += diffColor.red   + specColor.red   + ambColor.red;// R
   color01.green += diffColor.green + specColor.green + ambColor.green;// G
   color01.blue  += diffColor.blue  + specColor.blue  + ambColor.blue;// B
