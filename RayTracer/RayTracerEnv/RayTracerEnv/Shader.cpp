@@ -77,7 +77,6 @@ void getColor
   int numObjects
 )
 {
-
 	Vector *N         = &objToRender->objNormal;
 	Vector L             ;  //objToRender->objIntersection.subVector();
 	Vector              R;
@@ -86,12 +85,9 @@ void getColor
 	Color               specColor,diffColor,ambColor;
 	int flag = 1;
   
-	//L = L.normalize();
-	//NdotL = N->dotProduct(L);
-
-	memset(&specColor, 0x0, sizeof(specColor));
-	memset(&diffColor, 0x0, sizeof(diffColor));
-	memset(&ambColor, 0x0, sizeof(ambColor));
+	//memset(&specColor, 0x0, sizeof(specColor));
+	//memset(&diffColor, 0x0, sizeof(diffColor));
+	//memset(&ambColor, 0x0, sizeof(ambColor));
 	ambColor.red = 0.1;
 	ambColor.green = 0.1;
 	ambColor.blue = 0.1;
@@ -122,7 +118,7 @@ void getColor
 			shadow = false;
 			Ray shadowRay = Ray (currectObjectIntersection,L);
 
-			int geomType = objToRender->geometryType;
+			int currentObjId = objToRender->objectId;
 			/*  Now loop through all the objects */
 			for(int obj = 0;obj<numObjects;obj++)
 			{
@@ -130,7 +126,7 @@ void getColor
 				objsToRender[obj]->findIntersection(shadowRay);
 				if(objsToRender[obj]->intersectionValue > TRACER_THRESH && objsToRender[obj]->intersectionValue <= distance)
 				{
-					if(objsToRender[obj]->geometryType!=geomType)
+					if(objsToRender[obj]->objectId!=currentObjId)
 						shadow = true;
 				}
 			} /* End of obj loop */

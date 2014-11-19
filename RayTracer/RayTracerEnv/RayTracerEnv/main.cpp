@@ -109,9 +109,9 @@ void pre_initialize_everything()
   infinity_bsp.camLook      = Vector(1.0,1.0,1.0);
   
   infinity_bsp.numSpheres = 3;
-  infinity_bsp.spheres[0] =Sphere(Vector(-2.5,0.3,0.0),1.0,Material(Color(0.6,0.1,0.1,1.0)));
-  infinity_bsp.spheres[1] =Sphere(Vector(2.0,1.2,0.0),1.2,Material(Color(0.2,0.2,0.6,1.0)));
-  infinity_bsp.spheres[2] =Sphere(Vector(-0.8,0.2,-1.2),1.4,Material(Color(0.45,0.05,0.3,1.0)));
+  infinity_bsp.spheres[0] = Sphere(Vector(-2.5,0.3,0.0),1.0,Material(Color(0.6,0.1,0.1,1.0)));
+  infinity_bsp.spheres[1] = Sphere(Vector(2.0,1.2,0.0),1.2,Material(Color(0.2,0.2,0.6,1.0)));
+  infinity_bsp.spheres[2] = Sphere(Vector(-0.8,0.2,-1.2),1.4,Material(Color(0.45,0.05,0.3,1.0)));
   infinity_bsp.spheres[3] = Sphere(Vector(-1.5,2.4,0.0),0.5,Material(Color(0.3,0.0,0.25,1.0)));
   infinity_bsp.spheres[4] = Sphere(Vector(1.5,0.0,0.0),1.0,Material(Color(0.35,0.03,0.1,1.0)));
 

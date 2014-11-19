@@ -12,7 +12,7 @@ class GeomObj
 	Material material;
 	Vector objNormal;
 	Vector objIntersection;
-	int geometryType;
+	int objectId;
 	//virtual dumdum() = 0;
 
 	virtual double findIntersection(Ray ray)=0;

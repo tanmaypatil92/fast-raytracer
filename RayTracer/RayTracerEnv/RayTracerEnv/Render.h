@@ -9,6 +9,8 @@
 #ifndef __RayTracerEnv__Render__
 #define __RayTracerEnv__Render__
 
+#define REFLECTION_DEPTH 1
+
 #include <stdio.h>
 #include "Gz.h"
 #include "Disp.h"
@@ -56,6 +58,7 @@ void renderObjects
   int           numLights
 );
 
+bool trackRay(Ray incidentRay, Color *thisColor, Light *lights, int numLights, GeomObj *objsToRender[], int numObjects, int currentDepth);
 GeomObj* intersection(GeomObj* objsToRender[],int numObjects,Ray currentRay);
 
 #endif /* defined(__RayTracerEnv__Render__) */

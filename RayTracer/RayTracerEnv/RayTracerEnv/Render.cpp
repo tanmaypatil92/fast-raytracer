@@ -124,112 +124,146 @@ void renderObjects
 )
 {
   /* Local variables */
-  double horizScaleCeoff = 0.0;
-  double vertScaleCoeff  = 0.0;
-  Vector horizOffset;//     = {0,0,0};
-  Vector vertOffset;//      = {0,0,0};
-  Ray    primaryRay;//      = {};
-  Ray    secondaryRay;//    = {};
-  Ray    tempRay;
+  double horizScaleCeoff = 0.0, vertScaleCoeff  = 0.0;
+  Vector horizOffset, vertOffset;
+  Ray    primaryRay, secondaryRay, tempRay;
   GeomObj* objRend = NULL;
   double   intersectValue = INFINITY;
-  Color  thisColor,reflectionColor;
+  Color  currentColor, reflectionColor;
+  int counter = 0;
 
   /* Initializations */
   primaryRay.origin = camera->position;
+  
+  for(int obj = 0;obj<numObjects;obj++)
+  {
+	  objsToRender[obj]->objectId = counter++;
+  }
 
   /* Main processing */
   /* Render line by line, for all lines */
   for(int i =0; i < thisObj->width; i++)
   {
-      horizScaleCeoff = (i*thisObj->pixelWidth) - (camera->width/2.0);
-      horizOffset     = camera->camX.scalarMult(horizScaleCeoff);
+    horizScaleCeoff = (i*thisObj->pixelWidth) - (camera->width/2.0);
+    horizOffset     = camera->camX.scalarMult(horizScaleCeoff);
     /*  Now render this line  */
     for(int j = 0; j < thisObj->height;j++)
     {
       objRend         = NULL;
-
       vertScaleCoeff  = (j*thisObj->pixelHeight) - (camera->height/2.0);
       vertOffset = camera->camY.scalarMult(vertScaleCoeff);
       primaryRay.direction = (camera->camZ.addVector(horizOffset)).addVector(vertOffset);
       primaryRay.direction = primaryRay.direction.normalize();
 
-      int reflectionDepth = 1;
-	  bool objFlag = false;
-	  int counter = 0;
-	  for(int obj = 0;obj<numObjects;obj++)
-      {
-		  objsToRender[obj]->geometryType = counter++;
-	  }
-	  objRend = intersection(objsToRender,numObjects,primaryRay);
-	  tempRay = primaryRay;
-	  if(objRend != NULL)
-	  {
-		  int objectType = objRend->geometryType;
-		  Vector objIntersectionVector = objRend->objIntersection;
-		  Vector objNormalVector = objRend->objNormal;
-		  double objIntersectionValue = objRend->intersectionValue;
-		  objFlag = true;
-		  Ray secondaryRay;
-		  getColor(lights,numLights,objRend,&thisColor,objsToRender,&tempRay,numObjects);
-		  /* now that we have the object to render, find the color for this pixel */
-		  for(int r = 0; r < reflectionDepth; r++)
-		  {
-			  //cam_ray_origin.vectAdd(cam_ray_direction.vectMult(intersections.at(index_of_winning_object)
-			  secondaryRay.origin = tempRay.direction.scalarMult(objRend->intersectionValue);
-			  //secondaryRay.origin    = objIntersectionVector.subVector(tempRay.origin);
-			  // 2(N.L)*N - L where N is normal and L is negative ray direction
-			  double dotProd = (objNormalVector.dotProduct(tempRay.direction.negate()));
-			  secondaryRay.direction = (objNormalVector.scalarMult(dotProd*2)).subVector(tempRay.direction.negate());
-			  secondaryRay.direction = secondaryRay.direction.normalize();
-			 /* secondaryRay.origin    = objRend->objIntersection.subVector(tempRay.origin);
-			  secondaryRay.direction = (objRend->objNormal.scalarMult(2*(objRend->objNormal.dotProduct(tempRay.origin))).subVector(tempRay.origin));
-			  secondaryRay.direction = secondaryRay.direction.normalize();*/
+	    bool objFlag = false;
 
-			  objRend = intersection(objsToRender,numObjects,secondaryRay);
-			  tempRay = secondaryRay;
+      objFlag = trackRay(primaryRay, &currentColor, lights, numLights, objsToRender, numObjects, 0);
 
-			  if(objRend != NULL && objRend->geometryType!=objectType)
-			  {
-				  getColor(lights,numLights,objRend,&reflectionColor,objsToRender,&tempRay,numObjects);
-					thisColor.red   += reflectionColor.red*0.2;//0.2 is the reflection prcentage
-					thisColor.green += reflectionColor.green*0.2;
-					thisColor.blue  += reflectionColor.blue*0.2;
-			  }
-			  else
-			  {
-				  break;
-			  }
-			  objectType = objRend->geometryType;
-		  }
-		
-	  }
-
-	  if(objFlag == true){
-		  thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisColor);
-	  }
-      else{
-        //Set the default color to something?
+	    if(objFlag == true){
+		    thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(currentColor);
+	    }
+      else{  //Set the default color to something?
         thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisObj->defaultColor);
       }
-
-
     }/* End of display width, ie. each raster line */
   }/*  End of display height */
   return;
 }/* renderObjects */
 
+bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, GeomObj *objsToRender[], int numObjects, int currentDepth)
+{
+  if (currentDepth > REFLECTION_DEPTH)
+    return false;
+
+  Ray reflectedRay, refractedRay;
+  GeomObj *objRend;
+  bool objFlag = false;
+  int currentObjId;
+  Color reflectionColor;
+	Vector objIntersectionVector, objNormalVector;
+	double objIntersectionValue;
+
+  objRend = intersection(objsToRender, numObjects, incomingRay);
+	//tempRay = incomingRay;
+	if(objRend != NULL)
+	{
+    currentObjId  = objRend->objectId;
+    objIntersectionVector = objRend->objIntersection;
+    objIntersectionValue = objRend->intersectionValue;
+    objNormalVector = objRend->objNormal;
+		objFlag = true;
+
+		getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
+
+    /*reflectedRay.origin = incomingRay.direction.scalarMult(objIntersectionValue);
+		//2(N.L)*N - L where N is normal and L is negative ray direction
+		double dotProd = (objNormalVector.dotProduct(incomingRay.direction.negate()));
+		reflectedRay.direction = (objNormalVector.scalarMult(dotProd*2)).subVector(incomingRay.direction.negate());
+		reflectedRay.direction = reflectedRay.direction.normalize();*/
+
+    reflectedRay.origin = objIntersectionVector;
+    //Using equations from http://www.cs.jhu.edu/~cohen/RendTech99/Lectures/Ray_Tracing.bw.pdf
+    double dotProd = (objNormalVector.dotProduct(incomingRay.direction));
+    reflectedRay.direction = (incomingRay.direction.subVector(objNormalVector.scalarMult(dotProd*2)));
+		reflectedRay.direction = reflectedRay.direction.normalize();
+
+    bool innerObjFlag = trackRay(reflectedRay, &reflectionColor, lights, numLights, objsToRender, numObjects, ++currentDepth);
+
+    if (innerObjFlag == true)  {
+      thisColor->red   += reflectionColor.red*0.2;//0.2 is the reflection prcentage
+			thisColor->green += reflectionColor.green*0.2;
+			thisColor->blue  += reflectionColor.blue*0.2;
+    }
+
+		/* now that we have the object to render, find the color for this pixel */
+		/*for(int r = 0; r < reflectionDepth; r++)
+		{
+			//cam_ray_origin.vectAdd(cam_ray_direction.vectMult(intersections.at(index_of_winning_object)
+			//secondaryRay.origin    = objIntersectionVector.subVector(tempRay.origin);
+      /* secondaryRay.origin    = objRend->objIntersection.subVector(tempRay.origin);
+			secondaryRay.direction = (objRend->objNormal.scalarMult(2*(objRend->objNormal.dotProduct(tempRay.origin))).subVector(tempRay.origin));
+			secondaryRay.direction = secondaryRay.direction.normalize();
+
+      reflectedRay.origin = tempRay.direction.scalarMult(objRend->intersectionValue);
+
+			// 2(N.L)*N - L where N is normal and L is negative ray direction
+			double dotProd = (objNormalVector.dotProduct(tempRay.direction.negate()));
+			reflectedRay.direction = (objNormalVector.scalarMult(dotProd*2)).subVector(tempRay.direction.negate());
+			reflectedRay.direction = reflectedRay.direction.normalize();
+
+			objRend = intersection(objsToRender, numObjects, reflectedRay);
+			tempRay = reflectedRay;
+
+			if(objRend != NULL && objRend->objectId!=currentObjId )
+			{
+				getColor(lights, numLights, objRend, &reflectionColor, objsToRender, &tempRay, numObjects);
+				thisColor->red   += reflectionColor.red*0.2;//0.2 is the reflection prcentage
+				thisColor->green += reflectionColor.green*0.2;
+				thisColor->blue  += reflectionColor.blue*0.2;
+			}
+			else
+			{
+				break;
+			}
+			currentObjId  = objRend->objectId;
+		}
+    */
+	}
+  return objFlag;
+}
+
 GeomObj* intersection(GeomObj* objsToRender[],int numObjects,Ray currentRay)
 {
-	GeomObj* objRend = NULL;
+	GeomObj* objRend = NULL, *currentObj;
 	/*  Now loop through all the objects */
       double intersectValue = INFINITY;
       for(int obj = 0;obj<numObjects;obj++)
       {
+        currentObj = objsToRender[obj];
         //Perform the ray intersection with this object
-        objsToRender[obj]->findIntersection(currentRay);
-        if(objsToRender[obj]->intersectionValue < intersectValue &&
-           objsToRender[obj]->intersectionValue > TRACER_THRESH )
+        currentObj->findIntersection(currentRay);
+        if(currentObj->intersectionValue < intersectValue &&
+           currentObj->intersectionValue > TRACER_THRESH )
         {
           objRend = objsToRender[obj];
           intersectValue = objRend->intersectionValue;
