@@ -27,7 +27,7 @@
 //@todo do this from a common place
 #define MAX_LIGHTS            10
 #define SPECULAR_COEFF        32
-#define TRACER_THRESH   pow(10,-6)
+#define TRACER_THRESH   0.0000001
 #define INFINITY std::numeric_limits<double>::max()
 
 /*  MACROS */

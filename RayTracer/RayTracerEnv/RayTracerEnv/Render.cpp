@@ -20,7 +20,7 @@
 /*  MACROS */
 #define _USE_MATH_DEFINES
 #define RAD_CONV_CONST (M_PI/180.0)
-#define TRACER_THRESH   pow(10,-6) // checking for an epsilon of 10^-6(if causing problems change to 1)
+#define TRACER_THRESH   0.0000001 // checking for an epsilon of 10^-6(if causing problems change to 1)
 
 //@todo move these macros to the debug headers
 
