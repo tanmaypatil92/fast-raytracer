@@ -20,7 +20,7 @@
 /*  MACROS */
 #define _USE_MATH_DEFINES
 #define RAD_CONV_CONST (M_PI/180.0)
-#define TRACER_THRESH   1.0
+#define TRACER_THRESH   pow(10,-6) // checking for an epsilon of 10^-6(if causing problems change to 1)
 
 //@todo move these macros to the debug headers
 
@@ -130,9 +130,10 @@ void renderObjects
   Vector vertOffset;//      = {0,0,0};
   Ray    primaryRay;//      = {};
   Ray    secondaryRay;//    = {};
+  Ray    tempRay;
   GeomObj* objRend = NULL;
   double   intersectValue = INFINITY;
-  Color  thisColor;
+  Color  thisColor,reflectionColor;
 
   /* Initializations */
   primaryRay.origin = camera->position;
@@ -153,12 +154,80 @@ void renderObjects
       primaryRay.direction = (camera->camZ.addVector(horizOffset)).addVector(vertOffset);
       primaryRay.direction = primaryRay.direction.normalize();
 
-      /*  Now loop through all the objects */
-      intersectValue = INFINITY;
+      int reflectionDepth = 1;
+	  bool objFlag = false;
+	  int counter = 0;
+	  for(int obj = 0;obj<numObjects;obj++)
+      {
+		  objsToRender[obj]->geometryType = counter++;
+	  }
+	  objRend = intersection(objsToRender,numObjects,primaryRay);
+	  tempRay = primaryRay;
+	  if(objRend != NULL)
+	  {
+		  int objectType = objRend->geometryType;
+		  Vector objIntersectionVector = objRend->objIntersection;
+		  Vector objNormalVector = objRend->objNormal;
+		  double objIntersectionValue = objRend->intersectionValue;
+		  objFlag = true;
+		  Ray secondaryRay;
+		  getColor(lights,numLights,objRend,&thisColor,objsToRender,&tempRay,numObjects);
+		  /* now that we have the object to render, find the color for this pixel */
+		  for(int r = 0; r < reflectionDepth; r++)
+		  {
+			  //cam_ray_origin.vectAdd(cam_ray_direction.vectMult(intersections.at(index_of_winning_object)
+			  secondaryRay.origin = tempRay.direction.scalarMult(objRend->intersectionValue);
+			  //secondaryRay.origin    = objIntersectionVector.subVector(tempRay.origin);
+			  // 2(N.L)*N - L where N is normal and L is negative ray direction
+			  double dotProd = (objNormalVector.dotProduct(tempRay.direction.negate()));
+			  secondaryRay.direction = (objNormalVector.scalarMult(dotProd*2)).subVector(tempRay.direction.negate());
+			  secondaryRay.direction = secondaryRay.direction.normalize();
+			 /* secondaryRay.origin    = objRend->objIntersection.subVector(tempRay.origin);
+			  secondaryRay.direction = (objRend->objNormal.scalarMult(2*(objRend->objNormal.dotProduct(tempRay.origin))).subVector(tempRay.origin));
+			  secondaryRay.direction = secondaryRay.direction.normalize();*/
+
+			  objRend = intersection(objsToRender,numObjects,secondaryRay);
+			  tempRay = secondaryRay;
+
+			  if(objRend != NULL && objRend->geometryType!=objectType)
+			  {
+				  getColor(lights,numLights,objRend,&reflectionColor,objsToRender,&tempRay,numObjects);
+					thisColor.red   += reflectionColor.red*0.2;//0.2 is the reflection prcentage
+					thisColor.green += reflectionColor.green*0.2;
+					thisColor.blue  += reflectionColor.blue*0.2;
+			  }
+			  else
+			  {
+				  break;
+			  }
+			  objectType = objRend->geometryType;
+		  }
+		
+	  }
+
+	  if(objFlag == true){
+		  thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisColor);
+	  }
+      else{
+        //Set the default color to something?
+        thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisObj->defaultColor);
+      }
+
+
+    }/* End of display width, ie. each raster line */
+  }/*  End of display height */
+  return;
+}/* renderObjects */
+
+GeomObj* intersection(GeomObj* objsToRender[],int numObjects,Ray currentRay)
+{
+	GeomObj* objRend = NULL;
+	/*  Now loop through all the objects */
+      double intersectValue = INFINITY;
       for(int obj = 0;obj<numObjects;obj++)
       {
         //Perform the ray intersection with this object
-        objsToRender[obj]->findIntersection(primaryRay);
+        objsToRender[obj]->findIntersection(currentRay);
         if(objsToRender[obj]->intersectionValue < intersectValue &&
            objsToRender[obj]->intersectionValue > TRACER_THRESH )
         {
@@ -166,28 +235,6 @@ void renderObjects
           intersectValue = objRend->intersectionValue;
         }
       } /* End of obj loop */
-
-      /* now that we have the object to render, find the color for this pixel */
-      if(objRend !=NULL)
-      {
-      
-        //std::cout<<i<<","<<j<<" ";
-        if(i == 90 && j == 260)
-        {
-          std::cout<<"BP"<<std::endl;
-        }
-      
-        getColor(lights,numLights,objRend,&thisColor);
-        thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisColor);
-      }
-      else{
-        //Set the default color to something?
-        thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisObj->defaultColor);
-      }
-
-    }/* End of display width, ie. each raster line */
-  }/*  End of display height */
-  return;
-}/* renderObjects */
-
+	  return objRend;
+}
 

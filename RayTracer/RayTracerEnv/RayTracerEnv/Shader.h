@@ -18,8 +18,12 @@ void getColor
   Light   * lights,
   int       numLights,
   GeomObj * objToRender,
-  Color   * returnColor
+  Color   * returnColor,
+  GeomObj * objsToRender[],
+  Ray * tempRay,
+  int numObjects
 );
 
 void init_shader();
+
 #endif /* defined(__RayTracerEnv__Shader__) */

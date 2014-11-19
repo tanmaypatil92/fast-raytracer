@@ -9,10 +9,10 @@ class GeomObj
 {
 	public:
 	double intersectionValue;
-  Material material;
-  Vector objNormal;
-  Vector objIntersection;
-  
+	Material material;
+	Vector objNormal;
+	Vector objIntersection;
+	int geometryType;
 	//virtual dumdum() = 0;
 
 	virtual double findIntersection(Ray ray)=0;

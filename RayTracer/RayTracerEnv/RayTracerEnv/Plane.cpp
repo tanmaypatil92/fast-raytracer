@@ -53,13 +53,21 @@ double Plane::planeIntersection(Ray r)
   
     /* @todo - deprecated, use the superclass properties instead */
   
-	this->normal   = Pn.normalize(); //@todo : Uthara, please confirm this.
-	this->intersection    = R0.addVector(Rd.scalarMult(intersectionValue)).normalize();
+	this->normal          = Pn.normalize(); //@todo : Uthara, please confirm this.
+	// ya both should be normalized
+	// but normalizinf intersection messes with the checker pattern
+	this->intersection    = R0.addVector(Rd.scalarMult(t));
+	int columValue = this->intersection.x;
+	int rowvalue   = this->intersection.z;
+	if((columValue+rowvalue) %2 == 0)
+		mat.matColor = Color(0.5,0.1,0);
+	else
+		mat.matColor  = Color(0.3,0.3,0.6);
  
   /* Now set the superclass properties.*/
   intersectionValue = t;
   objNormal          = this->normal;
-  objIntersection    = intersection;
-  
-	return t;
+  objIntersection    = this->intersection;//.normalize();
+  material.matColor  = mat.matColor;
+  return t;
 }

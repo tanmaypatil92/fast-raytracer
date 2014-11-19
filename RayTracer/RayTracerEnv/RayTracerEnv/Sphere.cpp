@@ -70,11 +70,9 @@ double Sphere::sphereIntersection(Ray r)
  
   /* Now set the superclass properties.*/
   intersectionValue = intersectionVal;
-  objNormal          = sphereNormal;
-  objIntersection    = sphereInter;
-  
-
-	return intersectionVal;
+  objNormal         = sphereNormal;
+  objIntersection   = sphereInter;
+  return intersectionVal;
 }
 
 

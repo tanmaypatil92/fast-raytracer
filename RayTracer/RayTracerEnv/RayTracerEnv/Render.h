@@ -56,4 +56,6 @@ void renderObjects
   int           numLights
 );
 
+GeomObj* intersection(GeomObj* objsToRender[],int numObjects,Ray currentRay);
+
 #endif /* defined(__RayTracerEnv__Render__) */

@@ -16,7 +16,7 @@
 #define MAX_PLANES 1
 #define MAX_TRIANGLES 5
 #define MAX_COMPLEX_OBJECTS 5
-#define MAX_OBJ_TO_RENDER 5
+#define MAX_OBJ_TO_RENDER 6
 
 #include "Shader.h"
 #include "TracerAppBSP.h"
@@ -108,23 +108,21 @@ void pre_initialize_everything()
   infinity_bsp.camPosition = Vector(5,5,5);
   infinity_bsp.camLook      = Vector(1.0,1.0,1.0);
   
-  infinity_bsp.numSpheres = 0;
-  //infinity_bsp.spheres[0] =Sphere(Vector(0.0,1.2,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
-  //infinity_bsp.spheres[0] =Sphere(Vector(0.0,0.0,0.0),1.0,Material(Color(0.4,0.1,0.0,1.0)));
-  infinity_bsp.spheres[0] = Sphere(Vector(0.0,1.2,0.0),0.5,Material(Color(0.2,0.00,0.0,1.0)));
-  infinity_bsp.spheres[1] = Sphere(Vector(3.0,1.2,0.0),0.5,Material(Color(0.0,0.2,0.0,1.0)));
-  infinity_bsp.spheres[2] = Sphere(Vector(-3.0,1.2,0.0),0.5,Material(Color(0.0,0.0,0.25,1.0)));
+  infinity_bsp.numSpheres = 3;
+  infinity_bsp.spheres[0] =Sphere(Vector(-2.5,0.3,0.0),1.0,Material(Color(0.6,0.1,0.1,1.0)));
+  infinity_bsp.spheres[1] =Sphere(Vector(2.0,1.2,0.0),1.2,Material(Color(0.2,0.2,0.6,1.0)));
+  infinity_bsp.spheres[2] =Sphere(Vector(-0.8,0.2,-1.2),1.4,Material(Color(0.45,0.05,0.3,1.0)));
   infinity_bsp.spheres[3] = Sphere(Vector(-1.5,2.4,0.0),0.5,Material(Color(0.3,0.0,0.25,1.0)));
   infinity_bsp.spheres[4] = Sphere(Vector(1.5,0.0,0.0),1.0,Material(Color(0.35,0.03,0.1,1.0)));
 
 
   infinity_bsp.numPlanes = 0;
-  infinity_bsp.planes[0] = Plane(Vector(0.0,1.0,0.0),-1.0,Material(Color(0.5,0.0,0.2)));
+  infinity_bsp.planes[0] = Plane(Vector(0.0,1.0,0.0),2.0,Material(Color(0.5,0.0,0.2)));// having z value in plane normal is like rotating it in z
   
   infinity_bsp.numTriangles = 0;
   infinity_bsp.triangles[0] = Triangle(Vector(0.0,0.0,0.0),Vector(0.0,1.0,0.0),Vector(1.0,0.0,0.0));
 
-  infinity_bsp.numComplexObjects = 1;
+  infinity_bsp.numComplexObjects = 0;
   infinity_bsp.complex_objects[0] = ComplexObject("cube.obj" , Material(Color(0.9,0.9,0.9)) );
   //infinity_bsp.complex_objects[0] = ComplexObject("sphere_triangulated.obj" , Material(Color(0.9,0.9,0.9)) );// OBJ PARSER DOES NOT WORK
   //infinity_bsp.complex_objects[0] = ComplexObject("teapot.obj", Material(Color(0.9,0.9,0.9)) );
@@ -144,12 +142,12 @@ void pre_initialize_everything()
    tracer_app.infinityRender.cameraWidth = 0.0;
    tracer_app.infinityRender.cameraHeight = 0.0;
    tracer_app.infinityRender.pixels = NULL;
-   tracer_app.infinityRender.defaultColor = Color(1.0,1.0,1.0,1.0);
+   tracer_app.infinityRender.defaultColor = Color(0.0,0.0,0.0,1.0);
     
-  tracer_app.numLights = 4;
+  tracer_app.numLights = 1;
   
   tracer_app.defLights[0] =
-	 Light( Vector(2.0,2.0,2.0),Color(1.0,0.4,0.4));
+	 Light( Vector(2.0,2.0,2.0),Color(0.8,0.8,0.8));
      // Light(Vector(4,-10.0,3.0),Color(1.0,1.0,1.0));
   
   tracer_app.defLights[1] =
