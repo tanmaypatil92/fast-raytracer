@@ -70,55 +70,69 @@ void getColor
 (
   Light   * lights,
   int       numLights,
-  GeomObj * objToRender,
-  Color   * returnColor,
+  GeomObj * currentObject,
+  Color   * currentColor,
   GeomObj * objsToRender[],
-  Ray * tempRay,
+  Ray * incidentRay,
   int numObjects
 )
 {
-	Vector *N         = &objToRender->objNormal;
-	Vector L             ;  //objToRender->objIntersection.subVector();
-	Vector              R;
-	double              NdotL,NdotE,RdotE;
-	Vector              localNormal;
-	Color               specColor,diffColor,ambColor;
+	Vector N, L, R;
+	double NdotL,NdotE,RdotE;
+	Vector localNormal, currectObjectIntersection, currentObjectNormal;
+  double currentObjInterValue;
+	Color  specColor, diffColor, ambColor;
 	int flag = 1;
-  
-	//memset(&specColor, 0x0, sizeof(specColor));
-	//memset(&diffColor, 0x0, sizeof(diffColor));
-	//memset(&ambColor, 0x0, sizeof(ambColor));
+  bool shadow = true;
+	Ray specularRay;
+
 	ambColor.red = 0.1;
 	ambColor.green = 0.1;
 	ambColor.blue = 0.1;
 
-	Color color01 = Color(objToRender->material.matColor);
-	color01.red   = color01.red   + (shader_data.Ka.red   *ambColor.red);
-	color01.green = color01.green + (shader_data.Ka.green *ambColor.green);
-	color01.blue  = color01.blue  + (shader_data.Ka.blue  *ambColor.blue);
-	Vector currectObjectIntersection = objToRender->objIntersection.normalize();
-	Vector currentObjectNormal = objToRender->objNormal.normalize();
-	double currentObjInterValue = objToRender->intersectionValue;
-	bool shadow = true;
+  (*currentColor) = currentObject->material.matColor;
 
-	Ray specularRay;
-	specularRay.origin    = currectObjectIntersection.subVector(tempRay->origin);
+  (*currentColor).red +=  (currentObject->material.Ka.red * ambColor.red);
+  (*currentColor).green +=  (currentObject->material.Ka.green * ambColor.green);
+  (*currentColor).blue +=  (currentObject->material.Ka.blue * ambColor.blue);
+
+  /*
+	currectObjectIntersection = currentObject->objIntersection.normalize();
+	currentObjectNormal = currentObject->objNormal.normalize();
+	currentObjInterValue = currentObject->intersectionValue;
+
+	specularRay.origin    = currectObjectIntersection.subVector(incidentRay->origin);
 	 // 2(N.L)*N - L where N is normal and L is negative ray direction
-	double dotProd = (currentObjectNormal.dotProduct(tempRay->direction.negate()));
-	specularRay.direction = (currentObjectNormal.scalarMult(dotProd*2)).subVector(tempRay->direction.negate());
+	double dotProd = (currentObjectNormal.dotProduct(incidentRay->direction.negate()));
+	specularRay.direction = (currentObjectNormal.scalarMult(dotProd*2)).subVector(incidentRay->direction.negate());
 	specularRay.direction = specularRay.direction.normalize();
+  */
+
+	currectObjectIntersection = currentObject->objIntersection;
+	currentObjectNormal = currentObject->objNormal.normalize();
+	currentObjInterValue = currentObject->intersectionValue;
 
 	for(int l=0; l <numLights; l++)
 	{
-		L = lights[l].direction.normalize();//subVector(currectObjectIntersection).normalize();
+		L = lights[l].direction.normalize();
 		double distance = L.lengthVector();
-		NdotL = objToRender->objNormal.dotProduct(L);
+		//NdotL = currentObject->objNormal.dotProduct(L);
+    NdotL = currentObjectNormal.dotProduct(L);
+    NdotE = currentObjectNormal.dotProduct(incidentRay->direction.normalize());
+    if (NdotL * NdotE < 0)
+      break;
+
+    if (NdotL < 0 && NdotE < 0) {
+      currentObjectNormal = currentObjectNormal.negate();
+      NdotL = currentObjectNormal.dotProduct(L);
+    }
+
 		if(NdotL > 0)
 		{
 			shadow = false;
-			Ray shadowRay = Ray (currectObjectIntersection,L);
+      Ray shadowRay = Ray (currectObjectIntersection,L.negate());
 
-			int currentObjId = objToRender->objectId;
+			int currentObjId = currentObject->objectId;
 			/*  Now loop through all the objects */
 			for(int obj = 0;obj<numObjects;obj++)
 			{
@@ -133,25 +147,27 @@ void getColor
 
 			if(shadow == false)
 			{
-				color01.red   = color01.red   + (shader_data.Kd.red   * lights[l].lightColor.red   * NdotL);
-				color01.green = color01.green + (shader_data.Kd.green * lights[l].lightColor.green * NdotL);
-				color01.blue  = color01.blue  + (shader_data.Kd.blue  * lights[l].lightColor.blue  * NdotL);
+				(*currentColor).red   += (currentObject->material.Kd.red   * lights[l].lightColor.red   * NdotL);
+				(*currentColor).green += (currentObject->material.Kd.green * lights[l].lightColor.green * NdotL);
+				(*currentColor).blue  += (currentObject->material.Kd.blue  * lights[l].lightColor.blue  * NdotL);
 			}
-
+    	specularRay.origin    = currectObjectIntersection; //.subVector(incidentRay->origin);
+	   // 2(N.L)*N - L where N is normal and L is negative ray direction
+	    double dotProd = (currentObjectNormal.dotProduct(incidentRay->direction));
+	    specularRay.direction = (incidentRay->direction.subVector(currentObjectNormal.scalarMult(dotProd*2))); 
+	    specularRay.direction = specularRay.direction.normalize();
 			double RdotL = specularRay.direction.dotProduct(L);
 			double spec;
 			if(RdotL > 0)
 			{
 				spec = pow(RdotL,25);
-				color01.red   = color01.red   + (shader_data.Ks.red   * lights[l].lightColor.red   * spec);
-				color01.green = color01.green + (shader_data.Ks.green * lights[l].lightColor.green * spec);
-				color01.blue  = color01.blue  + (shader_data.Ks.blue  * lights[l].lightColor.blue  * spec);
+				(*currentColor).red   += (currentObject->material.Ks.red   * lights[l].lightColor.red   * spec);
+				(*currentColor).green += (currentObject->material.Ks.green * lights[l].lightColor.green * spec);
+				(*currentColor).blue  += (currentObject->material.Ks.blue  * lights[l].lightColor.blue  * spec);
 			}
 	   }
-		
+    (*currentColor).colorCheck();
 	}
-    
-    (*returnColor) = color01; 
 
 	#if 0
 	  for(int l=0; l <numLights; l++)
