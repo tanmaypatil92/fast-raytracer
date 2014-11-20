@@ -7,6 +7,7 @@
 #include "OBJParser.h"
 #include "triangle.h"
 #include "GeometricObject.h"
+#include "BoundingBox.h"
 
 class ComplexObject : public GeomObj
 {
@@ -14,6 +15,8 @@ class ComplexObject : public GeomObj
 	
 	char obj_filename[40];
 	OBJObject myOBJ;
+
+	BoundingBox box;
 
 	Material mat;
 

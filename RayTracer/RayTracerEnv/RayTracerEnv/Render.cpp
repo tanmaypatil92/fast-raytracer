@@ -199,12 +199,14 @@ void renderObjects
   /* Render line by line, for all lines */
   for(int i =0; i < thisObj->width; i++)
   {
-    horizScaleCeoff = (i*thisObj->pixelWidth) - (camera->width/2.0);
+    std::cout<<"i="<<i<<std::endl;
+
+	horizScaleCeoff = (i*thisObj->pixelWidth) - (camera->width/2.0);
     horizOffset     = camera->camX.scalarMult(horizScaleCeoff);
     /*  Now render this line  */
     for(int j = 0; j < thisObj->height;j++)
     {
-      objRend         = NULL;
+	  objRend         = NULL;
       vertScaleCoeff  = (j*thisObj->pixelHeight) - (camera->height/2.0);
       vertOffset = camera->camY.scalarMult(vertScaleCoeff);
       primaryRay.direction = (camera->camZ.addVector(horizOffset)).addVector(vertOffset);
