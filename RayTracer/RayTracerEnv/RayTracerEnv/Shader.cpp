@@ -77,7 +77,7 @@ void getColor
   int numObjects
 )
 {
-	Vector N, L, R;
+	Vector *N, L, R;
 	double NdotL,NdotE,RdotE;
 	Vector localNormal, currectObjectIntersection, currentObjectNormal;
   double currentObjInterValue;
@@ -85,6 +85,8 @@ void getColor
 	int flag = 1;
   bool shadow = true;
 	Ray specularRay;
+
+  N = &currentObject->objNormal;
 
 	ambColor.red = 0.1;
 	ambColor.green = 0.1;
@@ -112,25 +114,21 @@ void getColor
 	currentObjectNormal = currentObject->objNormal.normalize();
 	currentObjInterValue = currentObject->intersectionValue;
 
+	specularRay.origin    = currectObjectIntersection.subVector(incidentRay->origin);
+	 // 2(N.L)*N - L where N is normal and L is negative ray direction
+	double dotProd = (currentObjectNormal.dotProduct(incidentRay->direction.negate()));
+	specularRay.direction = (currentObjectNormal.scalarMult(dotProd*2)).subVector(incidentRay->direction.negate());
+	specularRay.direction = specularRay.direction.normalize();
+
 	for(int l=0; l <numLights; l++)
 	{
 		L = lights[l].direction.normalize();
 		double distance = L.lengthVector();
-		//NdotL = currentObject->objNormal.dotProduct(L);
-    NdotL = currentObjectNormal.dotProduct(L);
-    NdotE = currentObjectNormal.dotProduct(incidentRay->direction.normalize());
-    if (NdotL * NdotE < 0)
-      break;
-
-    if (NdotL < 0 && NdotE < 0) {
-      currentObjectNormal = currentObjectNormal.negate();
-      NdotL = currentObjectNormal.dotProduct(L);
-    }
-
+		NdotL = currentObject->objNormal.dotProduct(L);
 		if(NdotL > 0)
 		{
 			shadow = false;
-      Ray shadowRay = Ray (currectObjectIntersection,L.negate());
+			Ray shadowRay = Ray (currectObjectIntersection,L);
 
 			int currentObjId = currentObject->objectId;
 			/*  Now loop through all the objects */
@@ -151,11 +149,7 @@ void getColor
 				(*currentColor).green += (currentObject->material.Kd.green * lights[l].lightColor.green * NdotL);
 				(*currentColor).blue  += (currentObject->material.Kd.blue  * lights[l].lightColor.blue  * NdotL);
 			}
-    	specularRay.origin    = currectObjectIntersection; //.subVector(incidentRay->origin);
-	   // 2(N.L)*N - L where N is normal and L is negative ray direction
-	    double dotProd = (currentObjectNormal.dotProduct(incidentRay->direction));
-	    specularRay.direction = (incidentRay->direction.subVector(currentObjectNormal.scalarMult(dotProd*2))); 
-	    specularRay.direction = specularRay.direction.normalize();
+
 			double RdotL = specularRay.direction.dotProduct(L);
 			double spec;
 			if(RdotL > 0)
@@ -166,7 +160,7 @@ void getColor
 				(*currentColor).blue  += (currentObject->material.Ks.blue  * lights[l].lightColor.blue  * spec);
 			}
 	   }
-    (*currentColor).colorCheck();
+		
 	}
 
 	#if 0

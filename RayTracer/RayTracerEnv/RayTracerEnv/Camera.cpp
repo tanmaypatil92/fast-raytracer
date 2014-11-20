@@ -16,28 +16,28 @@ Camera::Camera()
 	position = Vector(10.0,10.0,10.0);
 	upVector = Vector(0.0,1.0,0.0);
 	lookAt   = Vector(0.0,0.0,0.0);
-	cameraXYZ(position,upVector,lookAt);
+	cameraXYZ();
 }
 Camera::Camera(const Vector pos)
 {
 	position = pos;
 	upVector = Vector(0.0,1.0,0.0);
 	lookAt   = Vector(0.0,0.0,0.0);
-	cameraXYZ(position,upVector,lookAt);
+	cameraXYZ();
 }
 Camera::Camera(const Vector pos,const Vector look)
 {
 	position = pos;
 	lookAt   = look;
 	upVector = Vector(0.0,1.0,0.0);
-	cameraXYZ(position,upVector,lookAt);
+	cameraXYZ();
 }
 Camera::Camera(Vector pos,Vector up,Vector look)
 {
 	position = pos;
 	upVector = up;
 	lookAt   = lookAt;
-	cameraXYZ(position,upVector,lookAt);
+	cameraXYZ();
 }
 
 #if 0
@@ -53,12 +53,18 @@ Camera::Camera(Vector pos,Vector up,Vector look)
 	this->camX = camZ.crossProduct(camY); //Because Z and Y are normalized this should be normalized??
 #endif
 
-int Camera::cameraXYZ( Vector pos, Vector up, Vector look)
+int Camera::cameraXYZ()
 {
-	this->camZ = lookAt.subVector(pos);
+  camZ = lookAt.subVector(position).normalize();
+  camY = upVector.subVector(camZ.scalarMult(camZ.dotProduct(upVector))); camY = camY.normalize();
+  camX = camZ.crossProduct(camY).normalize();
+
+  /*
+  this->camZ = lookAt.subVector(position);
 	this->camZ = camZ.normalize(); // Reversed and negative Z, if lookat subrated from pos ??
-	this->camX = (up.crossProduct(camZ)).normalize(); //@todo : it is actually this->camX
-	this->camY = camZ.crossProduct(camX); //Because Z and Y are normalized this should be normalized??
+	this->camX = (upVector.crossProduct(camZ)).normalize(); //@todo : it is actually this->camX
+	this->camY = camZ.crossProduct(camX); //Because Z and Y are normalized this should be normalized?? 
+  */
   return SUCCESS;
 }
 

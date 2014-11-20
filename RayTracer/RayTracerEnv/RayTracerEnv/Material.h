@@ -6,7 +6,9 @@
 class Material{
 	public:
 	Color matColor;
+  Color Ka, Kd, Ks;
+  float reflectionParameter, refractionIndex;
 	Material();
-	Material(Color);
+	Material(Color, Color, Color, Color, float, float);
 };
 #endif

@@ -18,7 +18,7 @@ class Camera{
 	Camera(const Vector);               // Constructor if only position Vector is given
 	Camera(const Vector,const Vector);        // Constructor if only position and lookat Vectors are given
 	Camera(const Vector,const Vector,const Vector); // Constructor if all three position,lookat,up Vectors are given
-	int cameraXYZ(const Vector,const Vector,const Vector);
+	int cameraXYZ();
   void setFOV(double newFOV, double aspectRatio);
 
 };

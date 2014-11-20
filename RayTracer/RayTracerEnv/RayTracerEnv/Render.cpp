@@ -210,9 +210,9 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
     bool innerObjFlag = trackRay(reflectedRay, &reflectionColor, lights, numLights, objsToRender, numObjects, ++currentDepth);
 
     if (innerObjFlag == true)  {
-      thisColor->red   += reflectionColor.red*0.2;//0.2 is the reflection prcentage
-			thisColor->green += reflectionColor.green*0.2;
-			thisColor->blue  += reflectionColor.blue*0.2;
+      thisColor->red   += reflectionColor.red * objRend->material.reflectionParameter;
+			thisColor->green += reflectionColor.green * objRend->material.reflectionParameter;
+			thisColor->blue  += reflectionColor.blue * objRend->material.reflectionParameter;
     }
 
 		/* now that we have the object to render, find the color for this pixel */

@@ -10,6 +10,7 @@
 #define __RayTracerEnv__Render__
 
 #define REFLECTION_DEPTH 1
+#define REFLECTION_PARAMETER 0.2 
 
 #include <stdio.h>
 #include "Gz.h"
