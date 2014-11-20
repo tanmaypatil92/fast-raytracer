@@ -10,6 +10,8 @@ class Color{
 	Color();
 	Color(double,double,double);
 	Color(double,double,double,double);
+	void addColor(Color);
+	void avgColor(int);
 	void colorCheck();
 };
 

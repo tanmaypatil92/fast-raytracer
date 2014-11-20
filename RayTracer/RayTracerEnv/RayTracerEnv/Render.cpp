@@ -38,6 +38,12 @@ typedef struct{
 
 }render_debug_s;
 
+void antiAliasing(infinity_render_s* thisObj);
+
+int ARRAY(int x,int y,int width){
+	return (x+(y*width));
+}
+
 #if 0
 /* LOCAL OBJECTS, to be referenced only in this file */
 render_debug_s debug_mode = {
@@ -112,6 +118,55 @@ GeomObj* findObjToRender
 }
 #endif
 
+void antiAliasing( infinity_render_s* thisObj){
+	
+	Pixel *pixels = new Pixel[thisObj->width * thisObj->height];
+	for(int i=0;i<thisObj->width;i++)
+		for(int j=0;j<thisObj->height; j++){
+			int count = 0;
+			Color c = Color(0,0,0,0);
+			if(i-1 >=0 && j-1 >= 0){
+				c.addColor(thisObj->pixels[ARRAY(i-1,j-1,thisObj->width)].pixelColor);
+				count ++;
+			}
+			if(i-1 >=0){
+				c.addColor(thisObj->pixels[ARRAY(i-1,j,thisObj->width)].pixelColor);
+				count ++;
+			}
+			if(i-1 >=0 && j+1 < thisObj->height){
+				c.addColor(thisObj->pixels[ARRAY(i-1,j+1,thisObj->width)].pixelColor);
+				count ++;
+			}
+			if(j-1 >= 0){
+				c.addColor(thisObj->pixels[ARRAY(i,j-1,thisObj->width)].pixelColor);
+				count ++;
+			}
+			if(j+1 < thisObj->height){
+				c.addColor(thisObj->pixels[ARRAY(i,j+1,thisObj->width)].pixelColor);
+				count ++;
+			}
+			if(i+1 < thisObj->width && j+1 < thisObj->height){
+				c.addColor(thisObj->pixels[ARRAY(i+1,j+1,thisObj->width)].pixelColor);
+				count ++;
+			}
+			if(i+1 < thisObj->width){
+				c.addColor(thisObj->pixels[ARRAY(i+1,j,thisObj->width)].pixelColor);
+				count ++;
+			}
+
+			if(i+1 < thisObj->width && j-1 >= 0){
+				c.addColor(thisObj->pixels[ARRAY(i+1,j-1,thisObj->width)].pixelColor);
+				count ++;
+			}
+			count++;
+			c.addColor(thisObj->pixels[ARRAY(i,j,thisObj->width)].pixelColor);
+			c.avgColor(count);
+			thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(c);
+		}
+	return;
+}
+
+
 /*  For now we only pass the objects, perhaps can add a pointer to a camera object */
 void renderObjects
 (
@@ -167,6 +222,8 @@ void renderObjects
       }
     }/* End of display width, ie. each raster line */
   }/*  End of display height */
+  /* To smooth-en out the edges */
+  antiAliasing(thisObj);
   return;
 }/* renderObjects */
 
@@ -271,4 +328,3 @@ GeomObj* intersection(GeomObj* objsToRender[],int numObjects,Ray currentRay)
       } /* End of obj loop */
 	  return objRend;
 }
-
