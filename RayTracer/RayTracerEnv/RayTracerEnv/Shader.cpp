@@ -135,11 +135,13 @@ void getColor
 			for(int obj = 0;obj<numObjects;obj++)
 			{
 			//Perform the ray intersection with this object
-				objsToRender[obj]->findIntersection(shadowRay);
-				if(objsToRender[obj]->intersectionValue > TRACER_THRESH && objsToRender[obj]->intersectionValue <= distance)
+				if(objsToRender[obj]->objectId!=currentObjId)
 				{
-					if(objsToRender[obj]->objectId!=currentObjId)
-						shadow = true;
+					objsToRender[obj]->findIntersection(shadowRay);
+					if(objsToRender[obj]->intersectionValue > TRACER_THRESH && objsToRender[obj]->intersectionValue <= distance)
+					{
+							shadow = true;
+					}
 				}
 			} /* End of obj loop */
 
@@ -148,18 +150,19 @@ void getColor
 				(*currentColor).red   += (currentObject->material.Kd.red   * lights[l].lightColor.red   * NdotL);
 				(*currentColor).green += (currentObject->material.Kd.green * lights[l].lightColor.green * NdotL);
 				(*currentColor).blue  += (currentObject->material.Kd.blue  * lights[l].lightColor.blue  * NdotL);
-			}
-
-			double RdotL = specularRay.direction.dotProduct(L);
-			double spec;
-			if(RdotL > 0)
-			{
-				spec = pow(RdotL,25);
-				(*currentColor).red   += (currentObject->material.Ks.red   * lights[l].lightColor.red   * spec);
-				(*currentColor).green += (currentObject->material.Ks.green * lights[l].lightColor.green * spec);
-				(*currentColor).blue  += (currentObject->material.Ks.blue  * lights[l].lightColor.blue  * spec);
+				// Shouldn't render specular if object in shadow I assume
+				double RdotL = specularRay.direction.dotProduct(L);
+				double spec;
+				if(RdotL > 0)
+				{
+					spec = pow(RdotL,25);
+					(*currentColor).red   += (currentObject->material.Ks.red   * lights[l].lightColor.red   * spec);
+					(*currentColor).green += (currentObject->material.Ks.green * lights[l].lightColor.green * spec);
+					(*currentColor).blue  += (currentObject->material.Ks.blue  * lights[l].lightColor.blue  * spec);
+				}
 			}
 	   }
+
 		
 	}
 

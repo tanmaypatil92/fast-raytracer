@@ -106,30 +106,30 @@ void pre_initialize_everything()
   //infinity_bsp.camLook      = Vector(0,0,3.0);
 
   // CAMERA FOR TESTING COMPLEX OBJECT
-  infinity_bsp.camPosition = Vector(5,5,5);
-  infinity_bsp.camLook      = Vector(1.0,1.0,1.0);
+  //infinity_bsp.camPosition = Vector(5,5,5);
+  //infinity_bsp.camLook      = Vector(1.0,1.0,1.0);
   
   // CAMERA FOR ANTIALISING / SHADING
-  //infinity_bsp.camPosition = Vector(0,0,5);
-  //infinity_bsp.camLook      = Vector(0,0,1.0);
+  infinity_bsp.camPosition = Vector(0,0,5);
+  infinity_bsp.camLook      = Vector(0,0,1.0);
 
-  infinity_bsp.numSpheres = 0;
-  infinity_bsp.spheres[0] = Sphere(Vector(-0.5,1,-1.0),0.5,Material(Color(0.6,0.1,0.1,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
-  infinity_bsp.spheres[1] = Sphere(Vector(0.5,1.2,0.0),0.5,Material(Color(0.2,0.2,0.6,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
-  infinity_bsp.spheres[2] = Sphere(Vector(-0.3,0.2,-2),0.5,Material(Color(0.45,0.05,0.3,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
+  infinity_bsp.numSpheres = 3;
+  infinity_bsp.spheres[0] = Sphere(Vector(-0.5,0.4,-1.0),0.55,Material(Color(0.6,0.1,0.1,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
+  infinity_bsp.spheres[1] = Sphere(Vector(0.5,0.6,0.0),0.55,Material(Color(0.2,0.2,0.6,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
+  infinity_bsp.spheres[2] = Sphere(Vector(-0.3,-0.7,-2),0.55,Material(Color(0.45,0.05,0.3,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
   infinity_bsp.spheres[3] = Sphere(Vector(-1.5,2.4,0.0),0.5,Material(Color(0.3,0.0,0.25,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
   infinity_bsp.spheres[4] = Sphere(Vector(1.5,0.0,0.0),1.0,Material(Color(0.35,0.03,0.1,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
 
 
-  infinity_bsp.numPlanes = 0;
-  infinity_bsp.planes[0] = Plane(Vector(0.0,1.0,0.0),2.0,Material(Color(0.5,0.0,0.2), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));// having z value in plane normal is like rotating it in z
+  infinity_bsp.numPlanes = 1;
+  infinity_bsp.planes[0] = Plane(Vector(0.0,1.0,0.0),1.1,Material(Color(0.5,0.0,0.2), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));// having z value in plane normal is like rotating it in z
   
   infinity_bsp.numTriangles = 0;
   infinity_bsp.triangles[0] = Triangle(Vector(0.0,0.0,0.0),Vector(0.0,1.0,0.0),Vector(1.0,0.0,0.0));
 
-  infinity_bsp.numComplexObjects = 1;
+  infinity_bsp.numComplexObjects = 0;
   //infinity_bsp.complex_objects[0] = ComplexObject("cube.obj" , Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
-  infinity_bsp.complex_objects[0] = ComplexObject("pawn.obj" , Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
+  //infinity_bsp.complex_objects[0] = ComplexObject("pawn.obj" , Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
   //infinity_bsp.complex_objects[0] = ComplexObject("sphere_triangulated.obj" , Material(Color(0.9,0.9,0.9)) );// OBJ PARSER DOES NOT WORK
   //infinity_bsp.complex_objects[0] = ComplexObject("teapot.obj", Material(Color(0.9,0.9,0.9)) );
 
@@ -150,15 +150,13 @@ void pre_initialize_everything()
    tracer_app.infinityRender.pixels = NULL;
    tracer_app.infinityRender.defaultColor = Color(0.0,0.0,0.0,1.0);
     
-  tracer_app.numLights = 1;
+  tracer_app.numLights = 2;
   
   tracer_app.defLights[0] =
-	 // LIGHTS - ANTIALIASING, SHADING
-	 //Light( Vector(2.0,2.0,2.0),Color(0.8,0.8,0.8));
-	
-	// LIGHTS - COMPLEX OBJECTS 
-	Light( Vector(1.0,2.0,0.5),Color(0.8,0.8,0.8));
-     
+  // LIGHTS - ANTIALIASING, SHADING
+  Light( Vector(2.0,0.0,2.0),Color(0.8,0.8,0.8));
+  // LIGHTS - COMPLEX OBJECTS 
+  //Light( Vector(1.0,2.0,0.5),Color(0.8,0.8,0.8)); 
   // Light(Vector(4,-10.0,3.0),Color(1.0,1.0,1.0));
   
   tracer_app.defLights[1] =
