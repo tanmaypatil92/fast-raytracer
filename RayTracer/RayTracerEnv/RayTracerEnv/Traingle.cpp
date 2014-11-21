@@ -11,12 +11,17 @@ Triangle::Triangle()
 	v0 = Vector( 0,  0, 0);                                                                                                                  
     v1 = Vector( 1,  0, 0);                                                                                                                  
     v2 = Vector( 1,  1, 0); 
+
+	mat.matColor = Color(1.0,0.0,0.0);
 }
 Triangle::Triangle(Vector v0_passed,Vector v1_passed, Vector v2_passed)
 {
 	v0 = v0_passed;
 	v1 = v1_passed;
 	v2 = v2_passed;
+
+	bb = BoundingBox();
+	bb.SetBounds_Triangle(v0,v1,v2);
 
 	mat.matColor = Color(1.0,0.0,0.0);
 }

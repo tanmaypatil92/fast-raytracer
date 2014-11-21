@@ -57,7 +57,9 @@ int OBJObject::parse(char *fileName)
     
     if (!obj_file)
     {
-        cerr << "OBJObject::parse File " << fileName << "could not be opened." << endl;
+        cerr << "OBJObject::parse File " << fileName << " could not be opened." << endl;
+		getchar();
+		exit(1);
         return -1; 
     }                      
     while(!obj_file.eof())

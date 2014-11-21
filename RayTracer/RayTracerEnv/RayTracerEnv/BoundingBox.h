@@ -16,8 +16,12 @@ class BoundingBox
 	bool Intersection(Ray r);
 
 	BoundingBox();
+	void SetBounds(float left, float right, float bottom, float top, float front, float back);
 	void SetBounds_Sphere(Vector center, double radius);
 	void SetBounds_ComplexObject(OBJObject myOBJ);
+	void SetBounds_Triangle(Vector v0, Vector v1, Vector v2);
+	
+	bool Contains(BoundingBox SmallBox);
 };
 
 #endif

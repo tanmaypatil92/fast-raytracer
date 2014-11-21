@@ -7,13 +7,72 @@ BoundingBox::BoundingBox()
 	left_bound = FLT_MAX;	top_bound = FLT_MAX; front_bound = FLT_MAX;
 	right_bound = -FLT_MAX;	bottom_bound = -FLT_MAX; back_bound = -FLT_MAX;
 }
+bool BoundingBox::Contains(BoundingBox SmallBox)
+{
+	if( (SmallBox.left_bound	<= right_bound) && 
+		(SmallBox.right_bound	>= left_bound) &&
+		
+		(SmallBox.bottom_bound	<= top_bound) &&
+		(SmallBox.top_bound		>= bottom_bound) &&
+
+		(SmallBox.front_bound	<= back_bound) &&
+		(SmallBox.back_bound	>= front_bound)
+
+		)
+		return true;
+	else
+		return false;
+}
+float minimum3(float a, float b, float c)
+{
+	if(a<b && a<c)
+		return a;
+	else if(b<c)
+		return b;
+	else
+		return c;
+
+}
+float maximum3(float a, float b, float c)
+{
+	if(a>b && a>c)
+		return a;
+	else if(b>c)
+		return b;
+	else
+		return c;
+
+}
+void BoundingBox::SetBounds(float left, float right, float bottom, float top, float front, float back)
+{
+	left_bound = left;
+	right_bound = right;
+
+	bottom_bound = bottom;
+	top_bound = top;
+
+	front_bound = front;
+	back_bound = back;
+}
+
+void BoundingBox::SetBounds_Triangle(Vector v0, Vector v1, Vector v2)
+{
+	left_bound = minimum3(v0.x, v1.x, v2.x);
+	right_bound = maximum3(v0.x, v1.x, v2.x);
+
+	bottom_bound = minimum3(v0.y, v1.y, v2.y);
+	top_bound = maximum3(v0.y, v1.y, v2.y);
+	
+	front_bound = minimum3(v0.z, v1.z, v2.z);
+	back_bound = maximum3(v0.z, v1.z, v2.z);
+}
 void BoundingBox::SetBounds_Sphere(Vector center, double radius)
 {
 	left_bound = center.x - radius;
 	right_bound = center.x + radius;
 
-	top_bound = center.y - radius;
-	bottom_bound = center.y + radius;
+	bottom_bound = center.y - radius;
+	top_bound = center.y + radius;
 
 	front_bound = center.y - radius;
 	back_bound = center.y + radius;
@@ -59,8 +118,8 @@ bool BoundingBox::Intersection(Ray r)
 			return false;
 	}
 
-	t1 = (-1 - r.origin.x) / r.direction.x;
-	t2 = ( 1 - r.origin.x) / r.direction.x;
+	t1 = (left_bound - r.origin.x) / r.direction.x;
+	t2 = (right_bound - r.origin.x) / r.direction.x;
 	if(t1 <= t2) {t_near = t1; t_far = t2;}
 	else {t_near = t2; t_far = t1;}
 	if(t_near > t_near_furtherest)   {t_near_furtherest = t_near;}
@@ -75,8 +134,8 @@ bool BoundingBox::Intersection(Ray r)
 			return false;
 	}
 
-	t1 = (-1 - r.origin.y) / r.direction.y;
-	t2 = ( 1 - r.origin.y) / r.direction.y;
+	t1 = (bottom_bound - r.origin.y) / r.direction.y;
+	t2 = (top_bound - r.origin.y) / r.direction.y;
 	if(t1 <= t2) {t_near = t1; t_far = t2;}
 	else {t_near = t2; t_far = t1;}
 	if(t_near > t_near_furtherest)   {t_near_furtherest = t_near;}
@@ -91,8 +150,8 @@ bool BoundingBox::Intersection(Ray r)
 			return false;
 	}
 
-	t1 = (-1 - r.origin.z) / r.direction.z;
-	t2 = ( 1 - r.origin.z) / r.direction.z;
+	t1 = (front_bound - r.origin.z) / r.direction.z;
+	t2 = (back_bound - r.origin.z) / r.direction.z;
 	if(t1 <= t2) {t_near = t1; t_far = t2;}
 	else {t_near = t2; t_far = t1;}
 	if(t_near > t_near_furtherest)   {t_near_furtherest = t_near;}

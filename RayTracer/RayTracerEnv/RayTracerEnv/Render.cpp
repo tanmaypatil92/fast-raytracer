@@ -225,7 +225,7 @@ void renderObjects
     }/* End of display width, ie. each raster line */
   }/*  End of display height */
   /* To smooth-en out the edges */
-  antiAliasing(thisObj);
+  //antiAliasing(thisObj);
   return;
 }/* renderObjects */
 

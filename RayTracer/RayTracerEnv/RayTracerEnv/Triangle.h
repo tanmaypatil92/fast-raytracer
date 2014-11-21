@@ -5,6 +5,7 @@
 #include "Vector.h"
 #include "Material.h"
 #include "OBJParser.h"
+#include "BoundingBox.h"
 #include "GeometricObject.h"
 
 class Triangle : public GeomObj
@@ -18,6 +19,8 @@ class Triangle : public GeomObj
 
 	Vector triInter;
 	Vector triNormal;
+
+	BoundingBox bb;
 
 	Triangle();
 	Triangle(Vector,Vector,Vector);
