@@ -119,10 +119,10 @@ void pre_initialize_everything()
   //infinity_bsp.camPosition = Vector(0,0,5);
   //infinity_bsp.camLook      = Vector(0,0,1.0);
 
-  infinity_bsp.numSpheres = 2;
-  infinity_bsp.spheres[0] = Sphere(Vector(4.5,0.4,-1.0),2,Material(Color(0.1,0.1,0.1,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
+  infinity_bsp.numSpheres = 3;
+  infinity_bsp.spheres[0] = Sphere(Vector(4.8,0.4,0.0),2,Material(Color(0.1,0.1,0.1,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
   infinity_bsp.spheres[1] = Sphere(Vector(-4.5,0.6,0.0),2,Material(Color(0.2,0.2,0.3,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
-  infinity_bsp.spheres[2] = Sphere(Vector(-0.3,-0.7,-2),0.55,Material(Color(0.45,0.05,0.3,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
+  infinity_bsp.spheres[2] = Sphere(Vector(1.3,0.7,-2),1.8,Material(Color(0.45,0.05,0.3,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
   infinity_bsp.spheres[3] = Sphere(Vector(-1.5,2.4,0.0),0.5,Material(Color(0.3,0.0,0.25,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
   infinity_bsp.spheres[4] = Sphere(Vector(1.5,0.0,0.0),1.0,Material(Color(0.35,0.03,0.1,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
 
@@ -133,13 +133,13 @@ void pre_initialize_everything()
   infinity_bsp.numTriangles = 0;
   infinity_bsp.triangles[0] = Triangle(Vector(0.0,0.0,0.0),Vector(0.0,1.0,0.0),Vector(1.0,0.0,0.0));
 
-  infinity_bsp.numComplexObjects = 1;
+  infinity_bsp.numComplexObjects = 2;
   //infinity_bsp.complex_objects[0] = ComplexObject("obj_files/cube.obj" , Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
-  infinity_bsp.complex_objects[0] = ComplexObject(fileName , Material(Color(0.3,0.37,0.3), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
+  infinity_bsp.complex_objects[0] = ComplexObject("obj_files/pawn.obj" , Material(Color(0.3,0.37,0.3), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
   //infinity_bsp.complex_objects[0] = ComplexObject("obj_files/dino.obj" , Material(Color(0.3,0.37,0.3), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5) );
   //infinity_bsp.complex_objects[0] = ComplexObject("obj_files/teapot2.obj", Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5) );
   //infinity_bsp.complex_objects[0] = ComplexObject("obj_files/dino.obj", Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5) );
-  //infinity_bsp.complex_objects[1] = ComplexObject("obj_files/object01.obj" , Material(Color(0.3,0.3,0.37), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
+  infinity_bsp.complex_objects[1] = ComplexObject("obj_files/object01.obj" , Material(Color(0.35,0.2,0.05), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.3, 1.5));
   //infinity_bsp.complex_objects[1] = ComplexObject("obj_files/object02.obj" , Material(Color(0.3,0.37,0.3), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
   //infinity_bsp.complex_objects[2] = ComplexObject("obj_files/object03.obj" , Material(Color(0.37,0.3,0.3), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5) );
   //infinity_bsp.complex_objects[3] = ComplexObject("obj_files/object04.obj", Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5) );

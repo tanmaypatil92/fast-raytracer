@@ -147,11 +147,24 @@ int OBJObject::parse(char *fileName)
            linestream >> x >> y >> z;
            
            // This is where I am including the Transform code(since here is were vertices are parsed)
-		    Transform t;
-			Vector v = Vector(x,y,z);
-			t.scaleXYZ(&v,1.1,1.1,1.1);
-			t.rotateX(&v,180);
-			t.translateXYZ(&v,0.0,-0.5,-3);
+		   // Very crude method of ecideing which object to transform... get file name!!
+		   // Can be changed later if necessarry.
+		   Transform t;
+		   Vector v = Vector(x,y,z);
+		   char *testFileName01 = "obj_files/pawn.obj";
+		   if(strcmp(fileName,testFileName01)==0)
+		   {
+				t.scaleXYZ(&v,1.1,1.1,1.1);
+				t.rotateX(&v,180);
+				t.translateXYZ(&v,-0.5,-0.5,-3.0);
+		   }
+		   char *testFileName02 = "obj_files/object01.obj";
+		   if(strcmp(fileName,testFileName02)==0)
+		   {
+				t.scaleXYZ(&v,1.1,1.1,1.1);
+				t.rotateX(&v,180);
+				t.translateXYZ(&v,-5.0,3.0,80);
+		   }
 			// Uthara
 
 		   this->vList[vCount].x = v.x;
