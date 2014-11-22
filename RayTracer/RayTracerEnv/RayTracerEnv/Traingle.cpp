@@ -97,6 +97,8 @@ Vector cross(Vector A, Vector B)
 	return C;
 }
 
+#define ABS(x) (x < 0? (-x) : (x) )
+
 float areaTriangle(Vector v1,Vector v2,Vector v3)
 {
 	Vector AB = sub(v2,v1);
@@ -107,8 +109,15 @@ float areaTriangle(Vector v1,Vector v2,Vector v3)
 	// AC coordinates
 	float y1 = AC.x ; float y2 = AC.y;  float y3 = AC.z;
 
-	float area = abs(( (x2*y1-x1*y2) + (x3*y2-x2*y3)+ (x1*y3-x3*y1) )  / 2.0);
-	return area;
+  #ifdef OS_X_ENV
+    float temp = (x2*y1-x1*y2) + (x3*y2-x2*y3)+ (x1*y3-x3*y1);
+    float area = ABS(temp);
+    area = area/2.0;
+  #else
+    float area = abs(( (x2*y1-x1*y2) + (x3*y2-x2*y3)+ (x1*y3-x3*y1) )  / 2.0);
+	#endif
+  
+  return area;
 }
 double Triangle::findIntersection(Ray ray)
 {

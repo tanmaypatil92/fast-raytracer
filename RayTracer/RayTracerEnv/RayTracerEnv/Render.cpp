@@ -14,8 +14,10 @@
 #include <climits>
 
 //@todo : VC++ people, uncomment this for unblocking you.
+#ifndef OS_X_ENV
 #define INFINITY std::numeric_limits<double>::max()
 #define M_PI 3.1427
+#endif
 
 /*  MACROS */
 #define _USE_MATH_DEFINES
@@ -120,7 +122,8 @@ GeomObj* findObjToRender
 
 void antiAliasing( infinity_render_s* thisObj){
 	
-	Pixel *pixels = new Pixel[thisObj->width * thisObj->height];
+  /* @todo - this is problematic, can someone explain what this is doing here? */
+	//Pixel *pixels = new Pixel[thisObj->width * thisObj->height];
 	for(int i=0;i<thisObj->width;i++)
 		for(int j=0;j<thisObj->height; j++){
 			int count = 0;
@@ -183,7 +186,7 @@ void renderObjects
   Vector horizOffset, vertOffset;
   Ray    primaryRay, secondaryRay, tempRay;
   GeomObj* objRend = NULL;
-  double   intersectValue = INFINITY;
+  //double   intersectValue = INFINITY;
   Color  currentColor, reflectionColor;
   int counter = 0;
 
@@ -279,7 +282,7 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
 		{
 			//cam_ray_origin.vectAdd(cam_ray_direction.vectMult(intersections.at(index_of_winning_object)
 			//secondaryRay.origin    = objIntersectionVector.subVector(tempRay.origin);
-      /* secondaryRay.origin    = objRend->objIntersection.subVector(tempRay.origin);
+      secondaryRay.origin    = objRend->objIntersection.subVector(tempRay.origin);
 			secondaryRay.direction = (objRend->objNormal.scalarMult(2*(objRend->objNormal.dotProduct(tempRay.origin))).subVector(tempRay.origin));
 			secondaryRay.direction = secondaryRay.direction.normalize();
 

@@ -28,7 +28,10 @@
 #define MAX_LIGHTS            10
 #define SPECULAR_COEFF        32
 #define TRACER_THRESH   0.0000001
+
+#ifndef OS_X_ENV
 #define INFINITY std::numeric_limits<double>::max()
+#endif
 
 /*  MACROS */
 #define _USE_MATH_DEFINES
@@ -78,11 +81,11 @@ void getColor
 )
 {
 	Vector *N, L, R;
-	double NdotL,NdotE,RdotE;
+	double NdotL;
 	Vector localNormal, currectObjectIntersection, currentObjectNormal;
   double currentObjInterValue;
 	Color  specColor, diffColor, ambColor;
-	int flag = 1;
+	
   bool shadow = true;
 	Ray specularRay;
 

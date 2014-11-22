@@ -1,5 +1,6 @@
 #include "BoundingBox.h"
 #include "math.h"
+#include <float.h>
 #include <limits>
 
 BoundingBox::BoundingBox()

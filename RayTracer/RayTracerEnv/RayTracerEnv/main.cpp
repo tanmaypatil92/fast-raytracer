@@ -92,6 +92,7 @@ static infinity_tracer_app_data_s tracer_app = {
 #endif
 
 
+static char fileName[] = "obj_files/pawn.obj";
 void pre_initialize_everything()
 {
 
@@ -134,7 +135,7 @@ void pre_initialize_everything()
 
   infinity_bsp.numComplexObjects = 1;
   //infinity_bsp.complex_objects[0] = ComplexObject("obj_files/cube.obj" , Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
-  infinity_bsp.complex_objects[0] = ComplexObject("obj_files/pawn.obj" , Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
+  infinity_bsp.complex_objects[0] = ComplexObject(fileName, Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
   //infinity_bsp.complex_objects[0] = ComplexObject("obj_files/sphere_triangulated.obj" , Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5) );
   //infinity_bsp.complex_objects[0] = ComplexObject("obj_files/teapot2.obj", Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5) );
   //infinity_bsp.complex_objects[0] = ComplexObject("obj_files/dino.obj", Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5) );
