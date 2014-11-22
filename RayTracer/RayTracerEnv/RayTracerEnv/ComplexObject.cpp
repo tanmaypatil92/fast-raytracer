@@ -6,6 +6,7 @@
 #include <fstream>
 
 #include "math.h"
+#include "Transform.h"
 
 using namespace std;
 ComplexObject::ComplexObject()
@@ -17,6 +18,7 @@ ComplexObject::ComplexObject()
 	//box.SetBounds_ComplexObject(myOBJ);
 	
 	mat.matColor = Color(0.8,0.5,0.5);
+	material = mat;
 }
 Oct* ComplexObject::initialize_oct(BoundingBox box)
 {
@@ -134,6 +136,7 @@ ComplexObject::ComplexObject(char* filename, Material m)
 	head_oct = initialize_oct(box);
 	
 	mat = m;
+	material = mat;
 }
 Vector ComplexObject::Vertex_to_Vector(Vertex vertex)
 {
@@ -179,7 +182,7 @@ double ComplexObject::complexIntersection(Ray ray)
 		return -1;
 	}
 	
-	float min_intersectionVal  = FLT_MAX;
+	double min_intersectionVal  = FLT_MAX;
 	Vector min_complexNormal, min_complexInter;
 
 	bool intersects = false;
@@ -202,7 +205,7 @@ double ComplexObject::complexIntersection(Ray ray)
 				
 		double tri_intersect = tri.triIntersection(ray);
 				
-		if( (tri_intersect >= 0) &&  (tri_intersect < min_intersectionVal) )
+		if( (tri_intersect >= 0.0000001) &&  (tri_intersect < min_intersectionVal) )
 		{	
 			min_intersectionVal = tri_intersect;
 			min_complexNormal = tri.triNormal;
@@ -220,7 +223,7 @@ double ComplexObject::complexIntersection(Ray ray)
 
 	/* Now set the superclass properties.*/
 	intersectionValue = intersectionVal;
-	objNormal          = min_complexNormal;
+	objNormal          = min_complexNormal.normalize();
 	objIntersection    = min_complexInter;
 
 	return min_intersectionVal;

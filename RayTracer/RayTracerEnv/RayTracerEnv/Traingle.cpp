@@ -146,7 +146,7 @@ double Triangle::triIntersection(Ray ray)
 	intersectionVal = t;
 
 	// CHECK IF TRINAGLE IS BEHIND RAY ORIGIN
-	if (t < 0) { intersectionVal = -1; }
+	if (t < 0.01) { intersectionVal = -1; }
     
 	
 	// COMPUTE INTERSECTION POINT

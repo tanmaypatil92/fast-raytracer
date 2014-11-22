@@ -54,7 +54,7 @@ double Plane::planeIntersection(Ray r)
     /* @todo - deprecated, use the superclass properties instead */
   
 	this->normal          = Pn; //@todo : Uthara, please confirm this.
-	// ya both should be normalized
+	//only Normal has to be normalized the Intersection is a Point not Vector so no I guess
 	int columValue = this->intersection.x;
 	int rowvalue   = this->intersection.z;
 	if((columValue+rowvalue) %2 == 0)

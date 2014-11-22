@@ -25,6 +25,8 @@ I think this works. It rendered the teapot. Have fun.
 #include <math.h>
 #include <sstream>
 #include <string>
+#include "Transform.h"
+#include "Vector.h"
 
 #include "OBJParser.h"
 #define LINE_BUFFER_SIZE 1024
@@ -51,7 +53,7 @@ OBJObject::~OBJObject()
 int OBJObject::parse(char *fileName)
 {
     char line[1024];
-    int ret_value = 0;
+    
     ifstream obj_file;
     obj_file.open(fileName, ifstream::in);
     
@@ -59,8 +61,8 @@ int OBJObject::parse(char *fileName)
     {
         cerr << "OBJObject::parse File " << fileName << " could not be opened." << endl;
 		getchar();
-		//exit(1);
-        ret_value = -1;
+		exit(1);
+        return -1; 
     }                      
     while(!obj_file.eof())
     { 
@@ -144,10 +146,18 @@ int OBJObject::parse(char *fileName)
            linestream << line;
            linestream >> x >> y >> z;
            
-           this->vList[vCount].x = x;
-           this->vList[vCount].y = y;
-           this->vList[vCount].z = z;
-           
+           // This is where I am including the Transform code(since here is were vertices are parsed)
+		    Transform t;
+			Vector v = Vector(x,y,z);
+			t.scaleXYZ(&v,1.1,1.1,1.1);
+			t.rotateX(&v,180);
+			t.translateXYZ(&v,0.0,-0.5,-3);
+			// Uthara
+
+		   this->vList[vCount].x = v.x;
+           this->vList[vCount].y = v.y;
+           this->vList[vCount].z = v.z;
+          
            
            vCount++;
            if(this->dBug)
@@ -211,7 +221,7 @@ int OBJObject::parse(char *fileName)
            int fieldIndex=0;
            int numIndex=0;
            int prevIndex=0;
-           //int val=0;
+           int val=0;
            int fields=0;
            
            for(int i=0;i<1024;i++)line[i]=0;
@@ -356,8 +366,7 @@ int OBJObject::parse(char *fileName)
            obj_file.getline(line,1024);
        }
     }//second while loop
-  
-    return ret_value;
+    
         
 }//OBJObject::parse
 

@@ -253,9 +253,9 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
     objIntersectionVector = objRend->objIntersection;
     objIntersectionValue = objRend->intersectionValue;
     objNormalVector = objRend->objNormal;
-		objFlag = true;
+	objFlag = true;
 
-		getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
+	getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
 
     /*reflectedRay.origin = incomingRay.direction.scalarMult(objIntersectionValue);
 		//2(N.L)*N - L where N is normal and L is negative ray direction
@@ -267,14 +267,14 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
     //Using equations from http://www.cs.jhu.edu/~cohen/RendTech99/Lectures/Ray_Tracing.bw.pdf
     double dotProd = (objNormalVector.dotProduct(incomingRay.direction));
     reflectedRay.direction = (incomingRay.direction.subVector(objNormalVector.scalarMult(dotProd*2)));
-		reflectedRay.direction = reflectedRay.direction.normalize();
+	reflectedRay.direction = reflectedRay.direction.normalize();
 
     bool innerObjFlag = trackRay(reflectedRay, &reflectionColor, lights, numLights, objsToRender, numObjects, ++currentDepth);
 
     if (innerObjFlag == true)  {
       thisColor->red   += reflectionColor.red * objRend->material.reflectionParameter;
-			thisColor->green += reflectionColor.green * objRend->material.reflectionParameter;
-			thisColor->blue  += reflectionColor.blue * objRend->material.reflectionParameter;
+	  thisColor->green += reflectionColor.green * objRend->material.reflectionParameter;
+	  thisColor->blue  += reflectionColor.blue * objRend->material.reflectionParameter;
     }
 
 		/* now that we have the object to render, find the color for this pixel */
