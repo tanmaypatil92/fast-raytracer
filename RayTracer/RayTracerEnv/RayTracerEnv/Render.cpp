@@ -181,7 +181,9 @@ Color PositionColors[] = {
 Color* getObjColorOnPosition(int j)
 {
   Color *ret_color = NULL;
-  ret_color = ( j<= 40 ? &PositionColors[0] : ( j <= 80 ? &PositionColors[1] : ( j <=120 ? &PositionColors[2] : (j <= 160 ? &PositionColors[3] : j <= 200 ? &PositionColors[4] : &PositionColors[5]))) );
+  ret_color = ( j<= 40 ? &PositionColors[0] : ( j <= 80 ? &PositionColors[1] :  \
+    ( j <=120 ? &PositionColors[2] : (j <= 160 ? &PositionColors[3] : j <= 200 ?  \
+      &PositionColors[4] : &PositionColors[5]))) );
 
   return ret_color;
 
@@ -219,14 +221,16 @@ void renderObjects
   /* Render line by line, for all lines */
   for(int i =0; i < thisObj->width; i++)
   {
-    std::cout<<"i="<<i<<std::endl;
+    //std::cout<<"i="<<i<<std::endl;   <--- annoying
 
-	horizScaleCeoff = (i*thisObj->pixelWidth) - (camera->width/2.0);
+    horizScaleCeoff = (i*thisObj->pixelWidth) - (camera->width/2.0);
     horizOffset     = camera->camX.scalarMult(horizScaleCeoff);
     /*  Now render this line  */
     for(int j = 0; j < thisObj->height;j++)
     {
-	  objRend         = NULL;
+      printf("%cRendering: %dx%d",13,i,j);
+      fflush(stdout);
+      objRend         = NULL;
       vertScaleCoeff  = (j*thisObj->pixelHeight) - (camera->height/2.0);
       vertOffset = camera->camY.scalarMult(vertScaleCoeff);
       primaryRay.direction = (camera->camZ.addVector(horizOffset)).addVector(vertOffset);
@@ -245,6 +249,8 @@ void renderObjects
       }
     }/* End of display width, ie. each raster line */
   }/*  End of display height */
+  
+  printf("\n");
   /* To smooth-en out the edges */
   //antiAliasing(thisObj);
   return;
