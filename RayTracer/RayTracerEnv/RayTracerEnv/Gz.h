@@ -4,8 +4,11 @@
 #define SUCCESS 0
 #define FAILURE 1
 
-#define XRES 640
-#define YRES 480
+//#define XRES 480	
+//#define YRES 270
+
+#define XRES 1280	
+#define YRES 720	
 
 //#define	ARRAY(x,y,width) (x+(y*width))
 

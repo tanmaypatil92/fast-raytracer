@@ -154,16 +154,32 @@ int OBJObject::parse(char *fileName)
 		   char *testFileName01 = "obj_files/pawn.obj";
 		   if(strcmp(fileName,testFileName01)==0)
 		   {
-				t.scaleXYZ(&v,1.1,1.1,1.1);
+				t.scaleXYZ(&v,1.25,1.25,1.25);
 				t.rotateX(&v,180);
-				t.translateXYZ(&v,-0.5,-0.5,-3.0);
+				t.translateXYZ(&v,0.24,-1.5,-3.0);
 		   }
-		   char *testFileName02 = "obj_files/object01.obj";
+		   char *testFileName02 = "obj_files/floor.obj";
 		   if(strcmp(fileName,testFileName02)==0)
 		   {
 				t.scaleXYZ(&v,1.1,1.1,1.1);
+				//t.rotateX(&v,180);
+				t.translateXYZ(&v,0.0,2.5,0.0);
+		   }
+		   char *testFileName03 = "obj_files/pillar01.obj";
+		   if(strcmp(fileName,testFileName03)==0)
+		   {
+				t.scaleXYZ(&v,0.7,0.85,0.7);
 				t.rotateX(&v,180);
-				t.translateXYZ(&v,-5.0,3.0,80);
+				t.rotateY(&v,-20);
+				t.translateXYZ(&v,-9.5,2.5,-8.5);
+		   }
+		   char *testFileName04 = "obj_files/pillar02.obj";
+		   if(strcmp(fileName,testFileName04)==0)
+		   {
+				t.scaleXYZ(&v,0.7,0.85,0.7);
+				t.rotateX(&v,180);
+				t.rotateY(&v,20);
+				t.translateXYZ(&v,10.0,2.5,-8.0);
 		   }
 			// Uthara
 
