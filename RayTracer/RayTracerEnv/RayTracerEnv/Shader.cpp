@@ -85,7 +85,7 @@ void getColor
 	Vector localNormal, currectObjectIntersection, currentObjectNormal;
   double currentObjInterValue;
 	Color  specColor, diffColor, ambColor;
-	int flag = 1;
+	//int flag = 1;
   bool shadow = true;
 	Ray specularRay;
 

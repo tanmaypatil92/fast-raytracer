@@ -92,7 +92,10 @@ static infinity_tracer_app_data_s tracer_app = {
 #endif
 
 
-static char fileName[] = "obj_files/pawn.obj";
+static char fileName1[] = "obj_files/pawn.obj";
+static char fileName2[] = "obj_files/pillar01.obj";
+static char fileName3[] = "obj_files/pillar02.obj";
+
 void pre_initialize_everything()
 {
 
@@ -137,9 +140,9 @@ void pre_initialize_everything()
   infinity_bsp.triangles[0] = Triangle(Vector(0.0,0.0,0.0),Vector(0.0,1.0,0.0),Vector(1.0,0.0,0.0));
 
   infinity_bsp.numComplexObjects = 3;
-  infinity_bsp.complex_objects[0] = ComplexObject("obj_files/pawn.obj" , Material(Color(0.9,0.4,0.2), Color(0.1,0.1,0.1), Color(0.6,0.6,0.6), Color(0.25,0.25,0.3), 0.2, 1.5));
-  infinity_bsp.complex_objects[1] = ComplexObject("obj_files/pillar01.obj" , Material(Color(0.1,0.15,0.35), Color(0.1,0.1,0.1), Color(0.3,0.3,0.3), Color(0.2,0.2,0.2), 0.2, 1.5));
-  infinity_bsp.complex_objects[2] = ComplexObject("obj_files/pillar02.obj" , Material(Color(0.1,0.15,0.35), Color(0.1,0.1,0.1), Color(0.4,0.4,0.4), Color(0.2,0.2,0.2), 0.2, 1.5));
+  infinity_bsp.complex_objects[0] = ComplexObject(fileName1, Material(Color(0.9,0.4,0.2), Color(0.1,0.1,0.1), Color(0.6,0.6,0.6), Color(0.25,0.25,0.3), 0.2, 1.5));
+  infinity_bsp.complex_objects[1] = ComplexObject(fileName2 , Material(Color(0.1,0.15,0.35), Color(0.1,0.1,0.1), Color(0.3,0.3,0.3), Color(0.2,0.2,0.2), 0.2, 1.5));
+  infinity_bsp.complex_objects[2] = ComplexObject(fileName3, Material(Color(0.1,0.15,0.35), Color(0.1,0.1,0.1), Color(0.4,0.4,0.4), Color(0.2,0.2,0.2), 0.2, 1.5));
   //infinity_bsp.complex_objects[0] = ComplexObject("obj_files/cube.obj" , Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
   //infinity_bsp.complex_objects[4] = ComplexObject("obj_files/floor.obj", Material(Color(0.2,0.2,0.2), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2,1.5) );
 

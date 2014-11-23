@@ -4,48 +4,48 @@
 void Transform::rotateX(Vector *vertex,float xRotation){
 	float angle = degToRad(xRotation);
 	TMatrix rotX = {
-						1,			0,		0,		0,
-						0,	cos(angle),	-sin(angle),0,
-						0,	sin(angle),	 cos(angle),0,
-						0,			0,		0,		1
+						{1,			0,		0,		0},
+						{0,	static_cast<float>(cos(angle)),	static_cast<float>(-sin(angle)),0},
+						{0,	static_cast<float>(sin(angle)),	 static_cast<float>(cos(angle)),0},
+						{0,			0,		0,		1}
 					};
 	multiplyMatrix(vertex,&rotX);
 }
 void Transform::rotateY(Vector *vertex,float yRotation){
 	float angle = degToRad(yRotation);
 	TMatrix rotY = {
-						cos(angle),	0,	sin(angle),	0,
-						0,			1,	0,			0,	
-						-sin(angle),0,	cos(angle),	0,
-						0,			0,	0,			1
+						{static_cast<float>(cos(angle)),	0,	static_cast<float>(sin(angle)),	0},
+						{0,			1,	0,			0},
+						{static_cast<float>(-sin(angle)),0,	static_cast<float>(cos(angle)),	0},
+						{0,			0,	0,			1}
 					};
 	multiplyMatrix(vertex,&rotY);
 }
 void Transform::rotateZ(Vector *vertex,float zRotation){
 	float angle = degToRad(zRotation);
 	TMatrix rotZ = {
-						cos(angle),-sin(angle),	0,	0,	
-						sin(angle),cos(angle),	0,	0,
-						0,					0,	1,	0,
-						0,					0,	0,	1
+						{static_cast<float>(cos(angle)),static_cast<float>(-sin(angle)),	0,	0},
+						{static_cast<float>(sin(angle)),static_cast<float>(cos(angle)),	0,	0},
+						{0,					0,	1,	0},
+						{0,					0,	0,	1}
 				   };
 	multiplyMatrix(vertex,&rotZ);
 }
 void Transform::scaleXYZ(Vector *vertex,float xScale,float yScale,float zScale){
 	TMatrix scale = {
-						xScale,	0,		0,		0,
-							0,	yScale,	0,		0,
-							0,	0,		zScale,	0,
-							0,	0,		0,		1
+						{xScale,	0,		0,		0},
+						{	0,	yScale,	0,		0},
+						{	0,	0,		zScale,	0},
+						{	0,	0,		0,		1}
 				    };
 	multiplyMatrix(vertex,&scale);
 }
 void Transform::translateXYZ(Vector *vertex,float xTranslate,float yTranslate,float zTranslate){
 	TMatrix translate = {
-						1,	0,	0,	xTranslate,
-						0,	1,	0,	yTranslate,
-						0,	0,	1,	zTranslate,
-						0,	0,	0,		1
+						{1,	0,	0,	xTranslate},
+						{0,	1,	0,	yTranslate},
+						{0,	0,	1,	zTranslate},
+						{0,	0,	0,		1}
 					    };
 	multiplyMatrix(vertex,&translate);
 }

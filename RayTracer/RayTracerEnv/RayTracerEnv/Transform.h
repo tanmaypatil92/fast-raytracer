@@ -1,4 +1,4 @@
-#ifndef _TRANSFORM_H
+#ifndef _TRANSFORM_H_
 #define _TRANSFORM_H_
 
 #include "Vector.h"
