@@ -169,6 +169,23 @@ void antiAliasing( infinity_render_s* thisObj){
 	return;
 }
 
+Color PositionColors[] = {
+  Color(0.68,0.61,0.80,1.0),
+  Color(0.72,0.63,0.82,1.0),
+  Color(0.76,0.65,0.84,1.0),
+  Color(0.80,0.67,0.86,1.0),
+  Color(0.84,0.69,0.88,1.0),
+  Color(0.88,0.71,0.90,1.0)
+};
+
+Color* getObjColorOnPosition(int j)
+{
+  Color *ret_color = NULL;
+  ret_color = ( j<= 40 ? &PositionColors[0] : ( j <= 80 ? &PositionColors[1] : ( j <=120 ? &PositionColors[2] : (j <= 160 ? &PositionColors[3] : j <= 200 ? &PositionColors[4] : &PositionColors[5]))) );
+
+  return ret_color;
+
+}/* getObjColorOnPosition */
 
 /*  For now we only pass the objects, perhaps can add a pointer to a camera object */
 void renderObjects
@@ -223,36 +240,8 @@ void renderObjects
 		    thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(currentColor);
 	    }
       else{  //Set the default color to something?
-		    if(j <= 40)
-			{
-				thisObj->defaultColor = Color(0.68,0.61,0.80,1.0);
-				thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisObj->defaultColor);
-			}
-		    else if(j <= 80 && j > 40)
-		    {
-			    thisObj->defaultColor = Color(0.72,0.63,0.82,1.0);
-			    thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisObj->defaultColor);
-		    }
-		    else if(j <= 120 && j > 80)
-		    {
-			    thisObj->defaultColor = Color(0.76,0.65,0.84,1.0);
-			    thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisObj->defaultColor);
-		    }
-			else if(j <= 160 && j > 120)
-		    {
-			    thisObj->defaultColor = Color(0.80,0.67,0.86,1.0);
-			    thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisObj->defaultColor);
-		    }
-			else if(j <= 200 && j > 160)
-		    {
-			    thisObj->defaultColor = Color(0.84,0.69,0.88,1.0);
-			    thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisObj->defaultColor);
-		    }
-			else if(j > 200)
-		    {
-			    thisObj->defaultColor = Color(0.88,0.71,0.90,1.0);
-			    thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisObj->defaultColor);
-		    }
+        thisObj->defaultColor = *(getObjColorOnPosition(j));
+        thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisObj->defaultColor);
       }
     }/* End of display width, ie. each raster line */
   }/*  End of display height */
