@@ -28,7 +28,10 @@
 #define MAX_LIGHTS            10
 #define SPECULAR_COEFF        32
 #define TRACER_THRESH   0.0000001
+
+#ifndef OS_X_ENV
 #define INFINITY std::numeric_limits<double>::max()
+#endif
 
 /*  MACROS */
 #define _USE_MATH_DEFINES
@@ -78,11 +81,11 @@ void getColor
 )
 {
 	Vector *N, L, R;
-	double NdotL,NdotE,RdotE;
+	double NdotL;
 	Vector localNormal, currectObjectIntersection, currentObjectNormal;
   double currentObjInterValue;
 	Color  specColor, diffColor, ambColor;
-	int flag = 1;
+	//int flag = 1;
   bool shadow = true;
 	Ray specularRay;
 
@@ -122,7 +125,7 @@ void getColor
 	for(int l=0; l <numLights; l++)
 	{
 		L = lights[l].direction.normalize();
-		double currentIntersectionValue = INFINITY;
+		double currentIntersectionValue = INFINITY, distance = INFINITY;
 		NdotL = currentObject->objNormal.dotProduct(L);
 		if(NdotL > 0)
 		{
@@ -133,6 +136,8 @@ void getColor
 			/*  Now loop through all the objects */
 			for(int obj = 0;obj<numObjects;obj++)
 			{
+
+  /*
 			//Perform ray intersection with this object
 				objsToRender[obj]->findIntersection(shadowRay);
 				if(objsToRender[obj]->intersectionValue > TRACER_THRESH && objsToRender[obj]->intersectionValue <= currentIntersectionValue)
@@ -140,6 +145,17 @@ void getColor
           currentIntersectionValue = objsToRender[obj]->intersectionValue;
 					//if(objsToRender[obj]->objectId!=currentObjId)
 					shadow = true;
+    */
+
+			//Perform the ray intersection with this object
+				if(objsToRender[obj]->objectId!=currentObjId)
+				{
+					objsToRender[obj]->findIntersection(shadowRay);
+					if(objsToRender[obj]->intersectionValue > TRACER_THRESH && objsToRender[obj]->intersectionValue <= distance)
+					{
+              distance = objsToRender[obj]->intersectionValue;
+							shadow = true;
+					}
 				}
 			} /* End of obj loop */
 
@@ -148,7 +164,9 @@ void getColor
 				(*currentColor).red   += (currentObject->material.Kd.red   * lights[l].lightColor.red   * NdotL);
 				(*currentColor).green += (currentObject->material.Kd.green * lights[l].lightColor.green * NdotL);
 				(*currentColor).blue  += (currentObject->material.Kd.blue  * lights[l].lightColor.blue  * NdotL);
-			}
+
+		/*
+      }
 
 			double RdotL = specularRay.direction.dotProduct(L);
 			double spec;
@@ -158,8 +176,21 @@ void getColor
 				(*currentColor).red   += (currentObject->material.Ks.red   * lights[l].lightColor.red   * spec);
 				(*currentColor).green += (currentObject->material.Ks.green * lights[l].lightColor.green * spec);
 				(*currentColor).blue  += (currentObject->material.Ks.blue  * lights[l].lightColor.blue  * spec);
+      */
+
+				// Shouldn't render specular if object in shadow I assume
+				double RdotL = specularRay.direction.dotProduct(L);
+				double spec;
+				if(RdotL > 0)
+				{
+					spec = pow(RdotL,25);
+					(*currentColor).red   += (currentObject->material.Ks.red   * lights[l].lightColor.red   * spec);
+					(*currentColor).green += (currentObject->material.Ks.green * lights[l].lightColor.green * spec);
+					(*currentColor).blue  += (currentObject->material.Ks.blue  * lights[l].lightColor.blue  * spec);
+				}
 			}
 	   }
+
 		
 	}
 

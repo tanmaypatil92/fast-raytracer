@@ -46,7 +46,7 @@ struct Face {
 
 class OBJObject {
        
-       char *mtlfile;
+       //char *mtlfile;
        int numVertices;
        int numVNormals;
        int numVTextures;

@@ -14,8 +14,10 @@
 #include <climits>
 
 //@todo : VC++ people, uncomment this for unblocking you.
+#ifndef OS_X_ENV
 #define INFINITY std::numeric_limits<double>::max()
 #define M_PI 3.1427
+#endif
 
 /*  MACROS */
 #define _USE_MATH_DEFINES
@@ -37,6 +39,12 @@ typedef struct{
   int debug_mode;
 
 }render_debug_s;
+
+void antiAliasing(infinity_render_s* thisObj);
+
+int ARRAY(int x,int y,int width){
+	return (x+(y*width));
+}
 
 #if 0
 /* LOCAL OBJECTS, to be referenced only in this file */
@@ -112,6 +120,75 @@ GeomObj* findObjToRender
 }
 #endif
 
+void antiAliasing( infinity_render_s* thisObj){
+	
+  /* @todo - this is problematic, can someone explain what this is doing here? */
+	//Pixel *pixels = new Pixel[thisObj->width * thisObj->height];
+	for(int i=0;i<thisObj->width;i++)
+		for(int j=0;j<thisObj->height; j++){
+			int count = 0;
+			Color c = Color(0,0,0,0);
+			if(i-1 >=0 && j-1 >= 0){
+				c.addColor(thisObj->pixels[ARRAY(i-1,j-1,thisObj->width)].pixelColor);
+				count ++;
+			}
+			if(i-1 >=0){
+				c.addColor(thisObj->pixels[ARRAY(i-1,j,thisObj->width)].pixelColor);
+				count ++;
+			}
+			if(i-1 >=0 && j+1 < thisObj->height){
+				c.addColor(thisObj->pixels[ARRAY(i-1,j+1,thisObj->width)].pixelColor);
+				count ++;
+			}
+			if(j-1 >= 0){
+				c.addColor(thisObj->pixels[ARRAY(i,j-1,thisObj->width)].pixelColor);
+				count ++;
+			}
+			if(j+1 < thisObj->height){
+				c.addColor(thisObj->pixels[ARRAY(i,j+1,thisObj->width)].pixelColor);
+				count ++;
+			}
+			if(i+1 < thisObj->width && j+1 < thisObj->height){
+				c.addColor(thisObj->pixels[ARRAY(i+1,j+1,thisObj->width)].pixelColor);
+				count ++;
+			}
+			if(i+1 < thisObj->width){
+				c.addColor(thisObj->pixels[ARRAY(i+1,j,thisObj->width)].pixelColor);
+				count ++;
+			}
+
+			if(i+1 < thisObj->width && j-1 >= 0){
+				c.addColor(thisObj->pixels[ARRAY(i+1,j-1,thisObj->width)].pixelColor);
+				count ++;
+			}
+			count++;
+			c.addColor(thisObj->pixels[ARRAY(i,j,thisObj->width)].pixelColor);
+			c.avgColor(count);
+			thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(c);
+		}
+	return;
+}
+
+Color PositionColors[] = {
+  Color(0.68,0.61,0.80,1.0),
+  Color(0.72,0.63,0.82,1.0),
+  Color(0.76,0.65,0.84,1.0),
+  Color(0.80,0.67,0.86,1.0),
+  Color(0.84,0.69,0.88,1.0),
+  Color(0.88,0.71,0.90,1.0)
+};
+
+Color* getObjColorOnPosition(int j)
+{
+  Color *ret_color = NULL;
+  ret_color = ( j<= 40 ? &PositionColors[0] : ( j <= 80 ? &PositionColors[1] :  \
+    ( j <=120 ? &PositionColors[2] : (j <= 160 ? &PositionColors[3] : j <= 200 ?  \
+      &PositionColors[4] : &PositionColors[5]))) );
+
+  return ret_color;
+
+}/* getObjColorOnPosition */
+
 /*  For now we only pass the objects, perhaps can add a pointer to a camera object */
 void renderObjects
 (
@@ -128,7 +205,7 @@ void renderObjects
   Vector horizOffset, vertOffset;
   Ray    primaryRay, secondaryRay, tempRay;
   GeomObj* objRend = NULL;
-  double   intersectValue = INFINITY;
+  //double   intersectValue = INFINITY;
   Color  currentColor, reflectionColor;
   int counter = 0;
 
@@ -145,11 +222,15 @@ void renderObjects
   /* Render line by line, for all lines */
   for(int i =0; i < thisObj->width; i++)
   {
+    //std::cout<<"i="<<i<<std::endl;   <--- annoying
+
     horizScaleCeoff = (i*thisObj->pixelWidth) - (camera->width/2.0);
     horizOffset     = camera->camX.scalarMult(horizScaleCeoff);
     /*  Now render this line  */
     for(int j = 0; j < thisObj->height;j++)
     {
+      printf("%cRendering: %dx%d",13,i,j);
+      fflush(stdout);
       objRend         = NULL;
       vertScaleCoeff  = (j*thisObj->pixelHeight) - (camera->height/2.0);
       vertOffset = camera->camY.scalarMult(vertScaleCoeff);
@@ -164,10 +245,15 @@ void renderObjects
 		    thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(currentColor);
 	    }
       else{  //Set the default color to something?
+        thisObj->defaultColor = *(getObjColorOnPosition(j));
         thisObj->pixels[ARRAY(i,j,thisObj->width)].setColor(thisObj->defaultColor);
       }
     }/* End of display width, ie. each raster line */
   }/*  End of display height */
+  
+  printf("\n");
+  /* To smooth-en out the edges */
+  //antiAliasing(thisObj);
   return;
 }/* renderObjects */
 
@@ -195,19 +281,19 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
     objIntersectionVector = objRend->objIntersection;
     objIntersectionValue = objRend->intersectionValue;
     objNormalVector = objRend->objNormal;
-		objFlag = true;
+  	objFlag = true;
     incomingRay.direction = incomingRay.direction.normalize();
     objNormalVector = objNormalVector.normalize();
     n1 = incomingRay.currentRefractiveIndex;
     n2 = objRend->material.refractionIndex;
 
-		getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
+	getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
 
     reflectedRay.origin = objIntersectionVector; reflectedRay.currentRefractiveIndex = incomingRay.currentRefractiveIndex;
     //Using reflection equations from http://www.cs.jhu.edu/~cohen/RendTech99/Lectures/Ray_Tracing.bw.pdf
     dotProd = (objNormalVector.dotProduct(incomingRay.direction));
     reflectedRay.direction = (incomingRay.direction.subVector(objNormalVector.scalarMult(dotProd*2)));
-		reflectedRay.direction = reflectedRay.direction.normalize();
+	reflectedRay.direction = reflectedRay.direction.normalize();
 
     refractedRay.origin = objIntersectionVector; refractedRay.currentRefractiveIndex = objRend->material.refractionIndex;
     //Using refraction equations from http://www.flipcode.com/archives/reflection_transmission.pdf
@@ -225,8 +311,8 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
 
     if (reflectedRayReturns == true)  {
       thisColor->red   += reflectionColor.red * objRend->material.reflectionParameter;
-			thisColor->green += reflectionColor.green * objRend->material.reflectionParameter;
-			thisColor->blue  += reflectionColor.blue * objRend->material.reflectionParameter;
+	  thisColor->green += reflectionColor.green * objRend->material.reflectionParameter;
+	  thisColor->blue  += reflectionColor.blue * objRend->material.reflectionParameter;
     }
 
     /*
@@ -238,7 +324,40 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
 			  thisColor->green += refractionColor.green * objRend->material.reflectionParameter;
 			  thisColor->blue  += refractionColor.blue * objRend->material.reflectionParameter;
       }
-	  }
+	  }*/
+
+		/* now that we have the object to render, find the color for this pixel */
+		/*for(int r = 0; r < reflectionDepth; r++)
+		{
+			//cam_ray_origin.vectAdd(cam_ray_direction.vectMult(intersections.at(index_of_winning_object)
+			//secondaryRay.origin    = objIntersectionVector.subVector(tempRay.origin);
+      secondaryRay.origin    = objRend->objIntersection.subVector(tempRay.origin);
+			secondaryRay.direction = (objRend->objNormal.scalarMult(2*(objRend->objNormal.dotProduct(tempRay.origin))).subVector(tempRay.origin));
+			secondaryRay.direction = secondaryRay.direction.normalize();
+
+      reflectedRay.origin = tempRay.direction.scalarMult(objRend->intersectionValue);
+
+			// 2(N.L)*N - L where N is normal and L is negative ray direction
+			double dotProd = (objNormalVector.dotProduct(tempRay.direction.negate()));
+			reflectedRay.direction = (objNormalVector.scalarMult(dotProd*2)).subVector(tempRay.direction.negate());
+			reflectedRay.direction = reflectedRay.direction.normalize();
+
+			objRend = intersection(objsToRender, numObjects, reflectedRay);
+			tempRay = reflectedRay;
+
+			if(objRend != NULL && objRend->objectId!=currentObjId )
+			{
+				getColor(lights, numLights, objRend, &reflectionColor, objsToRender, &tempRay, numObjects);
+				thisColor->red   += reflectionColor.red*0.2;//0.2 is the reflection prcentage
+				thisColor->green += reflectionColor.green*0.2;
+				thisColor->blue  += reflectionColor.blue*0.2;
+			}
+			else
+			{
+				break;
+			}
+			currentObjId  = objRend->objectId;
+		}
     */
   }
   return objFlag;
@@ -263,4 +382,3 @@ GeomObj* intersection(GeomObj* objsToRender[],int numObjects,Ray currentRay)
       } /* End of obj loop */
 	  return objRend;
 }
-

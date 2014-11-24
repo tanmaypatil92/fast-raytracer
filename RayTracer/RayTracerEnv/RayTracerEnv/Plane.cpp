@@ -31,7 +31,7 @@ double Plane::planeIntersection(Ray r)
 	   if Vd = 0 then ray is parallel to plane
 	   also if t<0 points are behind the ray origin */ 
 	double V0,Vd,t;
-	Vector Pn = normal;    //Plane Normal
+	Vector Pn = normal.normalize();    //Plane Normal
 	double D  = distance;  // Plane Distance(Vector) from origin 
 	Vector R0 = r.origin;  // Ray Origin
 	Vector Rd = r.direction;
@@ -44,19 +44,17 @@ double Plane::planeIntersection(Ray r)
 		//V0 = Pn.dotProduct(R0) + D;
 		//V0 = (R0.subVector(Vector(D,D,D))).dotProduct(Pn);
 		t  = -1 * (V0/Vd);
-		if (t < 1)t = -1;
+		if (t < 0.0000001)t = -1;
 		else
 		{
-			intersection = R0.addVector(Rd.scalarMult(t));
+			this->intersection = R0.addVector(Rd.scalarMult(t));
 		}
 	}
   
     /* @todo - deprecated, use the superclass properties instead */
   
-	this->normal          = Pn.normalize(); //@todo : Uthara, please confirm this.
-	// ya both should be normalized
-	// but normalizinf intersection messes with the checker pattern
-	this->intersection    = R0.addVector(Rd.scalarMult(t));
+	this->normal          = Pn; //@todo : Uthara, please confirm this.
+	//only Normal has to be normalized the Intersection is a Point not Vector so no I guess
 	int columValue = this->intersection.x;
 	int rowvalue   = this->intersection.z;
 	if((columValue+rowvalue) %2 == 0)
@@ -67,7 +65,7 @@ double Plane::planeIntersection(Ray r)
   /* Now set the superclass properties.*/
   intersectionValue = t;
   objNormal          = this->normal;
-  objIntersection    = this->intersection;//.normalize();
+  objIntersection    = this->intersection;
   material.matColor  = mat.matColor;
   return t;
 }

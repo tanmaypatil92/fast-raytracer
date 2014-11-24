@@ -25,6 +25,8 @@ I think this works. It rendered the teapot. Have fun.
 #include <math.h>
 #include <sstream>
 #include <string>
+#include "Transform.h"
+#include "Vector.h"
 
 #include "OBJParser.h"
 #define LINE_BUFFER_SIZE 1024
@@ -48,8 +50,16 @@ OBJObject::~OBJObject()
     //if(this->faceList) delete this->faceList;
 }
 
+char testFileName01[] = "obj_files/pawn.obj";
+char testFileName02[] = "obj_files/floor.obj";
+char testFileName03[] = "obj_files/pillar01.obj";
+char testFileName04[] = "obj_files/pillar02.obj";
+
+
 int OBJObject::parse(char *fileName)
 {
+
+    int ret_val = 0;
     char line[1024];
     
     ifstream obj_file;
@@ -57,8 +67,10 @@ int OBJObject::parse(char *fileName)
     
     if (!obj_file)
     {
-        cerr << "OBJObject::parse File " << fileName << "could not be opened." << endl;
-        return -1; 
+        cerr << "OBJObject::parse File " << fileName << " could not be opened." << endl;
+		getchar();
+		exit(1);
+        //ret_val =  -1;
     }                      
     while(!obj_file.eof())
     { 
@@ -142,10 +154,46 @@ int OBJObject::parse(char *fileName)
            linestream << line;
            linestream >> x >> y >> z;
            
-           this->vList[vCount].x = x;
-           this->vList[vCount].y = y;
-           this->vList[vCount].z = z;
-           
+           // This is where I am including the Transform code(since here is were vertices are parsed)
+		   // Very crude method of ecideing which object to transform... get file name!!
+		   // Can be changed later if necessarry.
+		   Transform t;
+		   Vector v = Vector(x,y,z);
+		   if(strcmp(fileName,testFileName01)==0)
+		   {
+				t.scaleXYZ(&v,1.25,1.25,1.25);
+				t.rotateX(&v,180);
+				t.translateXYZ(&v,0.24,-1.5,-3.0);
+		   }
+		   //char *testFileName02 = "obj_files/floor.obj";
+		   if(strcmp(fileName,testFileName02)==0)
+		   {
+				t.scaleXYZ(&v,1.1,1.1,1.1);
+				//t.rotateX(&v,180);
+				t.translateXYZ(&v,0.0,2.5,0.0);
+		   }
+		   //char *testFileName03 = "obj_files/pillar01.obj";
+		   if(strcmp(fileName,testFileName03)==0)
+		   {
+				t.scaleXYZ(&v,0.7,0.85,0.7);
+				t.rotateX(&v,180);
+				t.rotateY(&v,-20);
+				t.translateXYZ(&v,-9.5,2.5,-8.5);
+		   }
+		   //char *testFileName04 = "obj_files/pillar02.obj";
+		   if(strcmp(fileName,testFileName04)==0)
+		   {
+				t.scaleXYZ(&v,0.7,0.85,0.7);
+				t.rotateX(&v,180);
+				t.rotateY(&v,20);
+				t.translateXYZ(&v,10.0,2.5,-8.0);
+		   }
+			// Uthara
+
+		   this->vList[vCount].x = v.x;
+           this->vList[vCount].y = v.y;
+           this->vList[vCount].z = v.z;
+          
            
            vCount++;
            if(this->dBug)
@@ -209,7 +257,7 @@ int OBJObject::parse(char *fileName)
            int fieldIndex=0;
            int numIndex=0;
            int prevIndex=0;
-           int val=0;
+           //int val=0;
            int fields=0;
            
            for(int i=0;i<1024;i++)line[i]=0;
@@ -354,7 +402,8 @@ int OBJObject::parse(char *fileName)
            obj_file.getline(line,1024);
        }
     }//second while loop
-    
+  
+    return ret_val;
         
 }//OBJObject::parse
 

@@ -74,3 +74,47 @@ bool Vector::checkRange(float down, float up)
   return ret_value;
   
 }
+
+double dot(Vector A, Vector B)
+{
+	double dot;
+	dot = A.x*B.x + A.y*B.y + A.z*B.z;
+	return dot;
+}
+
+Vector add(Vector A, Vector B)
+{
+	Vector C;
+	C.x = A.x + B.x;
+	C.y = A.y + B.y;
+	C.z = A.z + B.z;
+
+	return C;
+}
+Vector add(Vector A, Vector B, Vector C)
+{
+	Vector D;
+	D.x = A.x + B.x + C.x;
+	D.y = A.y + B.y + C.y;
+	D.z = A.z + B.z + C.z;
+
+	return D;
+}
+Vector sub(Vector A, Vector B)
+{
+	Vector C;
+	C.x = A.x - B.x;
+	C.y = A.y - B.y;
+	C.z = A.z - B.z;
+
+	return C;
+}
+Vector cross(Vector A, Vector B)
+{
+	Vector C;
+	C.x = A.y*B.z - A.z*B.y;
+	C.y = A.z*B.x - A.x*B.z;
+	C.z = A.x*B.y - A.y*B.x;
+
+	return C;
+}

@@ -11,12 +11,17 @@ Triangle::Triangle()
 	v0 = Vector( 0,  0, 0);                                                                                                                  
     v1 = Vector( 1,  0, 0);                                                                                                                  
     v2 = Vector( 1,  1, 0); 
+
+	mat.matColor = Color(1.0,0.0,0.0);
 }
 Triangle::Triangle(Vector v0_passed,Vector v1_passed, Vector v2_passed)
 {
 	v0 = v0_passed;
 	v1 = v1_passed;
 	v2 = v2_passed;
+
+	bb = BoundingBox();
+	bb.SetBounds_Triangle(v0,v1,v2);
 
 	mat.matColor = Color(1.0,0.0,0.0);
 }
@@ -57,40 +62,7 @@ Triangle::Triangle(OBJObject obj, int  face_no)
 	}
 }
 
-double dot(Vector A, Vector B)
-{
-	double dot;
-	dot = A.x*B.x + A.y*B.y + A.z*B.z;
-	return dot;
-}
-
-Vector add(Vector A, Vector B)
-{
-	Vector C;
-	C.x = A.x + B.x;
-	C.y = A.y + B.y;
-	C.z = A.z + B.z;
-
-	return C;
-}
-Vector sub(Vector A, Vector B)
-{
-	Vector C;
-	C.x = A.x - B.x;
-	C.y = A.y - B.y;
-	C.z = A.z - B.z;
-
-	return C;
-}
-Vector cross(Vector A, Vector B)
-{
-	Vector C;
-	C.x = A.y*B.z - A.z*B.y;
-	C.y = A.z*B.x - A.x*B.z;
-	C.z = A.x*B.y - A.y*B.x;
-
-	return C;
-}
+#define ABS(x) (x < 0? (-x) : (x) )
 
 float areaTriangle(Vector v1,Vector v2,Vector v3)
 {
@@ -102,8 +74,15 @@ float areaTriangle(Vector v1,Vector v2,Vector v3)
 	// AC coordinates
 	float y1 = AC.x ; float y2 = AC.y;  float y3 = AC.z;
 
-	float area = abs(( (x2*y1-x1*y2) + (x3*y2-x2*y3)+ (x1*y3-x3*y1) )  / 2.0);
-	return area;
+  #ifdef OS_X_ENV
+    float temp = (x2*y1-x1*y2) + (x3*y2-x2*y3)+ (x1*y3-x3*y1);
+    float area = ABS(temp);
+    area = area/2.0;
+  #else
+    float area = abs(( (x2*y1-x1*y2) + (x3*y2-x2*y3)+ (x1*y3-x3*y1) )  / 2.0);
+	#endif
+  
+  return area;
 }
 double Triangle::findIntersection(Ray ray)
 {
@@ -132,7 +111,7 @@ double Triangle::triIntersection(Ray ray)
 	intersectionVal = t;
 
 	// CHECK IF TRINAGLE IS BEHIND RAY ORIGIN
-	if (t < 0) { intersectionVal = -1; }
+	if (t < 0.01) { intersectionVal = -1; }
     
 	
 	// COMPUTE INTERSECTION POINT
