@@ -18,4 +18,10 @@ class Vector{
 	Vector negate();
   bool checkRange(float down, float up);
 };
+
+double dot(Vector A, Vector B);
+Vector add(Vector A, Vector B);
+Vector add(Vector A, Vector B, Vector C);
+Vector sub(Vector A, Vector B);
+Vector cross(Vector A, Vector B);
 #endif

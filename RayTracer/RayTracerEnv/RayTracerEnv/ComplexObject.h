@@ -62,6 +62,8 @@ class ComplexObject : public GeomObj
 	ComplexObject(char* obj_filename,Material m);
 	
 	Vector Vertex_to_Vector(Vertex vertex);
+	Vector VertexNormal_to_Vector(VertexNormal vertex);
+
 	void OutputFaces();
 
 	double complexIntersection(Ray);

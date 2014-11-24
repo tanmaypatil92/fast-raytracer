@@ -19,6 +19,9 @@ class Triangle : public GeomObj
 
 	Vector triInter;
 	Vector triNormal;
+	Vector v0_normal, v1_normal, v2_normal;
+
+	VertexTexture tex0, tex1, tex2;
 
 	BoundingBox bb;
 

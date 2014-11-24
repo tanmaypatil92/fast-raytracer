@@ -117,8 +117,18 @@ void ComplexObject::get_triangles()
 		v2 = Vertex_to_Vector(myOBJ.getVertex(f.faceVList[2]));
 		
 
-		tri_list[n_tri++] = new Triangle(v0,v1,v2);
-			
+		tri_list[n_tri] = new Triangle(v0,v1,v2);
+
+		tri_list[n_tri]->v0_normal = VertexNormal_to_Vector(myOBJ.getVertexNormal(f.faceVNList[0]));
+		tri_list[n_tri]->v1_normal = VertexNormal_to_Vector(myOBJ.getVertexNormal(f.faceVNList[1]));
+		tri_list[n_tri]->v2_normal = VertexNormal_to_Vector(myOBJ.getVertexNormal(f.faceVNList[2]));
+
+		texture_defined = true;
+		tri_list[n_tri]->tex0 = myOBJ.getVertexTexture(f.faceVTList[0]);
+		tri_list[n_tri]->tex1 = myOBJ.getVertexTexture(f.faceVTList[1]);
+		tri_list[n_tri]->tex2 = myOBJ.getVertexTexture(f.faceVTList[2]);
+
+		n_tri++;
 	}
 }
 ComplexObject::ComplexObject(char* filename, Material m)
@@ -139,6 +149,15 @@ ComplexObject::ComplexObject(char* filename, Material m)
 	material = mat;
 }
 Vector ComplexObject::Vertex_to_Vector(Vertex vertex)
+{
+	Vector vector;
+
+	vector.x = vertex.x;
+	vector.y = vertex.y;
+	vector.z = vertex.z;
+	return vector;
+}
+Vector ComplexObject::VertexNormal_to_Vector(VertexNormal vertex)
 {
 	Vector vector;
 
@@ -229,65 +248,6 @@ double ComplexObject::complexIntersection(Ray ray)
 	return min_intersectionVal;
 }
 
-#if 0
-double ComplexObject::complexIntersection_fast(Ray ray)
-{
-	// -- ELIMINATE ON BASIS OF TOTAL BOUNDING BOX FIRST
-	double intersectionVal= 0;
-
-	if(!box.Intersection(ray))
-	{
-		intersectionValue = -1;
-		return -1;
-	}
-	
-
-	float min_intersectionVal  = FLT_MAX;
-	Vector min_complexNormal, min_complexInter;
-
-	int no_of_intersections = 0;
-
-	// GO THROUGH EACH OCT
-	for(int o=0; o<8; o++)
-	{
-		// CHECK IF OCT IS INTERSECTED, SKIP IF NOT
-		if( !oct[o].bb.Intersection(ray) )
-			continue;
-
-		// LOOP THROUGH ALL OCT TRINAGLES
-		for(int t=0; t<oct[o].n_tri_inside ; t++)
-		{
-			int tri_list_index =  oct[o].tri_index_list[t];
-			Triangle tri = tri_list[tri_list_index];
-			
-			double tri_intersect = tri.triIntersection(ray);
-
-			if( (tri_intersect >= 0) &&  (tri_intersect < min_intersectionVal) )
-			{	
-				min_intersectionVal = tri_intersect;
-				min_complexNormal = tri.triNormal;
-				min_complexInter  = tri.triInter;
-
-				no_of_intersections++;
-				if(no_of_intersections >= 2) {break;}
-			}
-		}
-
-		if(no_of_intersections >= 2) {break;}
-	}
-	
-
-	intersectionVal = min_intersectionVal;
-	if(no_of_intersections == 0) {intersectionVal = -1;}
-
-	/* Now set the superclass properties.*/
-	intersectionValue = intersectionVal;
-	objNormal          = min_complexNormal;
-	objIntersection    = min_complexInter;
-
-	return min_intersectionVal;
-}
-#endif
 
 double ComplexObject::complexIntersection_faster(Ray ray)
 {
@@ -303,9 +263,43 @@ double ComplexObject::complexIntersection_faster(Ray ray)
 		Triangle* tri = tri_list[r.tri_index];
 		double tri_intersect = tri->triIntersection(ray);
 
+		
+		// OBTAINING BARYCENTRIC FOR NORMAL AND UV INTERPOLATION
+		// The area of a triangle is 
+		Vector a = tri->v0;
+		Vector b = tri->v1;
+		Vector c = tri->v2;
+		Vector P = tri->triInter;
+		Vector face_normal = tri->triNormal;
+
+		float areaABC = dot( face_normal, cross( sub(b,a), sub(c,a)) );
+		float areaPBC = dot( face_normal, cross( sub(b,P), sub(c,P)) ) ;
+		float areaPCA = dot( face_normal, cross( sub(c,P), sub(a,P)) ) ;
+
+		float bary_a = areaPBC / areaABC ; // alpha
+		float bary_b = areaPCA / areaABC ; // beta
+		float bary_c = 1.0f - bary_a - bary_b ; // gamma
+		
+		// NORMAL INTERPOLATION
+		Vector normal_a = tri->v0_normal;
+		Vector normal_b = tri->v1_normal;
+		Vector normal_c = tri->v2_normal;
+
+		Vector inter_normal = add (normal_a.scalarMult(bary_a) ,normal_b.scalarMult(bary_b) , normal_c.scalarMult(bary_c));
+
+		// UV INTERPOLATION
+		VertexTexture tex_a = tri->tex0;
+		VertexTexture tex_b = tri->tex1;
+		VertexTexture tex_c = tri->tex2;
+
+		VertexTexture inter_tex;
+		inter_tex.s =  (tex_a.s)*bary_a + (tex_b.s)*bary_b + (tex_c.s)*bary_c;
+		inter_tex.t =  (tex_a.t)*bary_a + (tex_b.t)*bary_b + (tex_c.t)*bary_c;
+
 		intersectionValue =  tri_intersect;
-		objNormal          =  tri->triNormal;
+		objNormal          =  inter_normal;
 		objIntersection    = tri->triInter;
+		tex = inter_tex;
 
 		return tri_intersect;
 	}

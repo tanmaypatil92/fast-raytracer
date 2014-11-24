@@ -4,6 +4,7 @@
 #include "Ray.h"
 #include "Vector.h"
 #include "Material.h"
+#include "OBJParser.h"
 
 class GeomObj
 {
@@ -12,11 +13,21 @@ class GeomObj
 	Material material;
 	Vector objNormal;
 	Vector objIntersection;
+	
+	bool texture_defined;
+	VertexTexture tex;
+
 	int objectId;
 	//virtual dumdum() = 0;
 
+	
+
 	virtual double findIntersection(Ray ray)=0;
 	
+	GeomObj()
+	{
+		texture_defined = false;
+	}
 };
 
 #endif

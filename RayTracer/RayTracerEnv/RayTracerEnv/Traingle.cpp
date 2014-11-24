@@ -62,41 +62,6 @@ Triangle::Triangle(OBJObject obj, int  face_no)
 	}
 }
 
-double dot(Vector A, Vector B)
-{
-	double dot;
-	dot = A.x*B.x + A.y*B.y + A.z*B.z;
-	return dot;
-}
-
-Vector add(Vector A, Vector B)
-{
-	Vector C;
-	C.x = A.x + B.x;
-	C.y = A.y + B.y;
-	C.z = A.z + B.z;
-
-	return C;
-}
-Vector sub(Vector A, Vector B)
-{
-	Vector C;
-	C.x = A.x - B.x;
-	C.y = A.y - B.y;
-	C.z = A.z - B.z;
-
-	return C;
-}
-Vector cross(Vector A, Vector B)
-{
-	Vector C;
-	C.x = A.y*B.z - A.z*B.y;
-	C.y = A.z*B.x - A.x*B.z;
-	C.z = A.x*B.y - A.y*B.x;
-
-	return C;
-}
-
 #define ABS(x) (x < 0? (-x) : (x) )
 
 float areaTriangle(Vector v1,Vector v2,Vector v3)
