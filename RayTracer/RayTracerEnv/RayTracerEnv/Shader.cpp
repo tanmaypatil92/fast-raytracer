@@ -86,8 +86,6 @@ void getColor
   bool shadow = true;
 	Ray specularRay;
 
-  N = &currentObject->objNormal;
-
 	ambColor.red = 0.1;
 	ambColor.green = 0.1;
 	ambColor.blue = 0.1;
@@ -114,8 +112,9 @@ void getColor
 	currentObjectNormal = currentObject->objNormal.normalize();
 	currentObjInterValue = currentObject->intersectionValue;
 
-	specularRay.origin    = currectObjectIntersection.subVector(incidentRay->origin);
-	 // 2(N.L)*N - L where N is normal and L is negative ray direction
+  // 2(N.L)*N - L where N is normal and L is negative ray direction
+  // Equations for the specular ray directly follow from class notes.
+	specularRay.origin    = currectObjectIntersection; //.subVector(incidentRay->origin);
 	double dotProd = (currentObjectNormal.dotProduct(incidentRay->direction.negate()));
 	specularRay.direction = (currentObjectNormal.scalarMult(dotProd*2)).subVector(incidentRay->direction.negate());
 	specularRay.direction = specularRay.direction.normalize();
@@ -123,23 +122,24 @@ void getColor
 	for(int l=0; l <numLights; l++)
 	{
 		L = lights[l].direction.normalize();
-		double distance = L.lengthVector();
+		double currentIntersectionValue = INFINITY;
 		NdotL = currentObject->objNormal.dotProduct(L);
 		if(NdotL > 0)
 		{
 			shadow = false;
-			Ray shadowRay = Ray (currectObjectIntersection,L);
+			Ray shadowRay = Ray(currectObjectIntersection,L);
 
 			int currentObjId = currentObject->objectId;
 			/*  Now loop through all the objects */
 			for(int obj = 0;obj<numObjects;obj++)
 			{
-			//Perform the ray intersection with this object
+			//Perform ray intersection with this object
 				objsToRender[obj]->findIntersection(shadowRay);
-				if(objsToRender[obj]->intersectionValue > TRACER_THRESH && objsToRender[obj]->intersectionValue <= distance)
+				if(objsToRender[obj]->intersectionValue > TRACER_THRESH && objsToRender[obj]->intersectionValue <= currentIntersectionValue)
 				{
-					if(objsToRender[obj]->objectId!=currentObjId)
-						shadow = true;
+          currentIntersectionValue = objsToRender[obj]->intersectionValue;
+					//if(objsToRender[obj]->objectId!=currentObjId)
+					shadow = true;
 				}
 			} /* End of obj loop */
 
@@ -154,7 +154,7 @@ void getColor
 			double spec;
 			if(RdotL > 0)
 			{
-				spec = pow(RdotL,25);
+				spec = pow(RdotL,currentObject->material.specularPower);
 				(*currentColor).red   += (currentObject->material.Ks.red   * lights[l].lightColor.red   * spec);
 				(*currentColor).green += (currentObject->material.Ks.green * lights[l].lightColor.green * spec);
 				(*currentColor).blue  += (currentObject->material.Ks.blue  * lights[l].lightColor.blue  * spec);

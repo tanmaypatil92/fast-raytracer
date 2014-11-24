@@ -8,7 +8,8 @@ class Material{
 	Color matColor;
   Color Ka, Kd, Ks;
   float reflectionParameter, refractionIndex;
+  int specularPower;
 	Material();
-	Material(Color, Color, Color, Color, float, float);
+	Material(Color, Color, Color, Color, int, float, float);
 };
 #endif

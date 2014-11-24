@@ -5,6 +5,7 @@
 
 class Ray{
 	public:
+  float currentRefractiveIndex;
 	Vector origin;
 	Vector direction;
 	Ray();

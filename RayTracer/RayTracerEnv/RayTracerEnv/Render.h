@@ -9,8 +9,12 @@
 #ifndef __RayTracerEnv__Render__
 #define __RayTracerEnv__Render__
 
-#define REFLECTION_DEPTH 1
+#define INTERACTION_DEPTH 1
 #define REFLECTION_PARAMETER 0.2 
+
+#define REFRACTIVE_INDEX_AIR 1
+#define REFRACTIVE_INDEX_GLASS 1.5
+#define REFRACTIVE_INDEX_METAL 2
 
 #include <stdio.h>
 #include "Gz.h"

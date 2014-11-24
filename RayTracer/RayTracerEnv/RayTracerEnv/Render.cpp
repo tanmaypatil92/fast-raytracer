@@ -134,7 +134,8 @@ void renderObjects
 
   /* Initializations */
   primaryRay.origin = camera->position;
-  
+  primaryRay.currentRefractiveIndex = REFRACTIVE_INDEX_AIR;
+
   for(int obj = 0;obj<numObjects;obj++)
   {
 	  objsToRender[obj]->objectId = counter++;
@@ -172,16 +173,19 @@ void renderObjects
 
 bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, GeomObj *objsToRender[], int numObjects, int currentDepth)
 {
-  if (currentDepth > REFLECTION_DEPTH)
+  if (currentDepth > INTERACTION_DEPTH)
     return false;
 
   Ray reflectedRay, refractedRay;
   GeomObj *objRend;
   bool objFlag = false;
   int currentObjId;
-  Color reflectionColor;
+  Color reflectionColor, refractionColor;
 	Vector objIntersectionVector, objNormalVector;
 	double objIntersectionValue;
+  double dotProd, theta_i; 
+  float n1, n2;
+  bool doRefraction;
 
   objRend = intersection(objsToRender, numObjects, incomingRay);
 	//tempRay = incomingRay;
@@ -192,63 +196,51 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
     objIntersectionValue = objRend->intersectionValue;
     objNormalVector = objRend->objNormal;
 		objFlag = true;
+    incomingRay.direction = incomingRay.direction.normalize();
+    objNormalVector = objNormalVector.normalize();
+    n1 = incomingRay.currentRefractiveIndex;
+    n2 = objRend->material.refractionIndex;
 
 		getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
 
-    /*reflectedRay.origin = incomingRay.direction.scalarMult(objIntersectionValue);
-		//2(N.L)*N - L where N is normal and L is negative ray direction
-		double dotProd = (objNormalVector.dotProduct(incomingRay.direction.negate()));
-		reflectedRay.direction = (objNormalVector.scalarMult(dotProd*2)).subVector(incomingRay.direction.negate());
-		reflectedRay.direction = reflectedRay.direction.normalize();*/
-
-    reflectedRay.origin = objIntersectionVector;
-    //Using equations from http://www.cs.jhu.edu/~cohen/RendTech99/Lectures/Ray_Tracing.bw.pdf
-    double dotProd = (objNormalVector.dotProduct(incomingRay.direction));
+    reflectedRay.origin = objIntersectionVector; reflectedRay.currentRefractiveIndex = incomingRay.currentRefractiveIndex;
+    //Using reflection equations from http://www.cs.jhu.edu/~cohen/RendTech99/Lectures/Ray_Tracing.bw.pdf
+    dotProd = (objNormalVector.dotProduct(incomingRay.direction));
     reflectedRay.direction = (incomingRay.direction.subVector(objNormalVector.scalarMult(dotProd*2)));
 		reflectedRay.direction = reflectedRay.direction.normalize();
 
-    bool innerObjFlag = trackRay(reflectedRay, &reflectionColor, lights, numLights, objsToRender, numObjects, ++currentDepth);
+    refractedRay.origin = objIntersectionVector; refractedRay.currentRefractiveIndex = objRend->material.refractionIndex;
+    //Using refraction equations from http://www.flipcode.com/archives/reflection_transmission.pdf
+    theta_i = acos(objNormalVector.dotProduct(incomingRay.direction.negate()));
+    double innerTerm1 = 1 - pow((n1/n2*sin(theta_i)) , 2);
+    if (innerTerm1 > 0) {
+      double innerTerm2 = ((n1/n2) * cos(theta_i) + sqrt(innerTerm1));
+      refractedRay.direction = incomingRay.direction.scalarMult(n1/n2).subVector(objNormalVector.scalarMult(innerTerm2));
+      doRefraction = true;
+    }
+    else
+      doRefraction = false;
 
-    if (innerObjFlag == true)  {
+    bool reflectedRayReturns = trackRay(reflectedRay, &reflectionColor, lights, numLights, objsToRender, numObjects, (currentDepth+1));
+
+    if (reflectedRayReturns == true)  {
       thisColor->red   += reflectionColor.red * objRend->material.reflectionParameter;
 			thisColor->green += reflectionColor.green * objRend->material.reflectionParameter;
 			thisColor->blue  += reflectionColor.blue * objRend->material.reflectionParameter;
     }
 
-		/* now that we have the object to render, find the color for this pixel */
-		/*for(int r = 0; r < reflectionDepth; r++)
-		{
-			//cam_ray_origin.vectAdd(cam_ray_direction.vectMult(intersections.at(index_of_winning_object)
-			//secondaryRay.origin    = objIntersectionVector.subVector(tempRay.origin);
-      /* secondaryRay.origin    = objRend->objIntersection.subVector(tempRay.origin);
-			secondaryRay.direction = (objRend->objNormal.scalarMult(2*(objRend->objNormal.dotProduct(tempRay.origin))).subVector(tempRay.origin));
-			secondaryRay.direction = secondaryRay.direction.normalize();
+    /*
+    if (doRefraction == true) {
+      bool refractedRayReturns = trackRay(refractedRay, &refractionColor, lights, numLights, objsToRender, numObjects, (currentDepth+1));;
 
-      reflectedRay.origin = tempRay.direction.scalarMult(objRend->intersectionValue);
-
-			// 2(N.L)*N - L where N is normal and L is negative ray direction
-			double dotProd = (objNormalVector.dotProduct(tempRay.direction.negate()));
-			reflectedRay.direction = (objNormalVector.scalarMult(dotProd*2)).subVector(tempRay.direction.negate());
-			reflectedRay.direction = reflectedRay.direction.normalize();
-
-			objRend = intersection(objsToRender, numObjects, reflectedRay);
-			tempRay = reflectedRay;
-
-			if(objRend != NULL && objRend->objectId!=currentObjId )
-			{
-				getColor(lights, numLights, objRend, &reflectionColor, objsToRender, &tempRay, numObjects);
-				thisColor->red   += reflectionColor.red*0.2;//0.2 is the reflection prcentage
-				thisColor->green += reflectionColor.green*0.2;
-				thisColor->blue  += reflectionColor.blue*0.2;
-			}
-			else
-			{
-				break;
-			}
-			currentObjId  = objRend->objectId;
-		}
+      if (refractedRayReturns == true)  {
+        thisColor->red   += refractionColor.red * objRend->material.reflectionParameter;
+			  thisColor->green += refractionColor.green * objRend->material.reflectionParameter;
+			  thisColor->blue  += refractionColor.blue * objRend->material.reflectionParameter;
+      }
+	  }
     */
-	}
+  }
   return objFlag;
 }
 
