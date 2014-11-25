@@ -269,10 +269,10 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
   Color reflectionColor, refractionColor;
 	Vector objIntersectionVector, objNormalVector;
 	double objIntersectionValue;
-  double dotProd, theta_i; 
+  double dotProd, theta_i, theta_t;
   float n1, n2;
   bool doRefraction;
-
+  double R_total, T_total;
   objRend = intersection(objsToRender, numObjects, incomingRay);
 	//tempRay = incomingRay;
 	if(objRend != NULL)
@@ -295,36 +295,52 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
     reflectedRay.direction = (incomingRay.direction.subVector(objNormalVector.scalarMult(dotProd*2)));
 	reflectedRay.direction = reflectedRay.direction.normalize();
 
-    refractedRay.origin = objIntersectionVector; refractedRay.currentRefractiveIndex = objRend->material.refractionIndex;
-    //Using refraction equations from http://www.flipcode.com/archives/reflection_transmission.pdf
-    theta_i = acos(objNormalVector.dotProduct(incomingRay.direction.negate()));
-    double innerTerm1 = 1 - pow((n1/n2*sin(theta_i)) , 2);
-    if (innerTerm1 > 0) {
-      double innerTerm2 = ((n1/n2) * cos(theta_i) + sqrt(innerTerm1));
-      refractedRay.direction = incomingRay.direction.scalarMult(n1/n2).subVector(objNormalVector.scalarMult(innerTerm2));
-      doRefraction = true;
-    }
-    else
-      doRefraction = false;
+  if (n1 == 1.5 || n2 == 1.5) {
+      refractedRay.origin = objIntersectionVector; refractedRay.currentRefractiveIndex = objRend->material.refractionIndex;
+      //Using refraction equations from http://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf
+      theta_i = acos(objNormalVector.dotProduct(incomingRay.direction.negate()));
+      theta_t = asin((n1/n2)*sin(theta_i));
+      double innerTerm1 = 1 - pow(sin(theta_t) , 2);
+      if (innerTerm1 > 0) {
+        double innerTerm2 = ((n1/n2) * cos(theta_i) - sqrt(innerTerm1));
+        refractedRay.direction = incomingRay.direction.scalarMult(n1/n2).addVector(objNormalVector.scalarMult(innerTerm2));
+        doRefraction = true;
+          double R0 = pow(((n1-n2)/(n1+n2)), 2);
+          if (n1 <= n2)   {
+              R_total = R0 + (1 - R0)*(pow((1 - cos(theta_i)), 5));
+          }
+          else    {
+              R_total = R0 + (1 - R0)*(pow((1 - cos(theta_t)), 5));
+          }
+      }
+      else    {
+        doRefraction = false;
+        R_total = 1;
+      }
+      T_total = 1 - R_total;
+  }
+  else  {
+    doRefraction = false;
+    R_total = objRend->material.reflectionParameter;
+  }
 
     bool reflectedRayReturns = trackRay(reflectedRay, &reflectionColor, lights, numLights, objsToRender, numObjects, (currentDepth+1));
 
     if (reflectedRayReturns == true)  {
-      thisColor->red   += reflectionColor.red * objRend->material.reflectionParameter;
-	  thisColor->green += reflectionColor.green * objRend->material.reflectionParameter;
-	  thisColor->blue  += reflectionColor.blue * objRend->material.reflectionParameter;
+      thisColor->red   += reflectionColor.red * R_total;
+	  thisColor->green += reflectionColor.green * R_total;
+	  thisColor->blue  += reflectionColor.blue * R_total;
     }
-
-    /*
+    
     if (doRefraction == true) {
       bool refractedRayReturns = trackRay(refractedRay, &refractionColor, lights, numLights, objsToRender, numObjects, (currentDepth+1));;
 
       if (refractedRayReturns == true)  {
-        thisColor->red   += refractionColor.red * objRend->material.reflectionParameter;
-			  thisColor->green += refractionColor.green * objRend->material.reflectionParameter;
-			  thisColor->blue  += refractionColor.blue * objRend->material.reflectionParameter;
+        thisColor->red   += refractionColor.red * T_total;
+        thisColor->green += refractionColor.green * T_total;
+        thisColor->blue  += refractionColor.blue * T_total;
       }
-	  }*/
+    }
 
 		/* now that we have the object to render, find the color for this pixel */
 		/*for(int r = 0; r < reflectionDepth; r++)
