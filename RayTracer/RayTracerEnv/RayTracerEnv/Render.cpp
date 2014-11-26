@@ -287,6 +287,11 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
     n1 = incomingRay.currentRefractiveIndex;
     n2 = objRend->material.refractionIndex;
 
+    if (n1 == 1.5 && n2 == 1.5) {
+      n2 = 1;
+      objNormalVector = objNormalVector.negate();
+    }
+
 	getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
 
     reflectedRay.origin = objIntersectionVector; reflectedRay.currentRefractiveIndex = incomingRay.currentRefractiveIndex;
@@ -296,7 +301,7 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
 	reflectedRay.direction = reflectedRay.direction.normalize();
 
   if (n1 == 1.5 || n2 == 1.5) {
-      refractedRay.origin = objIntersectionVector; refractedRay.currentRefractiveIndex = objRend->material.refractionIndex;
+      refractedRay.origin = objIntersectionVector; refractedRay.currentRefractiveIndex = n2;
       //Using refraction equations from http://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf
       theta_i = acos(objNormalVector.dotProduct(incomingRay.direction.negate()));
       theta_t = asin((n1/n2)*sin(theta_i));
@@ -304,6 +309,7 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
       if (innerTerm1 > 0) {
         double innerTerm2 = ((n1/n2) * cos(theta_i) - sqrt(innerTerm1));
         refractedRay.direction = incomingRay.direction.scalarMult(n1/n2).addVector(objNormalVector.scalarMult(innerTerm2));
+        refractedRay.direction = refractedRay.direction.normalize();
         doRefraction = true;
           double R0 = pow(((n1-n2)/(n1+n2)), 2);
           if (n1 <= n2)   {

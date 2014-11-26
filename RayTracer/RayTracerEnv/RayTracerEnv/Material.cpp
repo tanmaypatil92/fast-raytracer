@@ -7,7 +7,7 @@ Material::Material()
   Kd = Color(0.7,0.7,0.7);
   Ks = Color(0.3,0.3,0.3);
   reflectionParameter = 0.2;
-  refractionIndex = 1.5;
+  refractionIndex = 2;
 }
 
 Material::Material(Color c, Color input_Ka, Color input_Kd, Color input_Ks, int inputSpecularPower, float inputReflectionParam, float inputRefractionIndex)

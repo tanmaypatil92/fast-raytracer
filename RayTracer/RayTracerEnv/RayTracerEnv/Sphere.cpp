@@ -1,6 +1,7 @@
 #include "Sphere.h"
 #include "math.h"
 
+#define TRACER_THRESH   0.0000001
 
 Sphere::Sphere()
 {
@@ -43,25 +44,32 @@ double Sphere::sphereIntersection(Ray r)
 	B = 2 * (Rd.x*(R0.x - center.x) + Rd.y*(R0.y - center.y) + Rd.z*(R0.z - center.z));
 	C = ((R0.x - center.x)*(R0.x - center.x) + (R0.y - center.y)*(R0.y - center.y) + (R0.z - center.z)*(R0.z - center.z)) - (radius*radius);
 	discriminant = (B*B - 4*A*C);
-	if(discriminant <= 0){intersectionVal = -1;}
+	if(discriminant < 0)  {
+    intersectionVal = -1;
+  }
+  else if (discriminant == 0) {
+    rootA = (-B / (2 * A));
+    intersectionVal = rootA;
+  }
 	else
 	{
-		rootA = ((-B)-sqrt(discriminant))/2.0;
-		if(rootA > 0)
+		rootA = ((-B)-sqrt(discriminant))/(2.0 * A);
+		if(rootA > 0 && rootA > TRACER_THRESH)
 		{
 			intersectionVal = rootA;
 		}
 		else
 		{
-			rootB = ((-B)+sqrt(discriminant))/2.0;
-			if(rootB > 0)
+			rootB = ((-B)+sqrt(discriminant))/(2.0 * A);
+			if(rootB > 0 && rootB > TRACER_THRESH)
 			{
 				intersectionVal = rootB;
 			}
 			else{intersectionVal = -1;}
 		}
 	}
-	//sphereInter  = (R0.addVector(Rd.scalarMult(intersectionVal))).normalize();
+
+  //sphereInter  = (R0.addVector(Rd.scalarMult(intersectionVal))).normalize();
 	//sphereNormal = ((sphereInter.subVector(center)).normalize()).scalarMult(1/radius);
 	Vector temp = Vector((R0.x - center.x),(R0.y - center.y),(R0.z - center.z));
   /* @todo - deprecated, use the superclass properties instead */
@@ -70,9 +78,10 @@ double Sphere::sphereIntersection(Ray r)
   sphereInter    = R0.addVector(Rd.scalarMult(intersectionVal));
 
   /* Now set the superclass properties.*/
-  intersectionValue = intersectionVal;
   objNormal         = sphereNormal;
   objIntersection   = sphereInter;
+
+  intersectionValue = intersectionVal;
   return intersectionVal;
 }
 

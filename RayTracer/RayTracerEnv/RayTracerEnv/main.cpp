@@ -134,7 +134,7 @@ void pre_initialize_everything()
 
 
   infinity_bsp.numPlanes = 1;
-  infinity_bsp.planes[0] = Plane(Vector(0.0,1.0,0.0),2.4,Material(Color(0.5,0.0,0.2), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 1.5));// having z value in plane normal is like rotating it in z
+  infinity_bsp.planes[0] = Plane(Vector(0.0,1.0,0.0),2.4,Material(Color(0.5,0.0,0.2), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2));// having z value in plane normal is like rotating it in z
   
   infinity_bsp.numTriangles = 0;
   infinity_bsp.triangles[0] = Triangle(Vector(0.0,0.0,0.0),Vector(0.0,1.0,0.0),Vector(1.0,0.0,0.0));
