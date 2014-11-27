@@ -125,9 +125,9 @@ int addTexture(float u, float v, Color *color, char *fileName, int reset)
 	int D = getIndex(ceil(x), floor(y));
 
 	// Interpolate
-	color->red = s*t*image[C].red + (1-s)*t*image[D].red+ s*(1-t)*image[B].red + (1-s)*(1-t)*image[A].red;
-	color->green = s*t*image[C].green + (1-s)*t*image[D].green + s*(1-t)*image[B].green + (1-s)*(1-t)*image[A].green;
-	color->blue = s*t*image[C].blue + (1-s)*t*image[D].blue + s*(1-t)*image[B].blue + (1-s)*(1-t)*image[A].blue;
+	color->red += s*t*image[C].red + (1-s)*t*image[D].red+ s*(1-t)*image[B].red + (1-s)*(1-t)*image[A].red;
+	color->green += s*t*image[C].green + (1-s)*t*image[D].green + s*(1-t)*image[B].green + (1-s)*(1-t)*image[A].green;
+	color->blue += s*t*image[C].blue + (1-s)*t*image[D].blue + s*(1-t)*image[B].blue + (1-s)*(1-t)*image[A].blue;
 
 	return 1;
 }
@@ -158,11 +158,7 @@ void getColor
 	ambColor.green = 0.1;
 	ambColor.blue = 0.1;
 
-  (*currentColor) = currentObject->material.matColor;
-
-  (*currentColor).red +=  (currentObject->material.Ka.red * ambColor.red);
-  (*currentColor).green +=  (currentObject->material.Ka.green * ambColor.green);
-  (*currentColor).blue +=  (currentObject->material.Ka.blue * ambColor.blue);
+  
 
   /*
 	currectObjectIntersection = currentObject->objIntersection.normalize();
@@ -180,11 +176,22 @@ void getColor
 		Sphere *sph = (Sphere *)currentObject;
 		Vector p = currentObject->objIntersection.subVector(sph->center);
 		p = p.normalize();
+
+		(*currentColor).red =  ambColor.red;
+		(*currentColor).green = ambColor.green;
+		(*currentColor).blue = ambColor.blue;
+
 		float u = ((atan2(p.x, p.z) / PI) + 1.0f) * 0.5f;
 		float v = (asin(p.y) / PI) + 0.5f;
 		addTexture(u,v,currentColor,sph->mat.fileName, sph->mat.reset);
 		sph->mat.reset = 0;
-		return;
+		
+	}else{
+		(*currentColor) = currentObject->material.matColor;
+
+		(*currentColor).red +=  (currentObject->material.Ka.red * ambColor.red);
+		(*currentColor).green +=  (currentObject->material.Ka.green * ambColor.green);
+		(*currentColor).blue +=  (currentObject->material.Ka.blue * ambColor.blue);
 	}
 
 	currectObjectIntersection = currentObject->objIntersection;
@@ -239,9 +246,15 @@ void getColor
 
 			if(shadow == false)
 			{
-				(*currentColor).red   += (currentObject->material.Kd.red   * lights[l].lightColor.red   * NdotL);
-				(*currentColor).green += (currentObject->material.Kd.green * lights[l].lightColor.green * NdotL);
-				(*currentColor).blue  += (currentObject->material.Kd.blue  * lights[l].lightColor.blue  * NdotL);
+				if(strcmp(currentObject->material.matType,"sphere") == 0){
+	/*				(*currentColor).red   += lights[l].lightColor.red   * NdotL;
+					(*currentColor).green += lights[l].lightColor.green * NdotL;
+					(*currentColor).blue  += lights[l].lightColor.blue  * NdotL;*/
+				}else{
+					(*currentColor).red   += (currentObject->material.Kd.red   * lights[l].lightColor.red   * NdotL);
+					(*currentColor).green += (currentObject->material.Kd.green * lights[l].lightColor.green * NdotL);
+					(*currentColor).blue  += (currentObject->material.Kd.blue  * lights[l].lightColor.blue  * NdotL);
+				}
 
 		/*
       }
@@ -262,9 +275,15 @@ void getColor
 				if(RdotL > 0)
 				{
 					spec = pow(RdotL,25);
-					(*currentColor).red   += (currentObject->material.Ks.red   * lights[l].lightColor.red   * spec);
-					(*currentColor).green += (currentObject->material.Ks.green * lights[l].lightColor.green * spec);
-					(*currentColor).blue  += (currentObject->material.Ks.blue  * lights[l].lightColor.blue  * spec);
+					if(strcmp(currentObject->material.matType,"sphere") == 0){
+						(*currentColor).red   += lights[l].lightColor.red   * spec;
+						(*currentColor).green += lights[l].lightColor.green * spec;
+						(*currentColor).blue  +=  lights[l].lightColor.blue  * spec;
+					}else{
+						(*currentColor).red   += (currentObject->material.Ks.red   * lights[l].lightColor.red   * spec);
+						(*currentColor).green += (currentObject->material.Ks.green * lights[l].lightColor.green * spec);
+						(*currentColor).blue  += (currentObject->material.Ks.blue  * lights[l].lightColor.blue  * spec);
+					}
 				}
 			}
 	   }
