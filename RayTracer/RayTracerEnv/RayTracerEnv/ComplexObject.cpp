@@ -343,7 +343,7 @@ return_data ComplexObject::complexIntersection_recursive(Oct* oct ,Ray ray)
 			
 			double tri_intersect = tri->triIntersection(ray);
 
-			if( (tri_intersect > 0) &&  (tri_intersect < best_r.min_intersectionVal) )
+			if( (tri_intersect >= 0.0000001) &&  (tri_intersect < best_r.min_intersectionVal) )
 			{	
 				
 				best_r.tri_index = tri_list_index;

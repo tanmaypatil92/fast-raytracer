@@ -177,9 +177,9 @@ void getColor
 		Vector p = currentObject->objIntersection.subVector(sph->center);
 		p = p.normalize();
 
-		(*currentColor).red =  ambColor.red;
-		(*currentColor).green = ambColor.green;
-		(*currentColor).blue = ambColor.blue;
+		(*currentColor).red   =  (currentObject->material.Ka.red * ambColor.red);
+		(*currentColor).green =  (currentObject->material.Ka.green * ambColor.green);
+		(*currentColor).blue  =  (currentObject->material.Ka.blue * ambColor.blue);
 
 		float u = ((atan2(p.x, p.z) / PI) + 1.0f) * 0.5f;
 		float v = (asin(p.y) / PI) + 0.5f;
@@ -189,9 +189,9 @@ void getColor
 	}else{
 		(*currentColor) = currentObject->material.matColor;
 
-		(*currentColor).red +=  (currentObject->material.Ka.red * ambColor.red);
+		(*currentColor).red   +=  (currentObject->material.Ka.red * ambColor.red);
 		(*currentColor).green +=  (currentObject->material.Ka.green * ambColor.green);
-		(*currentColor).blue +=  (currentObject->material.Ka.blue * ambColor.blue);
+		(*currentColor).blue  +=  (currentObject->material.Ka.blue * ambColor.blue);
 	}
 
 	currectObjectIntersection = currentObject->objIntersection;
@@ -246,44 +246,19 @@ void getColor
 
 			if(shadow == false)
 			{
-				if(strcmp(currentObject->material.matType,"sphere") == 0){
-	/*				(*currentColor).red   += lights[l].lightColor.red   * NdotL;
-					(*currentColor).green += lights[l].lightColor.green * NdotL;
-					(*currentColor).blue  += lights[l].lightColor.blue  * NdotL;*/
-				}else{
-					(*currentColor).red   += (currentObject->material.Kd.red   * lights[l].lightColor.red   * NdotL);
-					(*currentColor).green += (currentObject->material.Kd.green * lights[l].lightColor.green * NdotL);
-					(*currentColor).blue  += (currentObject->material.Kd.blue  * lights[l].lightColor.blue  * NdotL);
-				}
-
-		/*
-      }
-
-			double RdotL = specularRay.direction.dotProduct(L);
-			double spec;
-			if(RdotL > 0)
-			{
-				spec = pow(RdotL,currentObject->material.specularPower);
-				(*currentColor).red   += (currentObject->material.Ks.red   * lights[l].lightColor.red   * spec);
-				(*currentColor).green += (currentObject->material.Ks.green * lights[l].lightColor.green * spec);
-				(*currentColor).blue  += (currentObject->material.Ks.blue  * lights[l].lightColor.blue  * spec);
-      */
+				(*currentColor).red   += (currentObject->material.Kd.red   * lights[l].lightColor.red   * NdotL);
+				(*currentColor).green += (currentObject->material.Kd.green * lights[l].lightColor.green * NdotL);
+				(*currentColor).blue  += (currentObject->material.Kd.blue  * lights[l].lightColor.blue  * NdotL);
 
 				// Shouldn't render specular if object in shadow I assume
 				double RdotL = specularRay.direction.dotProduct(L);
 				double spec;
 				if(RdotL > 0)
 				{
-					spec = pow(RdotL,25);
-					if(strcmp(currentObject->material.matType,"sphere") == 0){
-						(*currentColor).red   += lights[l].lightColor.red   * spec;
-						(*currentColor).green += lights[l].lightColor.green * spec;
-						(*currentColor).blue  +=  lights[l].lightColor.blue  * spec;
-					}else{
-						(*currentColor).red   += (currentObject->material.Ks.red   * lights[l].lightColor.red   * spec);
-						(*currentColor).green += (currentObject->material.Ks.green * lights[l].lightColor.green * spec);
-						(*currentColor).blue  += (currentObject->material.Ks.blue  * lights[l].lightColor.blue  * spec);
-					}
+					spec = pow(RdotL,currentObject->material.specularPower);
+					(*currentColor).red   += (currentObject->material.Ks.red   * lights[l].lightColor.red   * spec);
+					(*currentColor).green += (currentObject->material.Ks.green * lights[l].lightColor.green * spec);
+					(*currentColor).blue  += (currentObject->material.Ks.blue  * lights[l].lightColor.blue  * spec);
 				}
 			}
 	   }
