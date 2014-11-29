@@ -272,7 +272,7 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
   double dotProd, theta_i, theta_t;
   float n1, n2;
   bool doRefraction;
-  double R_total, T_total;
+  double R_total, T_total = 0.0;
   objRend = intersection(objsToRender, numObjects, incomingRay);
 	//tempRay = incomingRay;
 	if(objRend != NULL)
