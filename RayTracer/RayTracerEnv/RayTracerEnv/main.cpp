@@ -147,9 +147,9 @@ void pre_initialize_everything()
 
   infinity_bsp.numComplexObjects = 3;
 //   infinity_bsp.numComplexObjects = 0;
-  infinity_bsp.complex_objects[0] = ComplexObject(fileName1, Material(Color(0.9,0.4,0.2), Color(0.1,0.1,0.1), Color(0.6,0.6,0.6), Color(0.25,0.25,0.3), 25, 0.2, 1.5));
-  infinity_bsp.complex_objects[1] = ComplexObject(fileName2 , Material(Color(0.1,0.15,0.35), Color(0.1,0.1,0.1), Color(0.3,0.3,0.3), Color(0.2,0.2,0.2), 25, 0.2, 1.5));
-  infinity_bsp.complex_objects[2] = ComplexObject(fileName3, Material(Color(0.1,0.15,0.35), Color(0.1,0.1,0.1), Color(0.4,0.4,0.4), Color(0.2,0.2,0.2), 25, 0.2, 1.5));
+  infinity_bsp.complex_objects[0] = ComplexObject(fileName1, Material(Color(0.9,0.4,0.2), Color(0.1,0.1,0.1), Color(0.6,0.6,0.6), Color(0.25,0.25,0.3), 25, 0.2, 2));
+  infinity_bsp.complex_objects[1] = ComplexObject(fileName2 , Material(Color(0.1,0.15,0.35), Color(0.1,0.1,0.1), Color(0.3,0.3,0.3), Color(0.2,0.2,0.2), 25, 0.2, 2));
+  infinity_bsp.complex_objects[2] = ComplexObject(fileName3, Material(Color(0.1,0.15,0.35), Color(0.1,0.1,0.1), Color(0.4,0.4,0.4), Color(0.2,0.2,0.2), 25, 0.2, 2));
   //infinity_bsp.complex_objects[0] = ComplexObject("obj_files/cube.obj" , Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
   //infinity_bsp.complex_objects[4] = ComplexObject("obj_files/floor.obj", Material(Color(0.2,0.2,0.2), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2,1.5) );
 
