@@ -133,7 +133,7 @@ void pre_initialize_everything()
 #if 0
   infinity_bsp.spheres[5] = Sphere(Vector(-1.3,1.0,3.0),1.4,Material(Color(0.45,0.28,0.4,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2));
 #else
-  infinity_bsp.spheres[5] = Sphere(Vector(-1.3,1.0,3.0),1.4,Material(Color(0.45,0.28,0.4,1.0), Color(0.1,0.1,0.1), Color(0.35,0.35,0.35), Color(0.4,0.4,0.4), 25, 0.1, 2, texFile1,"sphere"));
+  infinity_bsp.spheres[5] = Sphere(Vector(-1.3,1.0,3.0),1.4,Material(Color(0.45,0.28,0.4,1.0), Color(0.1,0.1,0.1), Color(0.35,0.35,0.35), Color(0.4,0.4,0.4), 25, 0.1, 2, texFile1,(char*)"sphere"));
 #endif
   infinity_bsp.spheres[6] = Sphere(Vector(1.4, 1.0,3.0),1.4,Material(Color(0.45,0.2,0.05,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2));
   infinity_bsp.spheres[7] = Sphere(Vector(4.1, 1.0,1.0),1.4,Material(Color(0.2,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.5,0.5,0.5), Color(0.3,0.3,0.3), 25, 0.2, 1.5));

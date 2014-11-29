@@ -81,7 +81,7 @@ int addTexture(float u, float v, Color *color, char *fileName, int reset)
 	unsigned char		pixel1[3];
 	unsigned char     dummy;
 	char  		foo[8];
-	int   		i, j;
+	int   		i;//, j;
 	FILE			*fd;
 
 	if (reset) {          /* open and load texture file */
@@ -145,7 +145,7 @@ void getColor
   int numObjects
 )
 {
-	Vector *N, L, R;
+	Vector L, R;
 	double NdotL;
 	Vector localNormal, currectObjectIntersection, currentObjectNormal;
   double currentObjInterValue;
@@ -210,7 +210,7 @@ void getColor
 	for(int l=0; l <numLights; l++)
 	{
 		L = lights[l].direction.normalize();
-		double currentIntersectionValue = INFINITY, distance = INFINITY;
+		double distance = INFINITY;
 		NdotL = currentObject->objNormal.dotProduct(L);
 		if(NdotL > 0)
 		{
