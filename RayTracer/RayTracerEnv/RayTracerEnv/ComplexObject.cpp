@@ -362,9 +362,8 @@ return_data ComplexObject::complexIntersection_recursive(Oct* oct ,Ray ray, int 
 			double tri_intersect = tri->triIntersection(ray);
 
       if (intersectionSide == 1)  {
-        if( (tri_intersect > 0) &&  (tri_intersect > best_r.intersectionVal) )
+        if( (tri_intersect >= 0.0000001) &&  (tri_intersect > best_r.intersectionVal) )
 			  {	
-				
 				  best_r.tri_index = tri_list_index;
 				  best_r.intersectionVal = tri_intersect;
 
@@ -374,7 +373,7 @@ return_data ComplexObject::complexIntersection_recursive(Oct* oct ,Ray ray, int 
       }
 
       else  {
-			  if( (tri_intersect > 0) &&  (tri_intersect < best_r.intersectionVal) )
+			  if( (tri_intersect >= 0.0000001) &&  (tri_intersect < best_r.intersectionVal) )
 			  {	
 				
 				  best_r.tri_index = tri_list_index;
