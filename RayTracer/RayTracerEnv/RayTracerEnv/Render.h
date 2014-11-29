@@ -64,6 +64,6 @@ void renderObjects
 );
 
 bool trackRay(Ray incidentRay, Color *thisColor, Light *lights, int numLights, GeomObj *objsToRender[], int numObjects, int currentDepth);
-GeomObj* intersection(GeomObj* objsToRender[],int numObjects,Ray currentRay);
+GeomObj* intersection(GeomObj* objsToRender[],int numObjects,Ray currentRay, int intersectionSide);
 
 #endif /* defined(__RayTracerEnv__Render__) */

@@ -269,11 +269,16 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
   Color reflectionColor, refractionColor;
 	Vector objIntersectionVector, objNormalVector;
 	double objIntersectionValue;
-  double dotProd, theta_i, theta_t;
+  double NDotL, theta_i, theta_t;
   float n1, n2;
   bool doRefraction;
   double R_total, T_total;
-  objRend = intersection(objsToRender, numObjects, incomingRay);
+  
+  if (incomingRay.currentRefractiveIndex == 1.5)
+    objRend = intersection(objsToRender, numObjects, incomingRay, 1);
+  else
+    objRend = intersection(objsToRender, numObjects, incomingRay, 0);
+
 	//tempRay = incomingRay;
 	if(objRend != NULL)
 	{
@@ -286,19 +291,24 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
     objNormalVector = objNormalVector.normalize();
     n1 = incomingRay.currentRefractiveIndex;
     n2 = objRend->material.refractionIndex;
+    NDotL = (objNormalVector.dotProduct(incomingRay.direction));
 
     if (n1 == 1.5 && n2 == 1.5) {
       n2 = 1;
-      objNormalVector = objNormalVector.negate();
+      if (NDotL > 0)  {
+        objNormalVector = objNormalVector.negate();
+        NDotL *= -1;
+      }
     }
 
 	getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
 
     reflectedRay.origin = objIntersectionVector; reflectedRay.currentRefractiveIndex = incomingRay.currentRefractiveIndex;
     //Using reflection equations from http://www.cs.jhu.edu/~cohen/RendTech99/Lectures/Ray_Tracing.bw.pdf
-    dotProd = (objNormalVector.dotProduct(incomingRay.direction));
-    reflectedRay.direction = (incomingRay.direction.subVector(objNormalVector.scalarMult(dotProd*2)));
+    
+    reflectedRay.direction = (incomingRay.direction.subVector(objNormalVector.scalarMult(NDotL*2)));
 	reflectedRay.direction = reflectedRay.direction.normalize();
+  reflectedRay.currentRefractiveIndex = incomingRay.currentRefractiveIndex;
 
   if (n1 == 1.5 || n2 == 1.5) {
       refractedRay.origin = objIntersectionVector; refractedRay.currentRefractiveIndex = n2;
@@ -385,7 +395,7 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
   return objFlag;
 }
 
-GeomObj* intersection(GeomObj* objsToRender[],int numObjects,Ray currentRay)
+GeomObj* intersection(GeomObj* objsToRender[],int numObjects,Ray currentRay, int intersectionSide)
 {
 	GeomObj* objRend = NULL, *currentObj;
 	/*  Now loop through all the objects */
@@ -394,7 +404,7 @@ GeomObj* intersection(GeomObj* objsToRender[],int numObjects,Ray currentRay)
       {
         currentObj = objsToRender[obj];
         //Perform the ray intersection with this object
-        currentObj->findIntersection(currentRay);
+        currentObj->findIntersection(currentRay, intersectionSide);
         if(currentObj->intersectionValue < intersectValue &&
            currentObj->intersectionValue > TRACER_THRESH )
         {

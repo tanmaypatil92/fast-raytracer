@@ -36,12 +36,12 @@ class return_data
 {
 public:	
 	int tri_index;
-	float min_intersectionVal;
+	float intersectionVal;
 
 	return_data()
 	{
 		tri_index = -1; 
-		min_intersectionVal = FLT_MAX;
+		intersectionVal = FLT_MAX;
 	}
 };
 class ComplexObject : public GeomObj
@@ -67,9 +67,9 @@ class ComplexObject : public GeomObj
 	void OutputFaces();
 
 	double complexIntersection(Ray);
-	double complexIntersection_faster(Ray);
+	double complexIntersection_faster(Ray, int intersectionSide);
 
-	double findIntersection(Ray ray);
+	double findIntersection(Ray ray, int intersectionSide);
 
 	//  OCT TREE 
 	int n_tri;
@@ -80,7 +80,7 @@ class ComplexObject : public GeomObj
 	
 	int curr_oct_depth, max_oct_depth;
 	Oct* initialize_oct(BoundingBox box);
-	return_data complexIntersection_recursive(Oct* oct ,Ray ray);
+	return_data complexIntersection_recursive(Oct* oct ,Ray ray, int intersectionSide);
 };
 
 #endif

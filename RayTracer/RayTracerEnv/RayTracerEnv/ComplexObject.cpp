@@ -185,11 +185,11 @@ void ComplexObject::OutputFaces()
 
 	getchar();
 }
-double ComplexObject::findIntersection(Ray ray)
+double ComplexObject::findIntersection(Ray ray, int intersectionSide)
 {
 	//return this->complexIntersection(ray);
 
-	return this->complexIntersection_faster(ray);
+	return this->complexIntersection_faster(ray, intersectionSide);
 }
 double ComplexObject::complexIntersection(Ray ray)
 {
@@ -249,9 +249,9 @@ double ComplexObject::complexIntersection(Ray ray)
 }
 
 
-double ComplexObject::complexIntersection_faster(Ray ray)
+double ComplexObject::complexIntersection_faster(Ray ray, int intersectionSide)
 {
-	return_data r = complexIntersection_recursive(head_oct ,ray);
+	return_data r = complexIntersection_recursive(head_oct ,ray, intersectionSide);
 	
 	if(r.tri_index == -1)
 	{
@@ -296,6 +296,11 @@ double ComplexObject::complexIntersection_faster(Ray ray)
 		inter_tex.s =  (tex_a.s)*bary_a + (tex_b.s)*bary_b + (tex_c.s)*bary_c;
 		inter_tex.t =  (tex_a.t)*bary_a + (tex_b.t)*bary_b + (tex_c.t)*bary_c;
 
+    double NDotL = inter_normal.dotProduct(ray.direction);
+    if (NDotL > 0)  {
+      inter_normal = inter_normal.negate();
+    }
+
 		intersectionValue =  tri_intersect;
 		objNormal          =  inter_normal;
 		objIntersection    = tri->triInter;
@@ -304,36 +309,49 @@ double ComplexObject::complexIntersection_faster(Ray ray)
 		return tri_intersect;
 	}
 }
-return_data ComplexObject::complexIntersection_recursive(Oct* oct ,Ray ray)
+return_data ComplexObject::complexIntersection_recursive(Oct* oct ,Ray ray, int intersectionSide)
 {
 	// IF NOT LEAF NODE RETURN BEST OF ALL SUB OCTS
 	if (oct->sub_oct[0] != NULL)
 	{
 		return_data best_r;
 		
+    if (intersectionSide == 1)
+      best_r.intersectionVal = -1 * FLT_MAX;
+
 		for(int i=0;i<8;i++)
 		{
 			if( !oct->sub_oct[i]->bb.Intersection(ray) )
 				continue;
 
-			return_data r = complexIntersection_recursive(oct->sub_oct[i] ,ray);
+			return_data r = complexIntersection_recursive(oct->sub_oct[i] ,ray, intersectionSide);
 			
 			if(r.tri_index == -1)
 				continue;
 
-			if(r.min_intersectionVal < best_r.min_intersectionVal)
-			{
-				best_r = r;
-			}
-		}
-
+      if (intersectionSide == 1)  {  
+		  	if(r.intersectionVal > best_r.intersectionVal)
+			  {
+				  best_r = r;
+			  }
+      }
+      else  {
+			  if(r.intersectionVal < best_r.intersectionVal)
+			  {
+			  	best_r = r;
+			  }
+		  }
+    }
 		return best_r;
-	}
+  }
 	// ELSE IF NODE : TRAVERSE THROUGH ALL TRIANGLES
-	else
+  else
 	{
 		return_data best_r;
 		int no_of_intersections = 0;
+
+    if (intersectionSide == 1)
+      best_r.intersectionVal = -1 * FLT_MAX;
 
 		// LOOP THROUGH ALL OCT TRINAGLES
 		for(int t=0; t< oct->n_tri_inside ; t++)
@@ -343,15 +361,29 @@ return_data ComplexObject::complexIntersection_recursive(Oct* oct ,Ray ray)
 			
 			double tri_intersect = tri->triIntersection(ray);
 
-			if( (tri_intersect > 0) &&  (tri_intersect < best_r.min_intersectionVal) )
-			{	
+      if (intersectionSide == 1)  {
+        if( (tri_intersect > 0) &&  (tri_intersect > best_r.intersectionVal) )
+			  {	
 				
-				best_r.tri_index = tri_list_index;
-				best_r.min_intersectionVal = tri_intersect;
+				  best_r.tri_index = tri_list_index;
+				  best_r.intersectionVal = tri_intersect;
 
-				no_of_intersections++;
-				if(no_of_intersections >= 2) {break;}
-			}
+				  no_of_intersections++;
+				  if(no_of_intersections >= 2) {break;}
+			  }
+      }
+
+      else  {
+			  if( (tri_intersect > 0) &&  (tri_intersect < best_r.intersectionVal) )
+			  {	
+				
+				  best_r.tri_index = tri_list_index;
+				  best_r.intersectionVal = tri_intersect;
+
+				  no_of_intersections++;
+				  if(no_of_intersections >= 2) {break;}
+			  }
+      }
 		}
 
 		return best_r;

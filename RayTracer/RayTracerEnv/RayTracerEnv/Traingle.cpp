@@ -5,6 +5,8 @@
 
 #include "math.h"
 
+#define TRACER_THRESH   0.0000001
+
 using namespace std;
 Triangle::Triangle()
 {
@@ -84,7 +86,7 @@ float areaTriangle(Vector v1,Vector v2,Vector v3)
   
   return area;
 }
-double Triangle::findIntersection(Ray ray)
+double Triangle::findIntersection(Ray ray, int intersectionSide)
 {
 	return this->triIntersection(ray);
 }
@@ -102,18 +104,36 @@ double Triangle::triIntersection(Ray ray)
 
     // CHECK IF PLANE IS PARALLEL --------------//
 	float NdotRayDirection = dot(N, ray.direction);
+  if (NdotRayDirection > 0) {
+    triNormal = triNormal.negate();
+  }
 	if (NdotRayDirection == 0){ return false; }
 
 	// OBTAIN 
     float d = - dot(N, v0);
 	float t = -(dot(N, ray.origin) + d) / NdotRayDirection;
-    
-	intersectionVal = t;
+  
+  Vector Edge1, Edge2, Pvector, Qvector, Tvector;
+  float det, t2, u, v;
+
+  Edge1 = v1.subVector(v0);
+  Edge2 = v2.subVector(v0);
+  Pvector = ray.direction.crossProduct(Edge2);
+  Tvector = ray.origin.subVector(v0);
+  Qvector = Tvector.crossProduct(Edge1);
+  det = Edge1.dotProduct(Pvector);
+  t2 = Edge2.dotProduct(Qvector) / det;
+  u = Tvector.dotProduct(Pvector) / det;
+  v = ray.direction.dotProduct(Qvector) / det;
+  intersectionVal = t;
 
 	// CHECK IF TRINAGLE IS BEHIND RAY ORIGIN
-	if (t < 0.01) { intersectionVal = -1; }
-    
-	
+	if (t < 0.01) { 
+  //if (det < 0.01 || u < 0 || v < 0 || (u+v > 1) || u > 1) {
+    intersectionVal = -1; 
+  }
+
+
 	// COMPUTE INTERSECTION POINT
 	Vector P = add(ray.origin , ray.direction.scalarMult(t));
 	triInter = P;

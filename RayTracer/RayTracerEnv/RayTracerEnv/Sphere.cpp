@@ -26,7 +26,7 @@ Sphere::Sphere(Vector c,double r,Material m)
   material = m;
 }
 
-double Sphere::findIntersection(Ray ray)
+double Sphere::findIntersection(Ray ray, int intersectionSide)
 {
 
   return this->sphereIntersection(ray);

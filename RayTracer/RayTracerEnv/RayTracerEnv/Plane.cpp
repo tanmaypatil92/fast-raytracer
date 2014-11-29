@@ -18,7 +18,7 @@ Plane::Plane(Vector n,double d,Material m)
 	normal   = n;
 	mat      = m;
 }
-double Plane::findIntersection(Ray r)
+double Plane::findIntersection(Ray r, int intersectionSide)
 {
   return planeIntersection(r);
 }
@@ -40,8 +40,8 @@ double Plane::planeIntersection(Ray r)
 	if (Vd == 0){ t = -1;} // We can check for negative values and discard later
 	else
 	{
-		V0 = Pn.dotProduct(R0.addVector(Pn.scalarMult(-1*D)));
-		//V0 = Pn.dotProduct(R0) + D;
+		//V0 = Pn.dotProduct(R0.addVector(Pn.scalarMult(-1*D)));
+		V0 = Pn.dotProduct(R0) + D;
 		//V0 = (R0.subVector(Vector(D,D,D))).dotProduct(Pn);
 		t  = -1 * (V0/Vd);
 		if (t < 0.0000001)t = -1;

@@ -31,7 +31,7 @@ class Triangle : public GeomObj
 	Vector Vertex_to_Vector(Vertex vertex);
 	
 	double triIntersection(Ray);
-	double findIntersection(Ray ray);
+	double findIntersection(Ray ray, int intersectionSide);
 };
 
 #endif

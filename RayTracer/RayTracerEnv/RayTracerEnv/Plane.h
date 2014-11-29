@@ -16,7 +16,7 @@ class Plane : public GeomObj
 	Plane();
 	Plane(Vector,double);
 	Plane(Vector,double,Material);
-  double findIntersection(Ray r);
+  double findIntersection(Ray r, int intersectionSide);
   double planeIntersection(Ray r);
 
 };

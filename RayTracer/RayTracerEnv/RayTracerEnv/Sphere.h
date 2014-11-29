@@ -19,7 +19,7 @@ class Sphere : public GeomObj
 	Sphere(Vector,double,Material);
 	double sphereIntersection(Ray);
   
-	double findIntersection(Ray ray);
+	double findIntersection(Ray ray, int intersectionSide);
 };
 
 #endif

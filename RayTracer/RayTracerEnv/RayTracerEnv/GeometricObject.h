@@ -13,7 +13,6 @@ class GeomObj
 	Material material;
 	Vector objNormal;
 	Vector objIntersection;
-	
 	bool texture_defined;
 	VertexTexture tex;
 
@@ -22,7 +21,7 @@ class GeomObj
 
 	
 
-	virtual double findIntersection(Ray ray)=0;
+	virtual double findIntersection(Ray ray, int intersectionSide)=0;
 	
 	GeomObj()
 	{

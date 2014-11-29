@@ -150,7 +150,7 @@ void getColor
 			//Perform the ray intersection with this object
 				if(objsToRender[obj]->objectId!=currentObjId)
 				{
-					objsToRender[obj]->findIntersection(shadowRay);
+					objsToRender[obj]->findIntersection(shadowRay, 0);
 					if(objsToRender[obj]->intersectionValue > TRACER_THRESH && objsToRender[obj]->intersectionValue <= distance)
 					{
               distance = objsToRender[obj]->intersectionValue;
@@ -190,8 +190,7 @@ void getColor
 				}
 			}
 	   }
-
-		
+    //(*currentColor).colorCheck();
 	}
 
 	#if 0
