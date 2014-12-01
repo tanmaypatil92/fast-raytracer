@@ -75,6 +75,30 @@ int getIndex(int x, int y, int xs) {
 	return x + (y * xs);
 }
 
+int addGaussianTexture(float u, float v, Color *color)  {
+	float row = 0.8, stdU = 1, stdV = 1, muU = 0.5, muV = 0.5;
+	float fXY, tmpVar1;
+	float pi = 3.14159265358979323846;
+
+	tmpVar1 = (1/(2*pi*stdU*stdV*(sqrt(1 - pow(row, 2)))));
+	fXY = (tmpVar1) * exp((-0.5/(1 - pow(row, 2)) * ( ( (pow((u - muU), 2))/pow(stdU, 2) ) + ( (pow((v - muV), 2))/pow(stdV, 2) ) - ( (2*row*(u-muU)*(v-muV))/(stdU*stdV)) )));
+
+	int indicator = floor(fXY * 100);
+	indicator = indicator % 2;
+	if (indicator == 0)	{
+    color->red = 0; 
+    color->green = 0; 
+    color->blue = 1;
+	}
+	else	{
+		color->red = 1; 
+		color->green = 1; 
+		color->blue = 1; 
+  }
+
+  return 1;
+}
+
 int addTexture(float u, float v, Color *color, char *fileName, int reset, Color **image, int *xs, int *ys)
 {
 
@@ -172,7 +196,7 @@ void getColor
 	specularRay.direction = specularRay.direction.normalize();
   */
 
-    if(strcmp(currentObject->material.matType,"sphere") == 0){
+  if(currentObject->objectType == 1){
 		Sphere *sph = (Sphere *)currentObject;
 		Vector p = currentObject->objIntersection.subVector(sph->center);
 		p = p.normalize();
@@ -183,7 +207,15 @@ void getColor
 
 		float u = ((atan2(p.x, p.z) / PI) + 1.0f) * 0.5f;
 		float v = (asin(p.y) / PI) + 0.5f;
-		addTexture(u,v,currentColor,sph->mat.fileName, sph->mat.reset, &(sph->image), &(sph->xs), &(sph->ys));
+//#ifndef ProceduralTexture
+    if (sph->mat.textureType == 2)  {
+ 	  	addTexture(u,v,currentColor,sph->mat.fileName, sph->mat.reset, &(sph->image), &(sph->xs), &(sph->ys));
+    }
+    else  {
+      if (sph->mat.procTextureType == 1)
+        addGaussianTexture(u,v,currentColor);
+    }
+
 		sph->mat.reset = 0;
 		
 	}else{

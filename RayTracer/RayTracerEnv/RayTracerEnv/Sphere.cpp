@@ -8,6 +8,7 @@ Sphere::Sphere()
 	center = Vector (0.0,0.0,0.0);
 	radius = 1.0;
 	mat.matColor = Color(0.5,0.5,0.5);
+  objectType = 1; //1 for sphere
 }
 
 Sphere::Sphere(Vector c,double r)
@@ -16,6 +17,7 @@ Sphere::Sphere(Vector c,double r)
 	radius = r;
 	mat.matColor = Color(0.5,0.5,0.5);
   material.matColor = mat.matColor;
+  objectType = 1; //1 for sphere
 }
 
 Sphere::Sphere(Vector c,double r,Material m)
@@ -24,6 +26,7 @@ Sphere::Sphere(Vector c,double r,Material m)
 	radius = r;
 	mat    = m;
   material = m;
+  objectType = 1; //1 for sphere
 }
 
 double Sphere::findIntersection(Ray ray, int intersectionSide)
