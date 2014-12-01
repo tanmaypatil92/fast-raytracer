@@ -175,18 +175,18 @@ int OBJObject::parse(char *fileName)
 		   //char *testFileName03 = "obj_files/pillar01.obj";
 		   if(strcmp(fileName,testFileName03)==0)
 		   {
-				t.scaleXYZ(&v,0.7,0.85,0.7);
+				t.scaleXYZ(&v,0.7,0.87,0.7);
 				t.rotateX(&v,180);
 				t.rotateY(&v,-20);
-				t.translateXYZ(&v,-9.5,2.5,-8.5);
+				t.translateXYZ(&v,-9.5,2.3,-8.5);
 		   }
 		   //char *testFileName04 = "obj_files/pillar02.obj";
 		   if(strcmp(fileName,testFileName04)==0)
 		   {
-				t.scaleXYZ(&v,0.7,0.85,0.7);
+				t.scaleXYZ(&v,0.7,0.87,0.7);
 				t.rotateX(&v,180);
 				t.rotateY(&v,20);
-				t.translateXYZ(&v,10.0,2.5,-8.0);
+				t.translateXYZ(&v,10.0,2.3,-8.0);
 		   }
 			// Uthara
 

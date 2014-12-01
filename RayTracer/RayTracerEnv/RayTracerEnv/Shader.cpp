@@ -102,8 +102,8 @@ int addTexture(float u, float v, Color *color, char *fileName, int reset, Color 
 			fread(pixel1, sizeof(pixel1), 1, fd);
 			//std::cout<<(float)((int)pixel1[0]) * (1.0 / 255.0);
 			(*image)[i].red = (float)((int)pixel1[0]) * (1.0 / 255.0);
-			(*image)[i].blue = (float)((int)pixel1[1]) * (1.0 / 255.0);
-			(*image)[i].green = (float)((int)pixel1[2]) * (1.0 / 255.0);
+			(*image)[i].green = (float)((int)pixel1[1]) * (1.0 / 255.0);
+			(*image)[i].blue = (float)((int)pixel1[2]) * (1.0 / 255.0);
 		}
 
 		reset = 0;          /* init is done */
