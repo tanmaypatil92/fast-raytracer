@@ -98,7 +98,6 @@ int addGaussianTexture(float u, float v, Color *color)  {
 
   return 1;
 }
-
 int addTexture(float u, float v, Color *color, char *fileName, int reset, Color **image, int *xs, int *ys)
 {
 
@@ -196,7 +195,7 @@ void getColor
 	specularRay.direction = specularRay.direction.normalize();
   */
 
-  if(currentObject->objectType == 1){
+    if(currentObject->objectType == 1){
 		Sphere *sph = (Sphere *)currentObject;
 		Vector p = currentObject->objIntersection.subVector(sph->center);
 		p = p.normalize();
@@ -207,15 +206,15 @@ void getColor
 
 		float u = ((atan2(p.x, p.z) / PI) + 1.0f) * 0.5f;
 		float v = (asin(p.y) / PI) + 0.5f;
-//#ifndef ProceduralTexture
-    if (sph->mat.textureType == 2)  {
- 	  	addTexture(u,v,currentColor,sph->mat.fileName, sph->mat.reset, &(sph->image), &(sph->xs), &(sph->ys));
-    }
-    else  {
-      if (sph->mat.procTextureType == 1)
-        addGaussianTexture(u,v,currentColor);
-    }
-
+		//addTexture(u,v,currentColor,sph->mat.fileName, sph->mat.reset, &(sph->image), &(sph->xs), &(sph->ys));
+		//#ifndef ProceduralTexture
+		if (sph->mat.textureType == 2)  {
+ 	  		addTexture(u,v,currentColor,sph->mat.fileName, sph->mat.reset, &(sph->image), &(sph->xs), &(sph->ys));
+		}
+		else  {
+			if (sph->mat.procTextureType == 1)
+				addGaussianTexture(u,v,currentColor);
+		}
 		sph->mat.reset = 0;
 		
 	}else{
