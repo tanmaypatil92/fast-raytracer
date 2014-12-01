@@ -68,14 +68,14 @@ void init_shader()
   shader_data.Ks = Color(0.3,0.3,0.3);
 }
 
-Color *image;
-int xs, ys;
+//Color *image;
+//int xs, ys;
 
-int getIndex(int x, int y) {
+int getIndex(int x, int y, int xs) {
 	return x + (y * xs);
 }
 
-int addTexture(float u, float v, Color *color, char *fileName, int reset)
+int addTexture(float u, float v, Color *color, char *fileName, int reset, Color **image, int *xs, int *ys)
 {
 
 	unsigned char		pixel1[3];
@@ -90,20 +90,20 @@ int addTexture(float u, float v, Color *color, char *fileName, int reset)
 			fprintf (stderr, "texture file not found\n");
 			exit(-1);
 		}
-		fscanf (fd, "%s %d %d %c", foo, &xs, &ys, &dummy);
-		image = (Color*)malloc(sizeof(Color)*(xs+1)*(ys+1));
+		fscanf (fd, "%s %d %d %c", foo, xs, ys, &dummy);
+		*image = (Color*)malloc(sizeof(Color)*(*xs+1)*(*ys+1));
 		//Color *image2 = (Color *)malloc(sizeof(Color)*(xs+1)*(ys+1));
-		if (image == NULL) {
+		if (*image == NULL) {
 			fprintf (stderr, "malloc for texture image failed\n");
 			exit(-1);
 		}
 
-		for (i = 0; i < xs*ys; i++) {	/* create array of GzColor values */
+		for (i = 0; i < (*xs)*(*ys); i++) {	/* create array of GzColor values */
 			fread(pixel1, sizeof(pixel1), 1, fd);
 			//std::cout<<(float)((int)pixel1[0]) * (1.0 / 255.0);
-			image[i].red = (float)((int)pixel1[0]) * (1.0 / 255.0);
-			image[i].blue = (float)((int)pixel1[1]) * (1.0 / 255.0);
-			image[i].green = (float)((int)pixel1[2]) * (1.0 / 255.0);
+			(*image)[i].red = (float)((int)pixel1[0]) * (1.0 / 255.0);
+			(*image)[i].blue = (float)((int)pixel1[1]) * (1.0 / 255.0);
+			(*image)[i].green = (float)((int)pixel1[2]) * (1.0 / 255.0);
 		}
 
 		reset = 0;          /* init is done */
@@ -116,18 +116,18 @@ int addTexture(float u, float v, Color *color, char *fileName, int reset)
 	s = u > 1? 1 : u;
 	t = v > 1? 1 : v;
 
-	float x = s * (xs - 1);
-	float y = t * (ys - 1);
+	float x = s * (*xs - 1);
+	float y = t * (*ys - 1);
 
-	int A = getIndex(ceil(x), ceil(y));
-	int B = getIndex(floor(x), ceil(y));
-	int C = getIndex(floor(x), floor(y));
-	int D = getIndex(ceil(x), floor(y));
+	int A = getIndex(ceil(x), ceil(y), *xs);
+	int B = getIndex(floor(x), ceil(y), *xs);
+	int C = getIndex(floor(x), floor(y), *xs);
+	int D = getIndex(ceil(x), floor(y), *xs);
 
 	// Interpolate
-	color->red += s*t*image[C].red + (1-s)*t*image[D].red+ s*(1-t)*image[B].red + (1-s)*(1-t)*image[A].red;
-	color->green += s*t*image[C].green + (1-s)*t*image[D].green + s*(1-t)*image[B].green + (1-s)*(1-t)*image[A].green;
-	color->blue += s*t*image[C].blue + (1-s)*t*image[D].blue + s*(1-t)*image[B].blue + (1-s)*(1-t)*image[A].blue;
+	color->red += s*t*(*image)[C].red + (1-s)*t*(*image)[D].red+ s*(1-t)*(*image)[B].red + (1-s)*(1-t)*(*image)[A].red;
+	color->green += s*t*(*image)[C].green + (1-s)*t*(*image)[D].green + s*(1-t)*(*image)[B].green + (1-s)*(1-t)*(*image)[A].green;
+	color->blue += s*t*(*image)[C].blue + (1-s)*t*(*image)[D].blue + s*(1-t)*(*image)[B].blue + (1-s)*(1-t)*(*image)[A].blue;
 
 	return 1;
 }
@@ -183,7 +183,7 @@ void getColor
 
 		float u = ((atan2(p.x, p.z) / PI) + 1.0f) * 0.5f;
 		float v = (asin(p.y) / PI) + 0.5f;
-		addTexture(u,v,currentColor,sph->mat.fileName, sph->mat.reset);
+		addTexture(u,v,currentColor,sph->mat.fileName, sph->mat.reset, &(sph->image), &(sph->xs), &(sph->ys));
 		sph->mat.reset = 0;
 		
 	}else{

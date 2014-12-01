@@ -141,7 +141,7 @@ ComplexObject::ComplexObject(char* filename, Material m)
 	
 	get_triangles();
 	
-	curr_oct_depth = 0; max_oct_depth = 2;
+	curr_oct_depth = 0; max_oct_depth = 3;
 	
 	head_oct = initialize_oct(box);
 	
