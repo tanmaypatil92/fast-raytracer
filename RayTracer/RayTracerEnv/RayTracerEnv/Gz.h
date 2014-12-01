@@ -8,8 +8,8 @@
 #define XRES 480	
 #define YRES 270
 #else
-#define XRES 1280	
-#define YRES 720	
+#define XRES 1024	
+#define YRES 768	
 #endif
 //#define	ARRAY(x,y,width) (x+(y*width))
 

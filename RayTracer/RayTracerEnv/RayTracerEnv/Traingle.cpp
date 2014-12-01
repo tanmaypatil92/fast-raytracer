@@ -113,6 +113,7 @@ double Triangle::triIntersection(Ray ray)
     float d = - dot(N, v0);
 	float t = -(dot(N, ray.origin) + d) / NdotRayDirection;
   
+  /*
   Vector Edge1, Edge2, Pvector, Qvector, Tvector;
   float det, t2, u, v;
 
@@ -125,6 +126,7 @@ double Triangle::triIntersection(Ray ray)
   t2 = Edge2.dotProduct(Qvector) / det;
   u = Tvector.dotProduct(Pvector) / det;
   v = ray.direction.dotProduct(Qvector) / det;
+  */
   intersectionVal = t;
 
 	// CHECK IF TRINAGLE IS BEHIND RAY ORIGIN
