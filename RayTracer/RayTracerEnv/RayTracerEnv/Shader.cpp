@@ -86,9 +86,9 @@ int addGaussianTexture(float u, float v, Color *color)  {
 	int indicator = floor(fXY * 100);
 	indicator = indicator % 2;
 	if (indicator == 0)	{
-    color->red = 0; 
+    color->red = 1; 
     color->green = 0; 
-    color->blue = 1;
+    color->blue = 0;
 	}
 	else	{
 		color->red = 1; 
