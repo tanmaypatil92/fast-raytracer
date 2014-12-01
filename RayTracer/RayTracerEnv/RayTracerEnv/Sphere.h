@@ -14,7 +14,9 @@ class Sphere : public GeomObj
 	Material mat;
 	Vector sphereNormal;
 	Vector sphereInter;
-	
+	Color *image;
+	int xs, ys;
+
 	Sphere();
 	Sphere(Vector,double);
 	Sphere(Vector,double,Material);

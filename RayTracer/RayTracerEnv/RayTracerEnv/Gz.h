@@ -9,7 +9,7 @@
 #define YRES 270
 #else
 #define XRES 1024	
-#define YRES 768	
+#define YRES 576	
 #endif
 //#define	ARRAY(x,y,width) (x+(y*width))
 

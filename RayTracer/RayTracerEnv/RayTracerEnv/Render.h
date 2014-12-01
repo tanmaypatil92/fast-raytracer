@@ -9,7 +9,7 @@
 #ifndef __RayTracerEnv__Render__
 #define __RayTracerEnv__Render__
 
-#define INTERACTION_DEPTH 3
+#define INTERACTION_DEPTH 2
 #define REFLECTION_PARAMETER 0.2 
 
 #define REFRACTIVE_INDEX_AIR 1
