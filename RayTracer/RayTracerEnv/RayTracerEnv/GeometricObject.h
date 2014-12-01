@@ -16,6 +16,8 @@ class GeomObj
 	bool texture_defined;
 	VertexTexture tex;
 
+  int objectType;
+
 	int objectId;
 	//virtual dumdum() = 0;
 

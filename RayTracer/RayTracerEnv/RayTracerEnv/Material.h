@@ -10,11 +10,12 @@ class Material{
   char fileName[40];
   char matType[40];
   int reset;
+  int textureType, procTextureType;
   float reflectionParameter, refractionIndex;
   int specularPower;
 	Material();
 	Material(Color, Color, Color, Color, int, float, float);
+  Material(Color, Color, Color, Color, int, float, float, int );
 	Material(Color, Color, Color, Color, int, float, float, char *);
-	Material(Color, Color, Color, Color, int, float, float, char *, char *);
 };
 #endif

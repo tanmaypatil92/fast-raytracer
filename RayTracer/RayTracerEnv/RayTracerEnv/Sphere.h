@@ -6,6 +6,8 @@
 #include "Material.h"
 #include "GeometricObject.h"
 
+#define ProceduralTexture 1
+
 class Sphere : public GeomObj
 {
 	public:
