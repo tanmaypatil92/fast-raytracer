@@ -64,13 +64,13 @@ int saveImage(Pixel *pixels)
    return SUCCESS;
 }
 #endif
-int saveImage(Pixel *pixels)
+int saveImage(Pixel *pixels, char *outFile)
 {
 	int width  = XRES;
 	int height = YRES;
 	// Writing to tga file, borrowed from PaulBrooke's website //
   
-	FILE *fptr = fopen(outfile, "wb");
+	FILE *fptr = fopen(outFile, "wb");
 	if (fptr == NULL) {
       fprintf(stderr,"Failed to open outputfile\n");
       return FAILURE;

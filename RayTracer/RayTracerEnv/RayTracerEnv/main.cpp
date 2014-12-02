@@ -18,6 +18,12 @@
 #define MAX_COMPLEX_OBJECTS 5
 #define MAX_OBJ_TO_RENDER 20
 
+#define MAKE_VIDEO 1
+
+#ifdef MAKE_VIDEO
+#define FRAMES_PER_SECOND 24
+#endif
+
 #include "Shader.h"
 #include "TracerAppBSP.h"
 
@@ -110,11 +116,15 @@ void pre_initialize_everything()
   infinity_bsp.dispWidth = XRES;
   infinity_bsp.dispHeight = YRES;
   
+  /*
 #ifndef Final
   infinity_bsp.defaultCamFOV = 65;
 #else
   infinity_bsp.defaultCamFOV = 55;
 #endif
+  */
+
+  infinity_bsp.defaultCamFOV = 55;
   
   //infinity_bsp.camPosition = Vector(0,-2.5,10);
   //infinity_bsp.camLook      = Vector(0,0,3.0);
@@ -124,28 +134,38 @@ void pre_initialize_everything()
   //infinity_bsp.camPosition = Vector(5,5,5);
   //infinity_bsp.camLook      = Vector(1.0,1.0,1.0);
 
+  /*
 #ifndef Final
   infinity_bsp.camPosition = Vector(-0.3,-7.0,23);//intial
 #else
   infinity_bsp.camPosition = Vector(-0.3,0.0,23);//final
 #endif
-  infinity_bsp.camLook      = Vector(0.1,-2.0,1.0);
+  */
 
-  
+   infinity_bsp.camPosition = Vector(-0.3,0.0,23);
+   infinity_bsp.camLook      = Vector(0.1,-2.0,1.0);
+
   // CAMERA FOR ANTIALISING / SHADING
   //infinity_bsp.camPosition = Vector(0,0,5);
   //infinity_bsp.camLook      = Vector(0,0,1.0);
 
   infinity_bsp.numSpheres = 6;
   infinity_bsp.spheres[0] = Sphere(Vector(-3.0,1.0,-9.0),1.4,Material(Color(0.45,0.28,0.4,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2, 1));
+
+  /*
 #ifndef Final
-  infinity_bsp.spheres[1] = Sphere(Vector(7.1, 1.0,1.0),1.4,Material(Color(0.2,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.5,0.5,0.5), Color(0.3,0.3,0.3), 25, 0.2, 1.5));//intial
-  infinity_bsp.spheres[2] = Sphere(Vector(-7.0,1.0,1.0),1.4,Material(Color(0.1,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.4,0.4,0.4), Color(0.3,0.3,0.3), 25, 0.2, 1.5));//intial
+  infinity_bsp.spheres[1] = Sphere(Vector(-7.0, 1.0,1.0),1.4,Material(Color(0.2,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.5,0.5,0.5), Color(0.3,0.3,0.3), 25, 0.2, 1.5));//intial
+  infinity_bsp.spheres[2] = Sphere(Vector(7.1,1.0,1.0),1.4,Material(Color(0.1,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.4,0.4,0.4), Color(0.3,0.3,0.3), 25, 0.2, 1.5));//intial
 #else
   infinity_bsp.spheres[1] = Sphere(Vector(-3.5,1.0,1.0),1.4,Material(Color(0.1,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.4,0.4,0.4), Color(0.3,0.3,0.3), 25, 0.2, 1.5));//final
   infinity_bsp.spheres[2] = Sphere(Vector(3.75, 1.0,1.0),1.4,Material(Color(0.2,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.5,0.5,0.5), Color(0.3,0.3,0.3), 25, 0.2, 1.5));//final
 #endif
+  */
+
+  infinity_bsp.spheres[1] = Sphere(Vector(-7.0, 1.0,1.0),1.4,Material(Color(0.1,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.4,0.4,0.4), Color(0.3,0.3,0.3), 25, 0.2, 1.5));
+  infinity_bsp.spheres[2] = Sphere(Vector(7.1,1.0,1.0),1.4,Material(Color(0.2,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.5,0.5,0.5), Color(0.3,0.3,0.3), 25, 0.2, 1.5));
   infinity_bsp.spheres[3] = Sphere(Vector(3.1, 1.0,-9.0),1.4,Material(Color(0.45,0.2,0.05,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2, 2));
+
 #if 0
   infinity_bsp.spheres[5] = Sphere(Vector(-1.3,1.0,3.0),1.4,Material(Color(0.45,0.28,0.4,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2));
   infinity_bsp.spheres[6] = Sphere(Vector(1.4, 1.0,3.0),1.4,Material(Color(0.45,0.2,0.05,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2));
@@ -153,6 +173,7 @@ void pre_initialize_everything()
   infinity_bsp.spheres[4] = Sphere(Vector(-9.5,1.0, -4.0),1.4,Material(Color(0.45,0.28,0.4,1.0), Color(0.1,0.1,0.1), Color(0.2,0.2,0.2), Color(0.4,0.4,0.4), 25, 0.1, 2, texFile1));
   infinity_bsp.spheres[5] = Sphere(Vector(10.0, 1.0, -4.0),1.4,Material(Color(0.45,0.2,0.05,1.0), Color(0.1,0.1,0.1), Color(0.2,0.2,0.2), Color(0.4,0.4,0.4), 25, 0.2, 2, texFile2));
 #endif
+
   
   infinity_bsp.numPlanes = 1;
   infinity_bsp.planes[0] = Plane(Vector(0.0,1.0,0.0),-2.4,Material(Color(0.5,0.0,0.2), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2));// having z value in plane normal is like rotating it in z
@@ -167,8 +188,10 @@ void pre_initialize_everything()
   //infinity_bsp.complex_objects[0] = ComplexObject("obj_files/cube.obj" , Material(Color(0.9,0.9,0.9), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2, 1.5));
   //infinity_bsp.complex_objects[4] = ComplexObject("obj_files/floor.obj", Material(Color(0.2,0.2,0.2), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 0.2,1.5) );
 
+//#ifndef MAKE_VIDEO
   tracer_app.appCamera = Camera(infinity_bsp.camPosition,infinity_bsp.camLook);
-  
+//#endif
+
   tracer_app.numObjsToRender = 0;
   //tracer_app.objectsToRender[0] = {};
 
@@ -261,8 +284,11 @@ bool initialize_tracer_app()
   /*  Now initialize the renderer to use the camera's FOV */
   tracer_app.infinityRender.pixels = NULL;
   setRenderSize(&tracer_app.infinityRender,infinity_bsp.dispHeight,infinity_bsp.dispWidth);
+
+//#ifndef MAKE_VIDEO
   setPixelParams(&tracer_app.infinityRender,tracer_app.appCamera.FOV);
-  
+//#endif
+
   return ret_val;
 } /* initialize_tracer_app */
 
@@ -279,9 +305,48 @@ int main
 	
   std::cout<<"Begin rendering ..."<<std::endl;
 
-  //Parser would read obj here
-  //objsToRender = getParserObjs();
+#ifdef MAKE_VIDEO
+  int durationInSeconds = 5;
+  int numberOfFrames = durationInSeconds * FRAMES_PER_SECOND;
+
+  int initialCamFOV = 65, finalCamFOV = 55;
+  float initialCamYPosition = -7.0, finalCamYPosition = 0.0;
+  float initialSphere1XPosition = -7.0, finalSphere1XPosition = -3.5;
+  float initialSphere2XPosition = 7.1, finalSphere2XPosition = 3.75;
   
+  float camFOVStepSize, sphere1XStepSize, sphere2XStepSize, camYStepSize;
+
+  camFOVStepSize = (finalCamFOV - initialCamFOV) / numberOfFrames;
+  sphere1XStepSize = (finalSphere1XPosition - initialSphere1XPosition) / numberOfFrames;
+  sphere2XStepSize = (finalSphere2XPosition - initialSphere2XPosition) / numberOfFrames;
+  camYStepSize = (finalCamYPosition - initialCamYPosition) / numberOfFrames;
+
+  for (int i=0; i<=numberOfFrames; i++)  {
+    infinity_bsp.defaultCamFOV = (initialCamFOV + camFOVStepSize * i);
+    infinity_bsp.camPosition.y = (initialCamYPosition + camYStepSize * i);
+    infinity_bsp.spheres[1].center.x = (initialSphere1XPosition + sphere1XStepSize * i);
+    infinity_bsp.spheres[2].center.x = (initialSphere2XPosition + sphere2XStepSize * i);
+
+    tracer_app.appCamera = Camera(infinity_bsp.camPosition,infinity_bsp.camLook);
+    tracer_app.appCamera.setFOV(infinity_bsp.defaultCamFOV,((double)infinity_bsp.dispHeight/(double)infinity_bsp.dispWidth));
+    setPixelParams(&tracer_app.infinityRender,tracer_app.appCamera.FOV);
+
+    renderObjects(
+      &tracer_app.infinityRender,
+       tracer_app.objectsToRender,
+      &tracer_app.appCamera,
+       tracer_app.numObjsToRender,
+       tracer_app.defLights,
+       tracer_app.numLights);
+
+    char outFile[20];
+
+    sprintf(outFile, "render%d.ppm", i);
+
+    saveImage(tracer_app.infinityRender.pixels, outFile);
+  }
+
+#else
   renderObjects(
     &tracer_app.infinityRender,
      tracer_app.objectsToRender,
@@ -290,9 +355,9 @@ int main
      tracer_app.defLights,
      tracer_app.numLights);
 
-  
-  saveImage(tracer_app.infinityRender.pixels);
-  
+  saveImage(tracer_app.infinityRender.pixels, "render01.ppm");
+#endif
+
   std::cout<<"Finished rendering"<<std::endl;
   
 	return SUCCESS;

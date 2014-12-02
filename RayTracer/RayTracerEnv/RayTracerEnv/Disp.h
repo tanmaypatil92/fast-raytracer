@@ -3,8 +3,8 @@
 
 #include "Pixel.h"
 //#define baseName    "/Users/enticer/developer/CS580/RayTracer/RayTracerEnv/RayTracerEnv/"
-#define outfile "render01.ppm"
+//#define outfile "render01.ppm"
 
-int saveImage(Pixel *pixels);
+int saveImage(Pixel *pixels, char *outFile);
 
 #endif
