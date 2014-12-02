@@ -295,12 +295,13 @@ double ComplexObject::complexIntersection_faster(Ray ray, int intersectionSide)
 		VertexTexture inter_tex;
 		inter_tex.s =  (tex_a.s)*bary_a + (tex_b.s)*bary_b + (tex_c.s)*bary_c;
 		inter_tex.t =  (tex_a.t)*bary_a + (tex_b.t)*bary_b + (tex_c.t)*bary_c;
-
+		
+		/*
     double NDotL = inter_normal.dotProduct(ray.direction);
     if (NDotL > 0)  {
       inter_normal = inter_normal.negate();
     }
-
+	*/
 		intersectionValue =  tri_intersect;
 		objNormal          =  inter_normal;
 		objIntersection    = tri->triInter;
