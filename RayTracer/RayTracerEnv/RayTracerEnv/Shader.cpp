@@ -86,9 +86,9 @@ int addGaussianTexture(float u, float v, Color *color)  {
 	int indicator = floor(fXY * 100);
 	indicator = indicator % 2;
 	if (indicator == 0)	{
-    color->red = 0; 
+    color->red = 1; 
     color->green = 0; 
-    color->blue = 1;
+    color->blue = 0;
 	}
 	else	{
 		color->red = 1; 
@@ -98,7 +98,6 @@ int addGaussianTexture(float u, float v, Color *color)  {
 
   return 1;
 }
-
 int addTexture(float u, float v, Color *color, char *fileName, int reset, Color **image, int *xs, int *ys)
 {
 
@@ -126,8 +125,8 @@ int addTexture(float u, float v, Color *color, char *fileName, int reset, Color 
 			fread(pixel1, sizeof(pixel1), 1, fd);
 			//std::cout<<(float)((int)pixel1[0]) * (1.0 / 255.0);
 			(*image)[i].red = (float)((int)pixel1[0]) * (1.0 / 255.0);
-			(*image)[i].blue = (float)((int)pixel1[1]) * (1.0 / 255.0);
-			(*image)[i].green = (float)((int)pixel1[2]) * (1.0 / 255.0);
+			(*image)[i].green = (float)((int)pixel1[1]) * (1.0 / 255.0);
+			(*image)[i].blue = (float)((int)pixel1[2]) * (1.0 / 255.0);
 		}
 
 		reset = 0;          /* init is done */
@@ -196,7 +195,7 @@ void getColor
 	specularRay.direction = specularRay.direction.normalize();
   */
 
-  if(currentObject->objectType == 1){
+    if(currentObject->objectType == 1){
 		Sphere *sph = (Sphere *)currentObject;
 		Vector p = currentObject->objIntersection.subVector(sph->center);
 		p = p.normalize();
@@ -207,15 +206,15 @@ void getColor
 
 		float u = ((atan2(p.x, p.z) / PI) + 1.0f) * 0.5f;
 		float v = (asin(p.y) / PI) + 0.5f;
-//#ifndef ProceduralTexture
-    if (sph->mat.textureType == 2)  {
- 	  	addTexture(u,v,currentColor,sph->mat.fileName, sph->mat.reset, &(sph->image), &(sph->xs), &(sph->ys));
-    }
-    else  {
-      if (sph->mat.procTextureType == 1)
-        addGaussianTexture(u,v,currentColor);
-    }
-
+		//addTexture(u,v,currentColor,sph->mat.fileName, sph->mat.reset, &(sph->image), &(sph->xs), &(sph->ys));
+		//#ifndef ProceduralTexture
+		if (sph->mat.textureType == 2)  {
+ 	  		addTexture(u,v,currentColor,sph->mat.fileName, sph->mat.reset, &(sph->image), &(sph->xs), &(sph->ys));
+		}
+		else  {
+			if (sph->mat.procTextureType == 1)
+				addGaussianTexture(u,v,currentColor);
+		}
 		sph->mat.reset = 0;
 		
 	}else{
