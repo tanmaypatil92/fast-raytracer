@@ -4,7 +4,7 @@
 #define SUCCESS 0
 #define FAILURE 1
 
-#if 0
+#if 1
 #define XRES 480	
 #define YRES 270
 #else

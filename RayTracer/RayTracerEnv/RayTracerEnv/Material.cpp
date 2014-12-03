@@ -9,6 +9,7 @@ Material::Material()
   Ks = Color(0.3,0.3,0.3);
   reflectionParameter = 0.2;
   refractionIndex = 2;
+  procTextureType = -1;
 }
 
 Material::Material(Color c, Color input_Ka, Color input_Kd, Color input_Ks, int inputSpecularPower, float inputReflectionParam, float inputRefractionIndex)
@@ -20,6 +21,7 @@ Material::Material(Color c, Color input_Ka, Color input_Kd, Color input_Ks, int 
   specularPower = inputSpecularPower;
   reflectionParameter = inputReflectionParam;
   refractionIndex = inputRefractionIndex; 
+  procTextureType = -1;
 }
 Material::Material(Color c, Color input_Ka, Color input_Kd, Color input_Ks, int inputSpecularPower, float inputReflectionParam, float inputRefractionIndex, int inputProcTextureType)
 {
@@ -45,4 +47,5 @@ Material::Material(Color c, Color input_Ka, Color input_Kd, Color input_Ks, int 
   strcpy(fileName,file);
   reset = 1;
   textureType = 2;
+  procTextureType = -1;
 }

@@ -302,7 +302,7 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
       }
     }
 
-	getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
+	int isShadowPoint = getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
 
     reflectedRay.origin = objIntersectionVector; reflectedRay.currentRefractiveIndex = incomingRay.currentRefractiveIndex;
     //Using reflection equations from http://www.cs.jhu.edu/~cohen/RendTech99/Lectures/Ray_Tracing.bw.pdf
@@ -341,6 +341,8 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
     R_total = objRend->material.reflectionParameter;
   }
 
+#ifndef REPORT_GEN
+  //if (isShadowPoint == false) {
     bool reflectedRayReturns = trackRay(reflectedRay, &reflectionColor, lights, numLights, objsToRender, numObjects, (currentDepth+1));
 
     if (reflectedRayReturns == true)  {
@@ -348,7 +350,7 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
 	  thisColor->green += reflectionColor.green * R_total;
 	  thisColor->blue  += reflectionColor.blue * R_total;
     }
-    
+  //}
     if (doRefraction == true) {
       bool refractedRayReturns = trackRay(refractedRay, &refractionColor, lights, numLights, objsToRender, numObjects, (currentDepth+1));;
 
@@ -358,6 +360,7 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
         thisColor->blue  += refractionColor.blue * T_total;
       }
     }
+#endif
 
 		/* now that we have the object to render, find the color for this pixel */
 		/*for(int r = 0; r < reflectionDepth; r++)

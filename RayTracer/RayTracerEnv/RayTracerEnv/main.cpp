@@ -24,6 +24,8 @@
 #define FRAMES_PER_SECOND 24
 #endif
 
+//#define REPORT_GEN 1
+
 #include "Shader.h"
 #include "TracerAppBSP.h"
 
@@ -103,10 +105,10 @@ static char fileName1[] = "obj_files/pawn.obj";
 static char fileName2[] = "obj_files/pillar01.obj";
 static char fileName3[] = "obj_files/pillar02.obj";
 
-static char texFile1 [] = "tex_files/metal.ppm";
+static char texFile1 [] = "tex_files/tiles02.ppm";
 static char texFile2 [] = "tex_files/green_marble.ppm";
 static char texFile3 [] = "tex_files/water02.ppm";
-static char texFile4 [] = "tex_files/lava.ppm";
+static char texFile4 [] = "tex_files/wood_dark.ppm";
 
 void pre_initialize_everything()
 {
@@ -142,16 +144,31 @@ void pre_initialize_everything()
 #endif
   */
 
-   infinity_bsp.camPosition = Vector(-0.3,0.0,23);
+#ifndef REPORT_GEN
+   infinity_bsp.camPosition = Vector(-0.3,0,23);
+#else
+   infinity_bsp.camPosition = Vector(-0.3,0,23);
+#endif
+
    infinity_bsp.camLook      = Vector(0.1,-2.0,1.0);
 
   // CAMERA FOR ANTIALISING / SHADING
   //infinity_bsp.camPosition = Vector(0,0,5);
   //infinity_bsp.camLook      = Vector(0,0,1.0);
 
+#ifndef REPORT_GEN
   infinity_bsp.numSpheres = 6;
   infinity_bsp.spheres[0] = Sphere(Vector(-3.0,1.0,-9.0),1.4,Material(Color(0.45,0.28,0.4,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2, 1));
-
+  infinity_bsp.spheres[1] = Sphere(Vector(-3.5, 1.0,1.0),1.4,Material(Color(0.1,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.4,0.4,0.4), Color(0.3,0.3,0.3), 25, 0.2, 1.5));
+  infinity_bsp.spheres[2] = Sphere(Vector(3.35,1.0,1.0),1.4,Material(Color(0.2,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.5,0.5,0.5), Color(0.3,0.3,0.3), 25, 0.2, 1.5));
+  infinity_bsp.spheres[3] = Sphere(Vector(3.1, 1.0,-9.0),1.4,Material(Color(0.45,0.2,0.05,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2, 2));
+  infinity_bsp.spheres[4] = Sphere(Vector(-9.5,1.0, -4.0),1.4,Material(Color(0.45,0.28,0.4,1.0), Color(0.1,0.1,0.1), Color(0.2,0.2,0.2), Color(0.4,0.4,0.4), 25, 0.1, 2, texFile1));
+  infinity_bsp.spheres[5] = Sphere(Vector(10.0, 1.0, -4.0),1.4,Material(Color(0.45,0.2,0.05,1.0), Color(0.1,0.1,0.1), Color(0.2,0.2,0.2), Color(0.4,0.4,0.4), 25, 0.2, 2, texFile2));
+#else
+  infinity_bsp.numSpheres = 2;
+  infinity_bsp.spheres[0] = Sphere(Vector(-3.0,-0.4, -2.0),3,Material(Color(0.1,0.7,0.2,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2, 0));
+  infinity_bsp.spheres[1] = Sphere(Vector(1, 1.0, 3),1.4,Material(Color(0.01,0.1,0.1,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 1.5, 0));
+#endif
   /*
 #ifndef Final
   infinity_bsp.spheres[1] = Sphere(Vector(-7.0, 1.0,1.0),1.4,Material(Color(0.2,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.5,0.5,0.5), Color(0.3,0.3,0.3), 25, 0.2, 1.5));//intial
@@ -160,28 +177,30 @@ void pre_initialize_everything()
   infinity_bsp.spheres[1] = Sphere(Vector(-3.5,1.0,1.0),1.4,Material(Color(0.1,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.4,0.4,0.4), Color(0.3,0.3,0.3), 25, 0.2, 1.5));//final
   infinity_bsp.spheres[2] = Sphere(Vector(3.75, 1.0,1.0),1.4,Material(Color(0.2,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.5,0.5,0.5), Color(0.3,0.3,0.3), 25, 0.2, 1.5));//final
 #endif
-  */
 
-  infinity_bsp.spheres[1] = Sphere(Vector(-7.0, 1.0,1.0),1.4,Material(Color(0.1,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.4,0.4,0.4), Color(0.3,0.3,0.3), 25, 0.2, 1.5));
-  infinity_bsp.spheres[2] = Sphere(Vector(7.1,1.0,1.0),1.4,Material(Color(0.2,0.1,0.05,1.0), Color(0.1,0.1,0.1), Color(0.5,0.5,0.5), Color(0.3,0.3,0.3), 25, 0.2, 1.5));
-  infinity_bsp.spheres[3] = Sphere(Vector(3.1, 1.0,-9.0),1.4,Material(Color(0.45,0.2,0.05,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2, 2));
-
-#if 0
   infinity_bsp.spheres[5] = Sphere(Vector(-1.3,1.0,3.0),1.4,Material(Color(0.45,0.28,0.4,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2));
   infinity_bsp.spheres[6] = Sphere(Vector(1.4, 1.0,3.0),1.4,Material(Color(0.45,0.2,0.05,1.0), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2));
+  */
+  
+#ifndef REPORT_GEN
+  infinity_bsp.numPlanes = 1;
+  infinity_bsp.planes[0] = Plane(Vector(0.0,1.0,0.0),-2.4,Material(Color(0.5,0.0,0.2), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2));// having z value in plane normal is like rotating it in z
 #else
-  infinity_bsp.spheres[4] = Sphere(Vector(-9.5,1.0, -4.0),1.4,Material(Color(0.45,0.28,0.4,1.0), Color(0.1,0.1,0.1), Color(0.2,0.2,0.2), Color(0.4,0.4,0.4), 25, 0.1, 2, texFile1));
-  infinity_bsp.spheres[5] = Sphere(Vector(10.0, 1.0, -4.0),1.4,Material(Color(0.45,0.2,0.05,1.0), Color(0.1,0.1,0.1), Color(0.2,0.2,0.2), Color(0.4,0.4,0.4), 25, 0.2, 2, texFile2));
+  infinity_bsp.numPlanes = 1;
+  infinity_bsp.planes[0] = Plane(Vector(0.0,1.0,0.0),-2.4,Material(Color(0.5,0.0,0.2), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 1, 2));// having z value in plane normal is like rotating it in z
 #endif
 
   
-  infinity_bsp.numPlanes = 1;
-  infinity_bsp.planes[0] = Plane(Vector(0.0,1.0,0.0),-2.4,Material(Color(0.5,0.0,0.2), Color(0.1,0.1,0.1), Color(0.7,0.7,0.7), Color(0.3,0.3,0.3), 25, 0.2, 2));// having z value in plane normal is like rotating it in z
-
   infinity_bsp.numTriangles = 0;
   infinity_bsp.triangles[0] = Triangle(Vector(0.0,0.0,0.0),Vector(0.0,1.0,0.0),Vector(1.0,0.0,0.0));
 
+#ifndef REPORT_GEN
   infinity_bsp.numComplexObjects = 3;
+#else
+  infinity_bsp.numComplexObjects = 1;
+  infinity_bsp.complex_objects[0] = ComplexObject(fileName1, Material(Color(0.8,0.4,0.2), Color(0.1,0.1,0.1), Color(0.5,0.5,0.5), Color(0.25,0.25,0.3), 25, 0.35, 2));
+#endif
+
   infinity_bsp.complex_objects[0] = ComplexObject(fileName1, Material(Color(0.8,0.4,0.2), Color(0.1,0.1,0.1), Color(0.5,0.5,0.5), Color(0.25,0.25,0.3), 25, 0.35, 2));
   infinity_bsp.complex_objects[1] = ComplexObject(fileName2 , Material(Color(0.2,0.25,0.45), Color(0.1,0.1,0.1), Color(0.3,0.3,0.3), Color(0.2,0.2,0.2), 25, 0.4, 2));
   infinity_bsp.complex_objects[2] = ComplexObject(fileName3, Material(Color(0.2,0.25,0.45), Color(0.1,0.1,0.1), Color(0.4,0.4,0.4), Color(0.2,0.2,0.2), 25, 0.4, 2));

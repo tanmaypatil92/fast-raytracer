@@ -157,7 +157,7 @@ int addTexture(float u, float v, Color *color, char *fileName, int reset, Color 
 
 /*  functions */
 
-void getColor
+bool getColor
 (
   Light   * lights,
   int       numLights,
@@ -195,7 +195,7 @@ void getColor
 	specularRay.direction = specularRay.direction.normalize();
   */
 
-    if(currentObject->objectType == 1){
+  if(currentObject->objectType == 1){
 		Sphere *sph = (Sphere *)currentObject;
 		Vector p = currentObject->objIntersection.subVector(sph->center);
 		p = p.normalize();
@@ -212,7 +212,13 @@ void getColor
  	  		addTexture(u,v,currentColor,sph->mat.fileName, sph->mat.reset, &(sph->image), &(sph->xs), &(sph->ys));
 		}
 		else  {
-			if (sph->mat.procTextureType == 1)
+      if (sph->mat.procTextureType == 0)  {
+        (*currentColor) = currentObject->material.matColor;
+	  	  (*currentColor).red   +=  (currentObject->material.Ka.red * ambColor.red);
+		    (*currentColor).green +=  (currentObject->material.Ka.green * ambColor.green);
+	      (*currentColor).blue  +=  (currentObject->material.Ka.blue * ambColor.blue);
+      }
+			else if (sph->mat.procTextureType == 1)
 				addGaussianTexture(u,v,currentColor);
 		}
 		sph->mat.reset = 0;
@@ -295,6 +301,8 @@ void getColor
 	   }
     //(*currentColor).colorCheck();
 	}
+
+  return shadow;
 
 	#if 0
 	  for(int l=0; l <numLights; l++)

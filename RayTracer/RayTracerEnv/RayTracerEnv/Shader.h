@@ -13,7 +13,7 @@
 #include "Light.h"
 #include "GeometricObject.h"
 
-void getColor
+bool getColor
 (
   Light   * lights,
   int       numLights,
