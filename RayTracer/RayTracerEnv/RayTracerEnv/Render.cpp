@@ -19,6 +19,8 @@
 #define M_PI 3.1427
 #endif
 
+//#define REPORT_GEN 1
+
 /*  MACROS */
 #define _USE_MATH_DEFINES
 #define RAD_CONV_CONST (M_PI/180.0)

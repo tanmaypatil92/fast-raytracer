@@ -30,6 +30,8 @@
 #define TRACER_THRESH   0.0000001
 #define PI 3.14
 
+//#define REPORT_GEN 1
+
 #ifndef OS_X_ENV
 #define INFINITY std::numeric_limits<double>::max()
 #endif
@@ -174,7 +176,12 @@ bool getColor
   double currentObjInterValue;
 	Color  specColor, diffColor, ambColor;
 	//int flag = 1;
+#ifndef REPORT_GEN
   bool shadow = true;
+#else
+  bool shadow = false;
+#endif
+
 	Ray specularRay;
 
 	ambColor.red = 0.1;
@@ -276,7 +283,9 @@ bool getColor
 					if(objsToRender[obj]->intersectionValue > TRACER_THRESH && objsToRender[obj]->intersectionValue <= distance)
 					{
               distance = objsToRender[obj]->intersectionValue;
+#ifndef REPORT_GEN 
 							shadow = true;
+#endif
 					}
 				}
 			} /* End of obj loop */
