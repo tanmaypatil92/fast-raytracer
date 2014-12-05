@@ -12,6 +12,8 @@
 #include "Shader.h"
 #include <cstdlib>
 #include <climits>
+#include "ctime"
+#include "conio.h"
 
 //@todo : VC++ people, uncomment this for unblocking you.
 #ifndef OS_X_ENV
@@ -219,6 +221,8 @@ void renderObjects
   {
 	  objsToRender[obj]->objectId = counter++;
   }
+  time_t currentTime = time(nullptr);
+  printf("Time: %s", asctime(localtime(&currentTime)));
 
   /* Main processing */
   /* Render line by line, for all lines */
@@ -231,7 +235,7 @@ void renderObjects
     /*  Now render this line  */
     for(int j = 0; j < thisObj->height;j++)
     {
-      printf("%cRendering: %dx%d",13,i,j);
+      printf("%cCurrently rendering pixel no: %dx%d",13,i,j);
       fflush(stdout);
       objRend         = NULL;
       vertScaleCoeff  = (j*thisObj->pixelHeight) - (camera->height/2.0);
@@ -254,6 +258,9 @@ void renderObjects
   }/*  End of display height */
   
   printf("\n");
+  currentTime = time(nullptr);
+  printf("Time: %s\n", asctime(localtime(&currentTime)));
+  getch();
   /* To smooth-en out the edges */
   //antiAliasing(thisObj);
   return;
@@ -304,8 +311,8 @@ bool trackRay(Ray incomingRay, Color *thisColor, Light *lights, int numLights, G
       }
     }
 
-	int isShadowPoint = getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
-
+	//int isShadowPoint = getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
+  (void)getColor(lights, numLights, objRend, thisColor, objsToRender, &incomingRay, numObjects);
     reflectedRay.origin = objIntersectionVector; reflectedRay.currentRefractiveIndex = incomingRay.currentRefractiveIndex;
     //Using reflection equations from http://www.cs.jhu.edu/~cohen/RendTech99/Lectures/Ray_Tracing.bw.pdf
     

@@ -107,8 +107,8 @@ static char fileName3[] = "obj_files/pillar02.obj";
 
 static char texFile1 [] = "tex_files/tiles02.ppm";
 static char texFile2 [] = "tex_files/green_marble.ppm";
-static char texFile3 [] = "tex_files/water02.ppm";
-static char texFile4 [] = "tex_files/wood_dark.ppm";
+//static char texFile3 [] = "tex_files/water02.ppm";
+//static char texFile4 [] = "tex_files/wood_dark.ppm";
 
 void pre_initialize_everything()
 {
@@ -368,9 +368,8 @@ int main
      tracer_app.defLights,
      tracer_app.numLights);
 
-  saveImage(tracer_app.infinityRender.pixels, "render01.ppm");
+  saveImage(tracer_app.infinityRender.pixels, (char *)"render01.ppm");
 #endif
-
   std::cout<<"Finished rendering"<<std::endl;
   
 	return SUCCESS;
